@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
-    private val _sortType = MutableStateFlow(SortType.ID)
+    private val _sortType = MutableStateFlow(SortType.UNICODE)
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _ideograms = _sortType
         .flatMapLatest { sortType ->
             when(sortType) {
-                SortType.ID -> dao.getIdeogramOrderedById()
+                SortType.UNICODE -> dao.getIdeogramOrderedByUnicode()
                 SortType.STROKES -> dao.getIdeogramOrderedByStrokes()
                 SortType.RETENTION -> dao.getIdeogramOrderedByRetention()
             }
@@ -45,16 +45,16 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
                 ) }
             }
             IdeogramEvent.SaveIdeogram -> {
-                val id = state.value.id
+                val unicode = state.value.unicode
                 val meanings = state.value.meanings
                 val strokes = state.value.strokes
 
-                if(id.isBlank() || meanings.isBlank() || strokes.isBlank()) {
+                if(unicode.isBlank() || meanings.isBlank() || strokes.isBlank()) {
                     return
                 }
 
                 val ideogram = Ideogram(
-                    id = Integer.parseInt(id),
+                    unicode = unicode,
                     meanings = meanings,
                     strokes = Integer.parseInt(strokes),
                     decompositions = "",
@@ -66,14 +66,14 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
                 }
                 _state.update { it.copy(
                     isAddingIdeogram = false,
-                    id = "",
+                    unicode = "",
                     meanings = "",
                     strokes = ""
                 ) }
             }
-            is IdeogramEvent.SetId -> {
+            is IdeogramEvent.SetUnicode -> {
                 _state.update { it.copy(
-                    id = event.id.toString()
+                    unicode = event.unicode.toString()
                 ) }
             }
             is IdeogramEvent.SetMeanings -> {

@@ -38,12 +38,12 @@ fun AddIdeogramDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TextField(
-                    value = state.id,
+                    value = state.unicode,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetId(Integer.parseInt(it)))
+                        onEvent(IdeogramEvent.SetUnicode(it))
                     },
                     placeholder = {
-                        Text(text = "Id")
+                        Text(text = "Unicode")
                     }
                 )
                 TextField(

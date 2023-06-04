@@ -1,7 +1,7 @@
 package com.example.kanjimemorized
 
 enum class SortType {
-    ID,
+    UNICODE,
     STROKES,
     RETENTION
 }

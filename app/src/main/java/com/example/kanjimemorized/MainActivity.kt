@@ -32,10 +32,10 @@ class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
     private val db by lazy {
         Room.databaseBuilder(
-            applicationContext,
-            IdeogramDatabase::class.java,
-            "Ideogram.db"
-        ).build()
+            context = applicationContext,
+            klass = IdeogramDatabase::class.java,
+            name = "Ideogram.db"
+        ).fallbackToDestructiveMigration().build()
     }
     private val viewModel by viewModels<IdeogramViewModel>(
         factoryProducer = {

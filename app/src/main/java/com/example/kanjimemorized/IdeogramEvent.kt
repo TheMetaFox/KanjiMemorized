@@ -2,7 +2,7 @@ package com.example.kanjimemorized
 
 sealed interface IdeogramEvent {
     object SaveIdeogram: IdeogramEvent
-    data class SetId(val id: Int): IdeogramEvent
+    data class SetUnicode(val unicode: String): IdeogramEvent
     data class SetMeanings(val meanings: List<String>): IdeogramEvent
     data class SetStrokes(val strokes: Int): IdeogramEvent
     object ShowDialog: IdeogramEvent

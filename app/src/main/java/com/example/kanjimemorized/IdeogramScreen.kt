@@ -92,7 +92,7 @@ fun IdeogramScreen(
                             .weight(1f)
                     ) {
                         Text(
-                            text = ideogram.id.toString(),
+                            text = ideogram.unicode,
                             fontSize = 20.sp
                         )
                         Text(
