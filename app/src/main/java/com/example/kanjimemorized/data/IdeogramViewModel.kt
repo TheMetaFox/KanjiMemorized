@@ -51,13 +51,18 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
                 val meanings = state.value.meanings
                 val strokes = state.value.strokes
 
-                if(unicode.isBlank() || meanings.isBlank() || strokes.isBlank()) {
+                if (unicode.isBlank() || meanings.isBlank() || strokes.isBlank()) {
                     return
+                }
+                for (char in 71..90) {
+                    if (unicode.contains(char.toChar(), true)) {
+                        return
+                    }
                 }
 
                 val ideogram = Ideogram(
-                    unicode = unicode,
-                    meanings = meanings,
+                    unicode = Integer.parseInt(unicode, 16).toChar(),
+                    meanings = meanings.split(","),
                     strokes = strokes,
                     decompositions = "",
                     retention = 0f,
@@ -78,21 +83,21 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
             is IdeogramEvent.SetUnicode -> {
                 _state.update {
                     it.copy(
-                    unicode = event.unicode.toString()
+                    unicode = event.unicode
                     )
                 }
             }
             is IdeogramEvent.SetMeanings -> {
                 _state.update {
                     it.copy(
-                    meanings = event.meanings.toString()
+                    meanings = event.meanings
                     )
                 }
             }
             is IdeogramEvent.SetStrokes -> {
                 _state.update {
                     it.copy(
-                    strokes = event.strokes.toString()
+                    strokes = event.strokes
                     )
                 }
             }

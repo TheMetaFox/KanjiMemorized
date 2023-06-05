@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity
 data class Ideogram(
     @PrimaryKey(autoGenerate = false)
-    val unicode: String,
-    var meanings: String,
+    val unicode: Char,
+    val meanings: List<String>,
     val strokes: String,
-    var decompositions: String?,
+    val decompositions: String?,
     val retention: Float,
     val coercivity: Float,
 )

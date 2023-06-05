@@ -77,7 +77,6 @@ fun IdeogramScreen(
                         SortOption(
                             sortType = sortType,
                             selected = mutableStateOf(state.sortType == sortType),
-                            state = state,
                             onEvent = onEvent
                         )
                     }
@@ -93,11 +92,11 @@ fun IdeogramScreen(
                             .weight(1f)
                     ) {
                         Text(
-                            text = ideogram.unicode,
+                            text = ideogram.unicode.toString(),
                             fontSize = 20.sp
                         )
                         Text(
-                            text = ideogram.meanings,
+                            text = ideogram.meanings.toString(),
                             fontSize = 12.sp
                         )
                     }
@@ -122,7 +121,6 @@ fun IdeogramScreen(
 fun SortOption(
     sortType: SortType,
     selected: MutableState<Boolean>,
-    state: IdeogramState,
     onEvent: (IdeogramEvent) -> Unit
 ) {
     Row(
@@ -146,5 +144,5 @@ fun SortOption(
 @Preview(showBackground = true)
 @Composable
 fun IdeogramScreenPreview() {
-    IdeogramScreen(rememberNavController(), IdeogramState(), { })
+    IdeogramScreen(rememberNavController(), IdeogramState()) { }
 }
