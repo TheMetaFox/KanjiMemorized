@@ -3,6 +3,7 @@ package com.example.kanjimemorized.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +12,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,7 +53,7 @@ fun AddIdeogramDialog(
                 TextField(
                     value = state.meanings,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetMeanings(it.split(",")))
+                        onEvent(IdeogramEvent.SetMeanings(it))
                     },
                     placeholder = {
                         Text(text = "Meanings")
@@ -60,11 +62,12 @@ fun AddIdeogramDialog(
                 TextField(
                     value = state.strokes,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetStrokes(Integer.parseInt(it)))
+                        onEvent(IdeogramEvent.SetStrokes(it))
                     },
                     placeholder = {
                         Text(text = "Strokes")
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
             Button(

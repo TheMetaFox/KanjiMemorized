@@ -58,7 +58,7 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
                 val ideogram = Ideogram(
                     unicode = unicode,
                     meanings = meanings,
-                    strokes = Integer.parseInt(strokes),
+                    strokes = strokes,
                     decompositions = "",
                     retention = 0f,
                     coercivity = 0f
