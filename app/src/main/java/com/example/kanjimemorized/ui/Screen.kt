@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.ui
 
 sealed class Screen(val route: String) {
     object Home: Screen(route = "home_screen")

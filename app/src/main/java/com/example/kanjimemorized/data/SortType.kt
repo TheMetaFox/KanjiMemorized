@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.data
 
 enum class SortType {
     UNICODE,

@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,5 +12,4 @@ data class Ideogram(
     var decompositions: String?,
     val retention: Float,
     val coercivity: Float,
-
 )

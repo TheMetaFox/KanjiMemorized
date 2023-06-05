@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,20 +29,22 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
             ideograms = ideograms,
             sortType = sortType
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IdeogramState())
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IdeogramState())
 
     fun onEvent(event: IdeogramEvent) {
         when(event) {
-
             is IdeogramEvent.DeleteIdeogram -> {
                 viewModelScope.launch {
                     dao.deleteIdeogram(event.ideogram)
                 }
             }
             IdeogramEvent.HideDialog -> {
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     isAddingIdeogram = false
-                ) }
+                    )
+                }
             }
             IdeogramEvent.SaveIdeogram -> {
                 val unicode = state.value.unicode
@@ -64,32 +66,42 @@ class IdeogramViewModel(private val dao: IdeogramDao): ViewModel() {
                 viewModelScope.launch {
                     dao.insertIdeogram(ideogram)
                 }
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     isAddingIdeogram = false,
                     unicode = "",
                     meanings = "",
                     strokes = ""
-                ) }
+                    )
+                }
             }
             is IdeogramEvent.SetUnicode -> {
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     unicode = event.unicode.toString()
-                ) }
+                    )
+                }
             }
             is IdeogramEvent.SetMeanings -> {
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     meanings = event.meanings.toString()
-                ) }
+                    )
+                }
             }
             is IdeogramEvent.SetStrokes -> {
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     strokes = event.strokes.toString()
-                ) }
+                    )
+                }
             }
             IdeogramEvent.ShowDialog -> {
-                _state.update { it.copy(
+                _state.update {
+                    it.copy(
                     isAddingIdeogram = true
-                ) }
+                    )
+                }
             }
             is IdeogramEvent.SortIdeograms -> {
                 _sortType.value = event.sortType

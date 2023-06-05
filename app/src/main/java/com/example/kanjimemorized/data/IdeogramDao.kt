@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.data
 
 import androidx.room.Dao
 import androidx.room.Delete

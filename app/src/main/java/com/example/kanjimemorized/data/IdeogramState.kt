@@ -1,4 +1,4 @@
-package com.example.kanjimemorized
+package com.example.kanjimemorized.data
 
 data class IdeogramState(
     val ideograms: List<Ideogram> = emptyList(),

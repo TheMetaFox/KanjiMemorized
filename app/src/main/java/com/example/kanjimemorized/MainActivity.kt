@@ -25,6 +25,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.kanjimemorized.data.IdeogramDatabase
+import com.example.kanjimemorized.data.IdeogramEvent
+import com.example.kanjimemorized.data.IdeogramViewModel
+import com.example.kanjimemorized.ui.SetupNavGraph
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 
 class MainActivity : ComponentActivity() {
