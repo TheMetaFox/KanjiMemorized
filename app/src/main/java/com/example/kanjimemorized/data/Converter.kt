@@ -15,7 +15,7 @@ class Converter {
 
     @TypeConverter
     fun stringListToString(meanings: List<String>): String {
-        return meanings.toString()
+        return meanings.toString().replace("[", "").replace("]","")
     }
     @TypeConverter
     fun stringToStringList(meanings: String): List<String> {

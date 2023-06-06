@@ -2,14 +2,14 @@ package com.example.kanjimemorized.data
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IdeogramDao {
 
-    @Insert
+    @Upsert
     suspend fun insertIdeogram(ideogram: Ideogram)
 
     @Delete

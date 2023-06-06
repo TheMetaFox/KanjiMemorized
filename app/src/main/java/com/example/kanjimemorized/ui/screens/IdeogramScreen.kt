@@ -96,7 +96,7 @@ fun IdeogramScreen(
                             fontSize = 20.sp
                         )
                         Text(
-                            text = ideogram.meanings.toString(),
+                            text = ideogram.meanings.toString().replace("[", "").replace("]",""),
                             fontSize = 12.sp
                         )
                     }
