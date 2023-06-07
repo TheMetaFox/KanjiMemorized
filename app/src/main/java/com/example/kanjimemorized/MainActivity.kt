@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -64,7 +65,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding()
                         .background(MaterialTheme.colorScheme.background),
                     snackbarHost = {
                         SnackbarHost(
@@ -84,8 +84,11 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     content = { contentPadding ->
-                        SetupNavGraph(navController = navController,
-                            contentPadding = contentPadding,
+                        SetupNavGraph(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding),
+                            navController = navController,
                             snackbarHostState =  snackbarHostState,
                             coroutineScope = coroutineScope,
                             state = state,

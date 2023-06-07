@@ -1,5 +1,7 @@
 package com.example.kanjimemorized.ui.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +25,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +39,7 @@ import com.example.kanjimemorized.data.SortType
 
 @Composable
 fun IdeogramScreen(
+    modifier: Modifier,
     navController: NavHostController,
     state: IdeogramState,
     onEvent: (IdeogramEvent) -> Unit
@@ -43,8 +48,7 @@ fun IdeogramScreen(
         AddIdeogramDialog(state = state, onEvent = onEvent)
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier.padding(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         ) {
         Box(
@@ -86,6 +90,7 @@ fun IdeogramScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     Column(
                         modifier = Modifier
@@ -113,7 +118,6 @@ fun IdeogramScreen(
                 }
             }
         }
-
     }
 }
 
@@ -125,6 +129,7 @@ fun SortOption(
 ) {
     Row(
         modifier = Modifier
+            .fillMaxSize()
             .clickable {
                 onEvent(IdeogramEvent.SortIdeograms(sortType))
             },
@@ -132,9 +137,10 @@ fun SortOption(
         horizontalArrangement = Arrangement.Center
     ) {
         RadioButton(
-            selected = selected.value,
+                    selected = selected.value,
             onClick = { onEvent(IdeogramEvent.SortIdeograms(sortType)) }
         )
+
         Text(
             text = sortType.name
         )
@@ -144,5 +150,5 @@ fun SortOption(
 @Preview(showBackground = true)
 @Composable
 fun IdeogramScreenPreview() {
-    IdeogramScreen(rememberNavController(), IdeogramState()) { }
+    IdeogramScreen(Modifier, rememberNavController(), IdeogramState()) { }
 }

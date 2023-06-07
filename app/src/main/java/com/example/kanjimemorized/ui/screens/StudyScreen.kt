@@ -43,20 +43,19 @@ import kotlin.random.Random
 
 @Composable
 fun StudyScreen(
+    modifier: Modifier,
     navController: NavHostController,
-    contentPadding: PaddingValues,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope
 ) {
     Column(
-        modifier = Modifier
-            .padding(contentPadding),
+        modifier = modifier.padding(5.dp),
         horizontalAlignment = CenterHorizontally
     ) {
         Box(
             modifier = Modifier
                 .clickable {
-                           navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Home.route)
                 },
         ) {
             Text(
@@ -229,5 +228,5 @@ fun AnswerChoice(
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(rememberNavController(), PaddingValues(0.dp), SnackbarHostState(), rememberCoroutineScope())
+    StudyScreen(Modifier, rememberNavController(), SnackbarHostState(), rememberCoroutineScope())
 }

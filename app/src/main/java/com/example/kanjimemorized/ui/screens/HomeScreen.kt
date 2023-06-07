@@ -38,10 +38,11 @@ import com.example.kanjimemorized.ui.Screen
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier,
     navController: NavHostController
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.padding(bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -152,5 +153,5 @@ fun ImageCard(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(rememberNavController())
+    HomeScreen(Modifier, rememberNavController())
 }
