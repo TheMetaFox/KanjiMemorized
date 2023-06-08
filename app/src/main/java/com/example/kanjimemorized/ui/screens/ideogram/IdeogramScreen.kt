@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.ideogram
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +14,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -43,73 +48,93 @@ fun IdeogramScreen(
     if (state.isAddingIdeogram) {
         AddIdeogramDialog(state = state, onEvent = onEvent)
     }
-    Column(
-        modifier = modifier.padding(5.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    onEvent(IdeogramEvent.ShowDialog)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Ideogram"
+                )
+            }
+        },
+    ) { contentPadding ->
+        Column(
+            modifier = modifier
+                .padding(contentPadding)
+                .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-        Box(
-            modifier = Modifier
-                .clickable {
-                    navController.navigate(Screen.Home.route)
-                },
-        ) {
-            Text(
-                text = "Ideogram",
+            Box(
                 modifier = Modifier
-                    .align(alignment = Alignment.Center),
-                fontSize = 50.sp
-            )
-        }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            item {
-                Row(
+                    .clickable {
+                        navController.navigate(Screen.Home.route)
+                    },
+            ) {
+                Text(
+                    text = "Ideogram",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    SortType.values().forEach { sortType ->
-                        SortOption(
-                            sortType = sortType,
-                            selected = mutableStateOf(state.sortType == sortType),
-                            onEvent = onEvent
-                        )
+                        .align(alignment = Alignment.Center),
+                    fontSize = 50.sp
+                )
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        SortType.values().forEach { sortType ->
+                            SortOption(
+                                sortType = sortType,
+                                selected = mutableStateOf(state.sortType == sortType),
+                                onEvent = onEvent
+                            )
+                        }
                     }
                 }
-            }
-            items(state.ideograms) { ideogram ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Column(
+                items(state.ideograms) { ideogram ->
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     ) {
-                        Text(
-                            text = ideogram.unicode.toString(),
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            text = ideogram.meanings.toString().replace("[", "").replace("]",""),
-                            fontSize = 12.sp
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            onEvent(IdeogramEvent.DeleteIdeogram(ideogram))
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = ideogram.unicode.toString(),
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                text = ideogram.meanings.toString().replace("[", "").replace("]",""),
+                                fontSize = 12.sp
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete Ideogram"
-                        )
+                        IconButton(
+                            onClick = {
+                                onEvent(IdeogramEvent.DeleteIdeogram(ideogram))
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Ideogram"
+                            )
+                        }
                     }
                 }
             }

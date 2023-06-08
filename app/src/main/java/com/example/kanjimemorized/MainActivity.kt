@@ -5,14 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,39 +53,15 @@ class MainActivity : ComponentActivity() {
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
                 val state by ideogramViewModel.state.collectAsState()
                 val onEvent: (IdeogramEvent) -> Unit = ideogramViewModel::onEvent
-                Scaffold(
+                SetupNavGraph(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background),
-                    snackbarHost = {
-                        SnackbarHost(
-                            hostState = snackbarHostState
-                        )
-                    },
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = {
-                                onEvent(IdeogramEvent.ShowDialog)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add Ideogram"
-                            )
-                        }
-                    },
-                    content = { contentPadding ->
-                        SetupNavGraph(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(contentPadding),
-                            navController = navController,
-                            snackbarHostState =  snackbarHostState,
-                            coroutineScope = coroutineScope,
-                            state = state,
-                            onEvent = onEvent
-                        )
-                    }
+                    navController = navController,
+                    snackbarHostState =  snackbarHostState,
+                    coroutineScope = coroutineScope,
+                    state = state,
+                    onEvent = onEvent
                 )
             }
         }

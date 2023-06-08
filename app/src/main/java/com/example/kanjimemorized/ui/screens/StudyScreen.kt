@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -47,22 +50,35 @@ fun StudyScreen(
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope
 ) {
-    Column(
-        modifier = modifier.padding(5.dp),
-        horizontalAlignment = CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .clickable {
-                    navController.navigate(Screen.Home.route)
-                },
-        ) {
-            Text(
-                text = "Study",
-                modifier = Modifier
-                    .align(alignment = Center),
-                fontSize = 50.sp
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
             )
+        }
+    ) { contentPadding ->
+        Column(
+            modifier = modifier
+                .padding(contentPadding)
+                .padding(5.dp),
+            horizontalAlignment = CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.Home.route)
+                    }
+            ) {
+                Text(
+                    text = "Study",
+                    modifier = Modifier
+                        .align(alignment = Center),
+                    fontSize = 50.sp
+                )
+            }
         }
         StudyContent(
             snackbarHostState = snackbarHostState,
@@ -70,6 +86,7 @@ fun StudyScreen(
         )
     }
 }
+
 @Composable
 fun StudyContent(
     snackbarHostState: SnackbarHostState,

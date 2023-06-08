@@ -54,7 +54,8 @@ fun SetupNavGraph(
                     .padding(5.dp),
                 navController = navController,
                 state = state,
-                onEvent = onEvent)
+                onEvent = onEvent
+            )
         }
     }
 }

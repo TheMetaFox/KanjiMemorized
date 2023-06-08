@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -12,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,50 +43,58 @@ fun HomeScreen(
     modifier: Modifier,
     navController: NavHostController
 ) {
-    Column(
-        modifier = modifier.padding(bottom = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        ImageCard(
-            modifier = Modifier
-                .wrapContentSize(),
-            painter = painterResource(R.drawable.study_anime),
-            contentDescription = "An adolescent human female studying in their room.",
-        )
-        Box(
-            modifier = Modifier,
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) { contentPadding ->
+        Column(
+            modifier = modifier
+                .padding(contentPadding)
+                .padding(bottom = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Home",
+            ImageCard(
                 modifier = Modifier
-                    .align(alignment = Center),
-                fontSize = 50.sp
+                    .wrapContentSize(),
+                painter = painterResource(R.drawable.study_anime),
+                contentDescription = "An adolescent human female studying in their room.",
             )
-        }
-        Button(
-            onClick = {
-            navController.navigate(Screen.Study.route)
-            },
-            modifier = Modifier
-        ) {
-            Text(
-                text = "Study",
-                modifier = Modifier.align(alignment = CenterVertically),
-                fontSize = 35.sp
-            )
-        }
-        Button(
-            onClick = {
-                navController.navigate(Screen.Ideogram.route)
-            },
-            modifier = Modifier
-        ) {
-            Text(
-                text = "Ideogram",
-                modifier = Modifier.align(alignment = CenterVertically),
-                fontSize = 35.sp
-            )
+            Box(
+                modifier = Modifier,
+            ) {
+                Text(
+                    text = "Home",
+                    modifier = Modifier
+                        .align(alignment = Center),
+                    fontSize = 50.sp
+                )
+            }
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Study.route)
+                },
+                modifier = Modifier
+            ) {
+                Text(
+                    text = "Study",
+                    modifier = Modifier.align(alignment = CenterVertically),
+                    fontSize = 35.sp
+                )
+            }
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Ideogram.route)
+                },
+                modifier = Modifier
+            ) {
+                Text(
+                    text = "Ideogram",
+                    modifier = Modifier.align(alignment = CenterVertically),
+                    fontSize = 35.sp
+                )
+            }
         }
     }
 }
