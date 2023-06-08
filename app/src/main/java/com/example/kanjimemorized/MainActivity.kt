@@ -34,24 +34,25 @@ import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : ComponentActivity() {
 
-    private val database by lazy(
-        initializer = {
-            Room.databaseBuilder(
-                context = applicationContext,
-                klass = IdeogramDatabase::class.java,
-                name = "Ideogram.db"
-            ).fallbackToDestructiveMigration().build()
-        }
-    )
-    private val ideogramRepository: IdeogramRepository = IdeogramRepository(database.ideogramDao)
-    private val ideogramViewModelFactory: IdeogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
-    private val ideogramViewModel: IdeogramViewModel = ViewModelProvider(
-        owner = this,
-        factory = ideogramViewModelFactory
-    )[IdeogramViewModel::class.java]
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val database by lazy(
+            initializer = {
+                Room.databaseBuilder(
+                    context = applicationContext,
+                    klass = IdeogramDatabase::class.java,
+                    name = "Ideogram.db"
+                ).fallbackToDestructiveMigration().build()
+            }
+        )
+        val ideogramRepository: IdeogramRepository = IdeogramRepository(database.ideogramDao)
+        val ideogramViewModelFactory: IdeogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
+        val ideogramViewModel: IdeogramViewModel = ViewModelProvider(
+            owner = this,
+            factory = ideogramViewModelFactory
+        )[IdeogramViewModel::class.java]
+
         setContent {
             KanjiMemorizedTheme {
                 val navController: NavHostController = rememberNavController()
