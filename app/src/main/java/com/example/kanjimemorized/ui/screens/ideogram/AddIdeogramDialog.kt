@@ -1,5 +1,5 @@
 
-package com.example.kanjimemorized.ui
+package com.example.kanjimemorized.ui.screens.ideogram
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

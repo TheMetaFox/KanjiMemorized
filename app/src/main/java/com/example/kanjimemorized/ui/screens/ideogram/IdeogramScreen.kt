@@ -1,7 +1,5 @@
-package com.example.kanjimemorized.ui.screens
+package com.example.kanjimemorized.ui.screens.ideogram
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +23,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.ui.AddIdeogramDialog
 import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.ui.Screen

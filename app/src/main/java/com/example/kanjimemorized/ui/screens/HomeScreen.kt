@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -47,6 +46,8 @@ fun HomeScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ImageCard(
+            modifier = Modifier
+                .wrapContentSize(),
             painter = painterResource(R.drawable.study_anime),
             contentDescription = "An adolescent human female studying in their room.",
         )
@@ -64,7 +65,8 @@ fun HomeScreen(
             onClick = {
             navController.navigate(Screen.Study.route)
             },
-            modifier = Modifier) {
+            modifier = Modifier
+        ) {
             Text(
                 text = "Study",
                 modifier = Modifier.align(alignment = CenterVertically),
@@ -75,7 +77,8 @@ fun HomeScreen(
             onClick = {
                 navController.navigate(Screen.Ideogram.route)
             },
-            modifier = Modifier) {
+            modifier = Modifier
+        ) {
             Text(
                 text = "Ideogram",
                 modifier = Modifier.align(alignment = CenterVertically),
@@ -87,12 +90,12 @@ fun HomeScreen(
 
 @Composable
 fun ImageCard(
+    modifier: Modifier,
     painter: Painter,
     contentDescription: String,
 ) {
     Card(
-        modifier = Modifier
-            .wrapContentSize(),
+        modifier = modifier,
         shape = RoundedCornerShape(15.dp),
         elevation = CardDefaults.cardElevation(5.dp),
     ) {

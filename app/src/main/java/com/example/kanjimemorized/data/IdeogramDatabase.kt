@@ -6,9 +6,11 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Ideogram::class],
-    version = 2,
+    version = 2
 )
-@TypeConverters(Converter::class)
+@TypeConverters(
+    value = [Converter::class]
+)
 abstract class IdeogramDatabase: RoomDatabase() {
-    abstract val dao: IdeogramDao
+    abstract val ideogramDao: IdeogramDao
 }

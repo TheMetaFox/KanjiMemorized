@@ -5,20 +5,20 @@ import androidx.room.TypeConverter
 class Converter {
 
     @TypeConverter
-    fun charToString(unicode: Char): String {
-        return unicode.toString()
+    fun charToString(unicodeChar: Char): String {
+        return unicodeChar.toString()
     }
     @TypeConverter
-    fun stringToChar(unicode: String): Char {
-        return Integer.parseInt(unicode, 16).toChar()
+    fun stringToChar(unicodeString: String): Char {
+        return Integer.parseInt(unicodeString, 16).toChar()
     }
 
     @TypeConverter
-    fun stringListToString(meanings: List<String>): String {
-        return meanings.toString().replace("[", "").replace("]","")
+    fun stringListToString(meaningsStringList: List<String>): String {
+        return meaningsStringList.toString().replace("[", "").replace("]","")
     }
     @TypeConverter
-    fun stringToStringList(meanings: String): List<String> {
-        return meanings.split(",")
+    fun stringToStringList(meaningsString: String): List<String> {
+        return meaningsString.split(",")
     }
 }

@@ -1,7 +1,5 @@
 package com.example.kanjimemorized.ui
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -13,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.ui.screens.*
+import com.example.kanjimemorized.ui.screens.ideogram.IdeogramScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -41,8 +40,7 @@ fun SetupNavGraph(
         ) {
             StudyScreen(
                 modifier = modifier
-                    .padding(5.dp)
-                ,
+                    .padding(5.dp),
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope
