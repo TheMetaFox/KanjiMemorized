@@ -12,6 +12,7 @@ import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.ui.screens.*
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramScreen
+import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable

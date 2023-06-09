@@ -1,5 +1,12 @@
-package com.example.kanjimemorized.ui.screens
+package com.example.kanjimemorized.ui.screens.study
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.InfiniteTransition
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -170,7 +177,11 @@ fun SingleChoiceQuestion(choiceList: List<String>) {
         horizontalAlignment = Alignment.End
     )
     {
-        var boxColor: Color by remember { mutableStateOf(Color.White) }
+        var boxColorState: Color by remember { mutableStateOf(Color.White) }
+        val boxColorAnimation: Color by animateColorAsState(
+            targetValue = boxColorState,
+            animationSpec = tween(durationMillis = 500)
+        )
         var selectedChoice: String? by remember { mutableStateOf(null) }
         Box(
             modifier = Modifier
@@ -178,14 +189,14 @@ fun SingleChoiceQuestion(choiceList: List<String>) {
                     width = 150.dp,
                     height = 5.dp
                 )
-                .background(boxColor)
+                .background(boxColorAnimation)
                 .align(alignment = CenterHorizontally)
         )
         choiceList.forEach { choice ->
             AnswerChoice(
                 choice = choice,
                 selected = mutableStateOf(choice == selectedChoice),
-                updateBoxColor = { boxColor = it },
+                updateBoxColor = { boxColorState = it },
                 updateSelected = { selectedChoice = it }
             )
         }
@@ -199,8 +210,16 @@ fun AnswerChoice(
     updateBoxColor: (Color) -> Unit,
     updateSelected: (String) -> Unit
 ) {
+    val infiniteTransition: InfiniteTransition = rememberInfiniteTransition()
     val containerColor: Color = if (selected.value) {
-        Color.Gray
+        infiniteTransition.animateColor(
+            initialValue = Color.DarkGray,
+            targetValue = Color.Gray,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 2000),
+                repeatMode = RepeatMode.Reverse
+            )
+        ).value
     } else {
         Color.DarkGray
     }

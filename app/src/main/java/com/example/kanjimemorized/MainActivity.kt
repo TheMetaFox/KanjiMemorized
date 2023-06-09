@@ -39,8 +39,8 @@ class MainActivity : ComponentActivity() {
                 ).fallbackToDestructiveMigration().build()
             }
         )
-        val ideogramRepository: IdeogramRepository = IdeogramRepository(database.ideogramDao)
-        val ideogramViewModelFactory: IdeogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
+        val ideogramRepository = IdeogramRepository(database.ideogramDao)
+        val ideogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
         val ideogramViewModel: IdeogramViewModel = ViewModelProvider(
             owner = this,
             factory = ideogramViewModelFactory
