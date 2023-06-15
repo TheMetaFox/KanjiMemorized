@@ -37,6 +37,7 @@ import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.data.SortType
+import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
 fun IdeogramScreen(
@@ -51,7 +52,8 @@ fun IdeogramScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(MaterialTheme.spacing.small),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -67,8 +69,7 @@ fun IdeogramScreen(
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .padding(contentPadding)
-                .padding(5.dp),
+                .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(

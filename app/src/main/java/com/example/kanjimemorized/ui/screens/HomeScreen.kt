@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.R
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
 fun HomeScreen(
@@ -51,7 +52,7 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .padding(contentPadding)
-                .padding(bottom = 8.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -61,39 +62,47 @@ fun HomeScreen(
                 painter = painterResource(R.drawable.study_anime),
                 contentDescription = "An adolescent human female studying in their room.",
             )
-            Box(
-                modifier = Modifier,
+            Column(
+                modifier = modifier
+                    .padding(MaterialTheme.spacing.small)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(
-                    text = "Home",
+                Box(
+                    modifier = Modifier,
+                ) {
+                    Text(
+                        text = "Home",
+                        modifier = Modifier
+                            .align(alignment = Center),
+                        fontSize = 50.sp,
+                    )
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(Screen.Study.route)
+                    },
                     modifier = Modifier
-                        .align(alignment = Center),
-                    fontSize = 50.sp
-                )
-            }
-            Button(
-                onClick = {
-                    navController.navigate(Screen.Study.route)
-                },
-                modifier = Modifier
-            ) {
-                Text(
-                    text = "Study",
-                    modifier = Modifier.align(alignment = CenterVertically),
-                    fontSize = 35.sp
-                )
-            }
-            Button(
-                onClick = {
-                    navController.navigate(Screen.Ideogram.route)
-                },
-                modifier = Modifier
-            ) {
-                Text(
-                    text = "Ideogram",
-                    modifier = Modifier.align(alignment = CenterVertically),
-                    fontSize = 35.sp
-                )
+                ) {
+                    Text(
+                        text = "Study",
+                        modifier = Modifier.align(alignment = CenterVertically),
+                        fontSize = 35.sp
+                    )
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(Screen.Ideogram.route)
+                    },
+                    modifier = Modifier
+                ) {
+                    Text(
+                        text = "Ideogram",
+                        modifier = Modifier.align(alignment = CenterVertically),
+                        fontSize = 35.sp
+                    )
+                }
             }
         }
     }
@@ -107,7 +116,7 @@ fun ImageCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(15.dp),
+        shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(5.dp),
     ) {
         Box(
@@ -129,7 +138,8 @@ fun ImageCard(
                                 Color.Transparent,
                                 Color.Black
                             ),
-                            startY = 200f
+                            startY = 0f,
+                            endY = 560f
                         )
                     )
             )

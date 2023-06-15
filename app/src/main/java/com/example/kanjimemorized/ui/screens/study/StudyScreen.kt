@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.theme.spacing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -60,7 +61,8 @@ fun StudyScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(MaterialTheme.spacing.small),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState
@@ -69,6 +71,7 @@ fun StudyScreen(
     ) { contentPadding ->
         Column(
             modifier = modifier
+                .fillMaxSize()
                 .padding(contentPadding)
                 .padding(5.dp),
             horizontalAlignment = CenterHorizontally
@@ -86,11 +89,11 @@ fun StudyScreen(
                     fontSize = 50.sp
                 )
             }
+            StudyContent(
+                snackbarHostState = snackbarHostState,
+                coroutineScope = coroutineScope
+            )
         }
-        StudyContent(
-            snackbarHostState = snackbarHostState,
-            coroutineScope = coroutineScope
-        )
     }
 }
 
