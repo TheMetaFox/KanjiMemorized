@@ -77,7 +77,10 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 _state.update(
                     function = {
                         it.copy(
-                            isAddingIdeogram = false
+                            isAddingIdeogram = false,
+                            unicode = "",
+                            meanings = "",
+                            strokes = ""
                         )
                     }
                 )
