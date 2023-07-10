@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.data.IdeogramEvent
-import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.data.SortType
 import com.example.kanjimemorized.ui.theme.spacing

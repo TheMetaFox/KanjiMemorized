@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -117,7 +116,6 @@ fun ImageCard(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(0.dp),
-        elevation = CardDefaults.cardElevation(5.dp),
     ) {
         Box(
             modifier = Modifier
@@ -126,7 +124,8 @@ fun ImageCard(
             Image(
                 painter = painter,
                 contentDescription = contentDescription,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
             )
             Box(
@@ -136,7 +135,7 @@ fun ImageCard(
                         Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black
+                                MaterialTheme.colorScheme.background
                             ),
                             startY = 0f,
                             endY = 560f
@@ -165,6 +164,7 @@ fun ImageCard(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(12.dp),
+                color = MaterialTheme.colorScheme.onBackground,
                 style = TextStyle(
                     color = Color.White,
                     fontSize = 30.sp

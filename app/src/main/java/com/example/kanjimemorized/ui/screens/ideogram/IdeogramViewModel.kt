@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramRepository
-import com.example.kanjimemorized.data.IdeogramState
 import com.example.kanjimemorized.data.SortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -15,12 +15,15 @@ interface IdeogramDao {
     @Delete
     suspend fun deleteIdeogram(ideogram: Ideogram)
 
+    @Query("SELECT * FROM ideogram")
+    suspend fun getIdeogramList(): List<Ideogram>
+
     @Query("SELECT * FROM ideogram ORDER BY unicode ASC")
-    fun getIdeogramOrderedByUnicode(): Flow<List<Ideogram>>
+    fun getIdeogramListOrderedByUnicode(): Flow<List<Ideogram>>
 
     @Query("SELECT * FROM ideogram ORDER BY strokes ASC")
-    fun getIdeogramOrderedByStrokes(): Flow<List<Ideogram>>
+    fun getIdeogramListOrderedByStrokes(): Flow<List<Ideogram>>
 
     @Query("SELECT * FROM ideogram ORDER BY retention ASC")
-    fun getIdeogramOrderedByRetention(): Flow<List<Ideogram>>
+    fun getIdeogramListOrderedByRetention(): Flow<List<Ideogram>>
 }

@@ -1,4 +1,7 @@
-package com.example.kanjimemorized.data
+package com.example.kanjimemorized.ui.screens.ideogram
+
+import com.example.kanjimemorized.data.Ideogram
+import com.example.kanjimemorized.data.SortType
 
 data class IdeogramState(
     val ideograms: List<Ideogram> = emptyList(),

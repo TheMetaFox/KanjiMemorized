@@ -11,13 +11,16 @@ class IdeogramRepository(private val ideogramDao: IdeogramDao) {
         ideogramDao.deleteIdeogram(
             ideogram = ideogram)
     }
+    suspend fun getRandomIdeogram(): Ideogram {
+        return ideogramDao.getIdeogramList().random()
+    }
     fun getIdeogramListOrderedByUnicode(): Flow<List<Ideogram>> {
-        return ideogramDao.getIdeogramOrderedByUnicode()
+        return ideogramDao.getIdeogramListOrderedByUnicode()
     }
     fun getIdeogramListOrderedByStrokes(): Flow<List<Ideogram>> {
-        return ideogramDao.getIdeogramOrderedByStrokes()
+        return ideogramDao.getIdeogramListOrderedByStrokes()
     }
     fun getIdeogramListOrderedByRetention(): Flow<List<Ideogram>> {
-        return ideogramDao.getIdeogramOrderedByRetention()
+        return ideogramDao.getIdeogramListOrderedByRetention()
     }
 }

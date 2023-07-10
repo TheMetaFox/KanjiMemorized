@@ -9,10 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.kanjimemorized.data.IdeogramEvent
-import com.example.kanjimemorized.data.IdeogramState
+import com.example.kanjimemorized.ui.screens.ideogram.IdeogramState
 import com.example.kanjimemorized.ui.screens.*
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramScreen
+import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
 import com.example.kanjimemorized.ui.screens.study.StudyScreen
+import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -42,9 +44,25 @@ fun SetupNavGraph(
             StudyScreen(
                 modifier = modifier
                     .padding(5.dp),
+                navController = navController)
+        }
+        composable(
+            route = Screen.StudyPlayground.route
+        ) {
+            StudyPlaygroundScreen(
+                modifier = modifier
+                    .padding(5.dp),
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope
+            )
+        }
+        composable(
+            route = Screen.Flashcard.route
+        ) {
+            FlashcardScreen(
+                modifier = modifier
+                    .padding(5.dp)
             )
         }
         composable(
