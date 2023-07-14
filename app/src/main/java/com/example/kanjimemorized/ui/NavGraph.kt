@@ -8,13 +8,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.kanjimemorized.data.IdeogramEvent
+import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramState
 import com.example.kanjimemorized.ui.screens.*
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramScreen
 import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
 import com.example.kanjimemorized.ui.screens.study.StudyScreen
+import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
+import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -23,8 +25,10 @@ fun SetupNavGraph(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
-    state: IdeogramState,
-    onEvent: (IdeogramEvent) -> Unit
+    ideogramState: IdeogramState,
+    flashcardState: FlashcardState,
+    onIdeogramEvent: (IdeogramEvent) -> Unit,
+    onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -62,7 +66,9 @@ fun SetupNavGraph(
         ) {
             FlashcardScreen(
                 modifier = modifier
-                    .padding(5.dp)
+                    .padding(5.dp),
+                flashcardState = flashcardState,
+                onFlashcardEvent = onFlashcardEvent
             )
         }
         composable(
@@ -72,8 +78,8 @@ fun SetupNavGraph(
                 modifier = modifier
                     .padding(5.dp),
                 navController = navController,
-                state = state,
-                onEvent = onEvent
+                ideogramState = ideogramState,
+                onIdeogramEvent = onIdeogramEvent
             )
         }
     }

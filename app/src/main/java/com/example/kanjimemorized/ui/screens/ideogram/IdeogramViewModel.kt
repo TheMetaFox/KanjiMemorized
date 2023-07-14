@@ -3,7 +3,6 @@ package com.example.kanjimemorized.ui.screens.ideogram
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.Ideogram
-import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramRepository
 import com.example.kanjimemorized.data.SortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,15 +61,17 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
         )
 
     fun onEvent(
-        event: IdeogramEvent
+        ideogramEvent: IdeogramEvent
     ) {
-        when(event) {
+        when(ideogramEvent) {
             is IdeogramEvent.DeleteIdeogram -> {
-                viewModelScope.launch {
-                    ideogramRepository.deleteIdeogram(
-                        ideogram = event.ideogram
-                    )
-                }
+                viewModelScope.launch(
+                    block = {
+                        ideogramRepository.deleteIdeogram(
+                            ideogram = ideogramEvent.ideogram
+                        )
+                    }
+                )
             }
             IdeogramEvent.HideDialog -> {
                 _state.update(
@@ -85,9 +86,9 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 )
             }
             IdeogramEvent.SaveIdeogram -> {
-                val unicode = state.value.unicode
-                val meanings = state.value.meanings
-                val strokes = state.value.strokes
+                val unicode: String = state.value.unicode
+                val meanings: String = state.value.meanings
+                val strokes: String = state.value.strokes
 
                 if (unicode.isBlank() || meanings.isBlank() || strokes.isBlank()) {
                     return
@@ -128,7 +129,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 _state.update(
                     function = {
                         it.copy(
-                            unicode = event.unicode
+                            unicode = ideogramEvent.unicode
                         )
                     }
                 )
@@ -137,7 +138,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 _state.update(
                     function = {
                         it.copy(
-                            meanings = event.meanings
+                            meanings = ideogramEvent.meanings
                         )
                     }
                 )
@@ -146,7 +147,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 _state.update(
                     function = {
                         it.copy(
-                            strokes = event.strokes
+                            strokes = ideogramEvent.strokes
                         )
                     }
                 )
@@ -161,7 +162,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 )
             }
             is IdeogramEvent.SortIdeograms -> {
-                _sortType.value = event.sortType
+                _sortType.value = ideogramEvent.sortType
             }
         }
     }

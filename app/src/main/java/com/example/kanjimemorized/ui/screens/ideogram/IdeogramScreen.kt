@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.data.IdeogramEvent
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.data.SortType
 import com.example.kanjimemorized.ui.theme.spacing
@@ -42,11 +41,11 @@ import com.example.kanjimemorized.ui.theme.spacing
 fun IdeogramScreen(
     modifier: Modifier,
     navController: NavHostController,
-    state: IdeogramState,
-    onEvent: (IdeogramEvent) -> Unit
+    ideogramState: IdeogramState,
+    onIdeogramEvent: (IdeogramEvent) -> Unit
 ) {
-    if (state.isAddingIdeogram) {
-        AddIdeogramDialog(state = state, onEvent = onEvent)
+    if (ideogramState.isAddingIdeogram) {
+        AddIdeogramDialog(state = ideogramState, onEvent = onIdeogramEvent)
     }
     Scaffold(
         modifier = Modifier
@@ -56,7 +55,7 @@ fun IdeogramScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    onEvent(IdeogramEvent.ShowDialog)
+                    onIdeogramEvent(IdeogramEvent.ShowDialog)
                 }
             ) {
                 Icon(
@@ -100,13 +99,13 @@ fun IdeogramScreen(
                         SortType.values().forEach { sortType ->
                             SortOption(
                                 sortType = sortType,
-                                selected = mutableStateOf(state.sortType == sortType),
-                                onEvent = onEvent
+                                selected = mutableStateOf(ideogramState.sortType == sortType),
+                                onIdeogramEvent = onIdeogramEvent
                             )
                         }
                     }
                 }
-                items(state.ideograms) { ideogram ->
+                items(ideogramState.ideograms) { ideogram ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -127,7 +126,7 @@ fun IdeogramScreen(
                         }
                         IconButton(
                             onClick = {
-                                onEvent(IdeogramEvent.DeleteIdeogram(ideogram))
+                                onIdeogramEvent(IdeogramEvent.DeleteIdeogram(ideogram))
                             }
                         ) {
                             Icon(
@@ -146,20 +145,20 @@ fun IdeogramScreen(
 fun SortOption(
     sortType: SortType,
     selected: MutableState<Boolean>,
-    onEvent: (IdeogramEvent) -> Unit
+    onIdeogramEvent: (IdeogramEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                onEvent(IdeogramEvent.SortIdeograms(sortType))
+                onIdeogramEvent(IdeogramEvent.SortIdeograms(sortType))
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         RadioButton(
                     selected = selected.value,
-            onClick = { onEvent(IdeogramEvent.SortIdeograms(sortType)) }
+            onClick = { onIdeogramEvent(IdeogramEvent.SortIdeograms(sortType)) }
         )
 
         Text(

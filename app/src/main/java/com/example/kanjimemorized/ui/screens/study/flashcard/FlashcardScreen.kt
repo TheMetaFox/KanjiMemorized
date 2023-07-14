@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.Center
@@ -26,11 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
 import com.example.kanjimemorized.ui.theme.spacing
-
 @Composable
 fun FlashcardScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    flashcardState: FlashcardState,
+    onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -45,13 +48,12 @@ fun FlashcardScreen(
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            var showMeaning: MutableState<Boolean> = remember { mutableStateOf(false) }
             Card(
                 modifier = Modifier
                     .size(200.dp, 175.dp)
-                    .clickable { showMeaning.value = !showMeaning.value }
+                    .clickable { onFlashcardEvent(FlashcardEvent.FlipFlashcard) }
             ) {
-                if (!showMeaning.value) {
+                if (!flashcardState.isAnswerShowing) {
                     Ideogram(
                         modifier = modifier
                     )
@@ -102,5 +104,5 @@ fun Meaning(
 @Preview
 @Composable
 fun FlashcardScreenPreview() {
-    FlashcardScreen(modifier = Modifier)
+    FlashcardScreen(modifier = Modifier, flashcardState = FlashcardState(), onFlashcardEvent = { })
 }
