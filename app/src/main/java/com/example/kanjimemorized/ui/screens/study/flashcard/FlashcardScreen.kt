@@ -5,10 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +21,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -55,14 +58,26 @@ fun FlashcardScreen(
             ) {
                 if (!flashcardState.isAnswerShowing) {
                     Ideogram(
-                        modifier = modifier
+                        modifier = modifier,
+                        ideogram = flashcardState.ideogram?.unicode.toString()
                     )
                 }
                 else {
                     Meaning(
-                        modifier = modifier
+                        modifier = modifier,
+                        meaning = flashcardState.ideogram?.meanings.toString()
                     )
                 }
+            }
+            Button(
+                onClick = { onFlashcardEvent(FlashcardEvent.GetRandomFlashcard) },
+                modifier = Modifier
+                    .size(175.dp,100.dp),
+            ) {
+                Text(
+                    text = "Next",
+                    fontSize = 36.sp
+                )
             }
         }
     }
@@ -70,30 +85,32 @@ fun FlashcardScreen(
 
 @Composable
 fun Ideogram(
-    modifier: Modifier
+    modifier: Modifier,
+    ideogram: String
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         Text(
-            text = "一",
+            text = ideogram,
             modifier = modifier.align(Center),
-            fontSize = 100.sp,
+            fontSize = 50.sp,
             textAlign = TextAlign.Center
         )
     }
 }
 @Composable
 fun Meaning(
-    modifier: Modifier
+    modifier: Modifier,
+    meaning: String
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         Text(
-            text = "one",
+            text = meaning,
             modifier = modifier.align(Center),
             fontSize = 40.sp,
             textAlign = TextAlign.Center

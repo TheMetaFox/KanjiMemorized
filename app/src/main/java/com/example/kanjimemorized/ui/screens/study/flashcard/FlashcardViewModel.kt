@@ -34,16 +34,14 @@ class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): Vi
                 )
             }
             is FlashcardEvent.GetRandomFlashcard -> {
-                var ideogram: Ideogram? = state.value.ideogram
                 viewModelScope.launch(
                     block = {
-                        ideogram = ideogramRepository.getRandomIdeogram()
-                    }
-                )
-                _state.update(
-                    function = {
-                        it.copy(
-                            ideogram = ideogram
+                        _state.update(
+                            function = {
+                                it.copy(
+                                    ideogram = ideogramRepository.getRandomIdeogram()
+                                )
+                            }
                         )
                     }
                 )
