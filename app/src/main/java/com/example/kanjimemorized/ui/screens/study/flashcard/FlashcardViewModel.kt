@@ -1,11 +1,8 @@
 package com.example.kanjimemorized.ui.screens.study.flashcard
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramRepository
-import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -39,7 +36,8 @@ class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): Vi
                         _state.update(
                             function = {
                                 it.copy(
-                                    ideogram = ideogramRepository.getRandomIdeogram()
+                                    ideogram = ideogramRepository.getRandomIdeogram(),
+                                    isAnswerShowing = false
                                 )
                             }
                         )
