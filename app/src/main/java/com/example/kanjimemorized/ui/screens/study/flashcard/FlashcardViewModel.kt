@@ -35,8 +35,12 @@ class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): Vi
                     block = {
                         _state.update(
                             function = {
+                                var i = ideogramRepository.getRandomIdeogram()
+                                while (state.value.ideogram == i) {
+                                    i = ideogramRepository.getRandomIdeogram()
+                                }
                                 it.copy(
-                                    ideogram = ideogramRepository.getRandomIdeogram(),
+                                    ideogram = i,
                                     isAnswerShowing = false
                                 )
                             }
