@@ -21,4 +21,19 @@ class Converter {
     fun stringToStringList(meaningsString: String): List<String> {
         return meaningsString.split(",")
     }
+
+    @TypeConverter
+    fun characterListToString(decompositionsCharacterList: List<Char>?): String {
+        if (decompositionsCharacterList == null) {
+            return ""
+        }
+        if (decompositionsCharacterList.isEmpty()) {
+            return ""
+        }
+        return decompositionsCharacterList.toString().replace("[", "").replace("]","")
+    }
+    @TypeConverter
+    fun stringToCharacterList(decompositionsCharacterString: String): List<Char> {
+        return decompositionsCharacterString.toList()
+    }
 }

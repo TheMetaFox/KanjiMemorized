@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramDatabase
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
 import com.example.kanjimemorized.data.IdeogramRepository
@@ -27,6 +28,9 @@ import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : ComponentActivity() {
 
@@ -43,6 +47,10 @@ class MainActivity : ComponentActivity() {
             }
         )
         val ideogramRepository = IdeogramRepository(database.ideogramDao)
+
+        addIdeogram(ideogramRepository)
+
+
         val ideogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
         val ideogramViewModel: IdeogramViewModel = ViewModelProvider(
             owner = this,
@@ -78,5 +86,17 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+}
+
+fun addIdeogram(ideogramRepository: IdeogramRepository) {
+    CoroutineScope(Dispatchers.IO).launch() {
+        ideogramRepository.insertIdeogram(
+        Ideogram(
+            unicode = Integer.parseInt("2F03", 16).toChar(),
+            meanings = listOf("slash"),
+            strokes = 1
+        )
+    )
     }
 }

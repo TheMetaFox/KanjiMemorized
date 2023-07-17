@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramRepository
-import com.example.kanjimemorized.data.SortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -102,8 +101,8 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 val ideogram = Ideogram(
                     unicode = Integer.parseInt(unicode, 16).toChar(),
                     meanings = meanings.split(","),
-                    strokes = strokes,
-                    decompositions = "",
+                    strokes = Integer.parseInt(strokes),
+                    decompositions = null,
                     retention = 0f,
                     coercivity = 0f
                 )

@@ -6,10 +6,14 @@ import androidx.room.PrimaryKey
 @Entity
 data class Ideogram(
     @PrimaryKey(autoGenerate = false)
-    val unicode: Char,
-    val meanings: List<String>,
-    val strokes: String,
-    val decompositions: String?,
-    val retention: Float,
-    val coercivity: Float,
-)
+    val unicode: Char, // unicode of the ideogram character
+    val meanings: List<String>, // a few of it's most relevant meanings
+    val strokes: Int, // used as an indicator of ideogram complexity
+    val decompositions: List<Char>?, // ideograms that exist within other ideograms
+    val retention: Float, // the probability of remembering an idea at a specific point in time
+    val coercivity: Float, // the degree to which a memory is retained (the forgetting curve)
+) {
+    constructor(unicode: Char, meanings: List<String>, strokes: Int) : this(
+        unicode, meanings, strokes, decompositions = null, retention = 0f, coercivity = 0f
+    )
+}
