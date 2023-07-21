@@ -65,7 +65,7 @@ fun FlashcardScreen(
                 else {
                     Meaning(
                         modifier = modifier,
-                        meaning = flashcardState.ideogram?.meanings.toString()
+                        meaning = flashcardState.ideogram?.meanings.toString().replace("[", "").replace("]","")
                     )
                 }
             }

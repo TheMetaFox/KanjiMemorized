@@ -16,6 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.kanjimemorized.DatabaseModule.provideDao
+import com.example.kanjimemorized.DatabaseModule.provideDatabase
+import com.example.kanjimemorized.DatabaseModule.provideIdeogramData
+import com.example.kanjimemorized.DatabaseModule.provideRepository
 import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramDatabase
 import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
@@ -30,26 +34,16 @@ import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database by lazy(
-            initializer = {
-                Room.databaseBuilder(
-                    context = applicationContext,
-                    klass = IdeogramDatabase::class.java,
-                    name = "Ideogram.db"
-                ).fallbackToDestructiveMigration().build()
-            }
-        )
-        val ideogramRepository = IdeogramRepository(database.ideogramDao)
 
-        addIdeogram(ideogramRepository)
+        val ideogramRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
 
+        provideIdeogramData(ideogramRepository)
 
         val ideogramViewModelFactory = IdeogramViewModelFactory(ideogramRepository)
         val ideogramViewModel: IdeogramViewModel = ViewModelProvider(
@@ -86,17 +80,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-}
-
-fun addIdeogram(ideogramRepository: IdeogramRepository) {
-    CoroutineScope(Dispatchers.IO).launch() {
-        ideogramRepository.insertIdeogram(
-        Ideogram(
-            unicode = Integer.parseInt("2F03", 16).toChar(),
-            meanings = listOf("slash"),
-            strokes = 1
-        )
-    )
     }
 }
