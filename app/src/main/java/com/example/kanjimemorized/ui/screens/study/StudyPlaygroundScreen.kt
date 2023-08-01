@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -158,6 +160,7 @@ fun GreetingAndAnswerChoice(
         SingleChoiceQuestion(choices)
     }
 }
+
 @Composable
 fun Greeting() {
     Box(modifier = Modifier
@@ -183,7 +186,8 @@ fun SingleChoiceQuestion(choiceList: List<String>) {
         var boxColorState: Color by remember { mutableStateOf(Color.White) }
         val boxColorAnimation: Color by animateColorAsState(
             targetValue = boxColorState,
-            animationSpec = tween(durationMillis = 500)
+            animationSpec = tween(durationMillis = 500),
+            label = ""
         )
         var selectedChoice: String? by remember { mutableStateOf(null) }
         Box(
@@ -213,7 +217,7 @@ fun AnswerChoice(
     updateBoxColor: (Color) -> Unit,
     updateSelected: (String) -> Unit
 ) {
-    val infiniteTransition: InfiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition: InfiniteTransition = rememberInfiniteTransition(label = "")
     val containerColor: Color = if (selected.value) {
         infiniteTransition.animateColor(
             initialValue = Color.DarkGray,
@@ -221,7 +225,7 @@ fun AnswerChoice(
             animationSpec = infiniteRepeatable(
                 animation = tween(durationMillis = 2000),
                 repeatMode = RepeatMode.Reverse
-            )
+            ), label = ""
         ).value
     } else {
         Color.DarkGray
