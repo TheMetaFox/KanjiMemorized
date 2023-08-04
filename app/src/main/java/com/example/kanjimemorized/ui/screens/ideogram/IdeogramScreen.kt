@@ -67,7 +67,11 @@ fun IdeogramScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(MaterialTheme.spacing.small),
+            .padding(
+                start = MaterialTheme.spacing.small,
+                top = MaterialTheme.spacing.small,
+                end = MaterialTheme.spacing.small
+            ),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
