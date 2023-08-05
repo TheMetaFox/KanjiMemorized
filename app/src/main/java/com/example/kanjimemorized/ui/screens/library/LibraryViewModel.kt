@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.ideogram
+package com.example.kanjimemorized.ui.screens.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): ViewModel() {
+class LibraryViewModel(private val ideogramRepository: IdeogramRepository): ViewModel() {
     private val _sortType: MutableStateFlow<SortType> = MutableStateFlow(
         value = SortType.UNICODE
     )
@@ -38,10 +38,10 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                 .WhileSubscribed(),
             initialValue = emptyList()
         )
-    private val _state: MutableStateFlow<IdeogramState> = MutableStateFlow(
-        value = IdeogramState()
+    private val _state: MutableStateFlow<LibraryState> = MutableStateFlow(
+        value = LibraryState()
     )
-    val state: StateFlow<IdeogramState> = combine(
+    val state: StateFlow<LibraryState> = combine(
         flow = _state,
         flow2 = _sortType,
         flow3 = _ideograms,
@@ -56,23 +56,23 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
             scope = viewModelScope,
             started = SharingStarted
                 .WhileSubscribed(5000),
-            initialValue = IdeogramState()
+            initialValue = LibraryState()
         )
 
     fun onEvent(
-        ideogramEvent: IdeogramEvent
+        libraryEvent: LibraryEvent
     ) {
-        when(ideogramEvent) {
-            is IdeogramEvent.DeleteIdeogram -> {
+        when(libraryEvent) {
+            is LibraryEvent.DeleteIdeogram -> {
                 viewModelScope.launch(
                     block = {
                         ideogramRepository.deleteIdeogram(
-                            ideogram = ideogramEvent.ideogram
+                            ideogram = libraryEvent.ideogram
                         )
                     }
                 )
             }
-            IdeogramEvent.HideDialog -> {
+            LibraryEvent.HideDialog -> {
                 _state.update(
                     function = {
                         it.copy(
@@ -84,7 +84,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                     }
                 )
             }
-            IdeogramEvent.SaveIdeogram -> {
+            LibraryEvent.SaveIdeogram -> {
                 val unicode: String = state.value.unicode
                 val meanings: String = state.value.meanings
                 val strokes: String = state.value.strokes
@@ -124,34 +124,34 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                     }
                 )
             }
-            is IdeogramEvent.SetUnicode -> {
+            is LibraryEvent.SetUnicode -> {
                 _state.update(
                     function = {
                         it.copy(
-                            unicode = ideogramEvent.unicode
+                            unicode = libraryEvent.unicode
                         )
                     }
                 )
             }
-            is IdeogramEvent.SetMeanings -> {
+            is LibraryEvent.SetMeanings -> {
                 _state.update(
                     function = {
                         it.copy(
-                            meanings = ideogramEvent.meanings
+                            meanings = libraryEvent.meanings
                         )
                     }
                 )
             }
-            is IdeogramEvent.SetStrokes -> {
+            is LibraryEvent.SetStrokes -> {
                 _state.update(
                     function = {
                         it.copy(
-                            strokes = ideogramEvent.strokes
+                            strokes = libraryEvent.strokes
                         )
                     }
                 )
             }
-            IdeogramEvent.ShowDialog -> {
+            LibraryEvent.ShowDialog -> {
                 _state.update(
                     function = {
                         it.copy(
@@ -160,8 +160,8 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                     }
                 )
             }
-            is IdeogramEvent.SortIdeograms -> {
-                _sortType.value = ideogramEvent.sortType
+            is LibraryEvent.SortIdeograms -> {
+                _sortType.value = libraryEvent.sortType
             }
         }
     }

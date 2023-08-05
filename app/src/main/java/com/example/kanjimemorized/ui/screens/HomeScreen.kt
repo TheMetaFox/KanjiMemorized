@@ -92,12 +92,12 @@ fun HomeScreen(
                 }
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Ideogram.route)
+                        navController.navigate(Screen.Library.route)
                     },
                     modifier = Modifier
                 ) {
                     Text(
-                        text = "Ideogram",
+                        text = "Library",
                         modifier = Modifier.align(alignment = CenterVertically),
                         fontSize = 35.sp
                     )

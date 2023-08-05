@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.ideogram
+package com.example.kanjimemorized.ui.screens.library
 
 enum class SortType {
     UNICODE,

@@ -8,10 +8,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.kanjimemorized.ui.screens.ideogram.IdeogramEvent
-import com.example.kanjimemorized.ui.screens.ideogram.IdeogramState
+import com.example.kanjimemorized.ui.screens.library.LibraryEvent
+import com.example.kanjimemorized.ui.screens.library.LibraryState
 import com.example.kanjimemorized.ui.screens.*
-import com.example.kanjimemorized.ui.screens.ideogram.IdeogramScreen
+import com.example.kanjimemorized.ui.screens.library.LibraryScreen
+import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramEvent
+import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramScreen
+import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramState
 import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
 import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
@@ -25,10 +28,12 @@ fun SetupNavGraph(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
+    libraryState: LibraryState,
     ideogramState: IdeogramState,
     flashcardState: FlashcardState,
+    onLibraryEvent: (LibraryEvent) -> Unit,
     onIdeogramEvent: (IdeogramEvent) -> Unit,
-    onFlashcardEvent: (FlashcardEvent) -> Unit
+    onFlashcardEvent: (FlashcardEvent) -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -72,11 +77,22 @@ fun SetupNavGraph(
             )
         }
         composable(
+            route = Screen.Library.route
+        ) {
+            LibraryScreen(
+                modifier = modifier
+                    .padding(5.dp),
+                navController = navController,
+                libraryState = libraryState,
+                onLibraryEvent = onLibraryEvent,
+                onIdeogramEvent = onIdeogramEvent
+            )
+        }
+        composable(
             route = Screen.Ideogram.route
         ) {
             IdeogramScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 ideogramState = ideogramState,
                 onIdeogramEvent = onIdeogramEvent

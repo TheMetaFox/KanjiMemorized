@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.ideogram
+package com.example.kanjimemorized.ui.screens.library
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -38,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -50,18 +48,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramEvent
+import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramState
 import com.example.kanjimemorized.ui.theme.spacing
-import kotlinx.coroutines.delay
 
 @Composable
-fun IdeogramScreen(
+fun LibraryScreen(
     modifier: Modifier,
     navController: NavHostController,
-    ideogramState: IdeogramState,
+    libraryState: LibraryState,
+    onLibraryEvent: (LibraryEvent) -> Unit,
     onIdeogramEvent: (IdeogramEvent) -> Unit
 ) {
-    if (ideogramState.isAddingIdeogram) {
-        AddIdeogramDialog(state = ideogramState, onEvent = onIdeogramEvent)
+    if (libraryState.isAddingIdeogram) {
+        AddIdeogramDialog(state = libraryState, onEvent = onLibraryEvent)
     }
     Scaffold(
         modifier = Modifier
@@ -75,7 +75,7 @@ fun IdeogramScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    onIdeogramEvent(IdeogramEvent.ShowDialog)
+                    onLibraryEvent(LibraryEvent.ShowDialog)
                 }
             ) {
                 Icon(
@@ -97,7 +97,7 @@ fun IdeogramScreen(
                     },
             ) {
                 Text(
-                    text = "Ideogram",
+                    text = "Library",
                     modifier = Modifier
                         .align(alignment = Alignment.Center),
                     fontSize = 50.sp
@@ -119,17 +119,21 @@ fun IdeogramScreen(
                         SortType.values().forEach { sortType ->
                             SortOption(
                                 sortType = sortType,
-                                selected = mutableStateOf(ideogramState.sortType == sortType),
-                                onIdeogramEvent = onIdeogramEvent
+                                selected = mutableStateOf(libraryState.sortType == sortType),
+                                onIdeogramEvent = onLibraryEvent
                             )
                         }
                     }
                 }
-                items(ideogramState.ideograms) { ideogram ->
+                items(libraryState.ideograms) { ideogram ->
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .clickable {
+                                onIdeogramEvent(IdeogramEvent.DisplayIdeogram(ideogram))
+                                navController.navigate(Screen.Ideogram.route)
+                            },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -156,7 +160,7 @@ fun IdeogramScreen(
                         )
                         IconButton(
                             onClick = {
-                                onIdeogramEvent(IdeogramEvent.DeleteIdeogram(ideogram))
+                                onLibraryEvent(LibraryEvent.DeleteIdeogram(ideogram))
                             },
                             modifier = Modifier
                         ) {
@@ -176,20 +180,20 @@ fun IdeogramScreen(
 fun SortOption(
     sortType: SortType,
     selected: MutableState<Boolean>,
-    onIdeogramEvent: (IdeogramEvent) -> Unit
+    onIdeogramEvent: (LibraryEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                onIdeogramEvent(IdeogramEvent.SortIdeograms(sortType))
+                onIdeogramEvent(LibraryEvent.SortIdeograms(sortType))
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         RadioButton(
                     selected = selected.value,
-            onClick = { onIdeogramEvent(IdeogramEvent.SortIdeograms(sortType)) }
+            onClick = { onIdeogramEvent(LibraryEvent.SortIdeograms(sortType)) }
         )
 
         Text(
@@ -253,6 +257,6 @@ fun CircularProgressBar(
 
 @Preview(showBackground = true)
 @Composable
-fun IdeogramScreenPreview() {
-    IdeogramScreen(Modifier, rememberNavController(), IdeogramState()) { }
+fun LibraryScreenPreview() {
+    LibraryScreen(Modifier, rememberNavController(), LibraryState(), { }, { })
 }

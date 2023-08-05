@@ -1,5 +1,5 @@
 
-package com.example.kanjimemorized.ui.screens.ideogram
+package com.example.kanjimemorized.ui.screens.library
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,13 +20,13 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddIdeogramDialog(
-    state: IdeogramState,
-    onEvent: (IdeogramEvent) -> Unit,
+    state: LibraryState,
+    onEvent: (LibraryEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
         modifier = modifier,
-        onDismissRequest = { onEvent(IdeogramEvent.HideDialog) },
+        onDismissRequest = { onEvent(LibraryEvent.HideDialog) },
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -42,7 +42,7 @@ fun AddIdeogramDialog(
                 TextField(
                     value = state.unicode,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetUnicode(it))
+                        onEvent(LibraryEvent.SetUnicode(it))
                     },
                     placeholder = {
                         Text(text = "Unicode")
@@ -51,7 +51,7 @@ fun AddIdeogramDialog(
                 TextField(
                     value = state.meanings,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetMeanings(it))
+                        onEvent(LibraryEvent.SetMeanings(it))
                     },
                     placeholder = {
                         Text(text = "Meanings")
@@ -60,7 +60,7 @@ fun AddIdeogramDialog(
                 TextField(
                     value = state.strokes,
                     onValueChange = {
-                        onEvent(IdeogramEvent.SetStrokes(it))
+                        onEvent(LibraryEvent.SetStrokes(it))
                     },
                     placeholder = {
                         Text(text = "Strokes")
@@ -70,7 +70,7 @@ fun AddIdeogramDialog(
             }
             Button(
                 onClick = {
-                    onEvent(IdeogramEvent.SaveIdeogram)
+                    onEvent(LibraryEvent.SaveIdeogram)
                 },
                 ) {
                 Text(text = "Save")
@@ -82,5 +82,5 @@ fun AddIdeogramDialog(
 @Preview(showBackground = true)
 @Composable
 fun AddIdeogramDialogPreview() {
-    AddIdeogramDialog(state = IdeogramState(), onEvent = { IdeogramEvent.ShowDialog })
+    AddIdeogramDialog(state = LibraryState(), onEvent = { LibraryEvent.ShowDialog })
 }
