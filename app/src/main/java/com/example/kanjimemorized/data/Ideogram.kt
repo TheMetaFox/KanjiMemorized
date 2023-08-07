@@ -16,4 +16,7 @@ data class Ideogram(
     constructor(unicode: Char, meanings: List<String>, strokes: Int) : this(
         unicode, meanings, strokes, decompositions = null, retention = 0f, coercivity = 0f
     )
+    constructor(unicode: Char, meanings: List<String>, strokes: Int, decompositions: List<Char>?) : this(
+        unicode, meanings, strokes, decompositions, retention = 0f, coercivity = 0f
+    )
 }

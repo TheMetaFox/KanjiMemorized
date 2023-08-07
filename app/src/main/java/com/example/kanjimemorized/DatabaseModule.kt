@@ -43,13 +43,9 @@ object DatabaseModule {
     @Provides
     fun provideIdeogramData(ideogramRepository: IdeogramRepository) {
         CoroutineScope(Dispatchers.IO).launch() {
-            radicalIdeogramData.forEach {SimpleIdeogram ->
+            radicalIdeogramData.forEach {Ideogram ->
                 ideogramRepository.insertIdeogram(
-                    Ideogram(
-                        unicode = Integer.parseInt(SimpleIdeogram.unicode, 16).toChar(),
-                        meanings = SimpleIdeogram.meanings,
-                        strokes = SimpleIdeogram.strokes
-                    )
+                    Ideogram
                 )
             }
         }
