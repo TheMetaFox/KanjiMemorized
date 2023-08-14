@@ -26,4 +26,7 @@ interface IdeogramDao {
 
     @Query("SELECT * FROM ideogram ORDER BY retention ASC")
     fun getIdeogramListOrderedByRetention(): Flow<List<Ideogram>>
+
+    @Query("SELECT * FROM ideogram WHERE unicode IN (:decompositions)")
+    suspend fun getIdeogramDecompositionsList(decompositions: List<Char>): List<Ideogram>
 }

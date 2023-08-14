@@ -1,11 +1,12 @@
 package com.example.kanjimemorized.ui.screens.library.ideogram
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.IdeogramRepository
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): ViewModel() {
 
@@ -19,7 +20,7 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
         ideogramEvent: IdeogramEvent
     ) {
         when(ideogramEvent) {
-            is IdeogramEvent.DisplayIdeogram -> {
+            is IdeogramEvent.DisplayIdeogramInfo -> {
                 _state.update(
                     function = {
                         it.copy(
@@ -27,6 +28,27 @@ class IdeogramViewModel(private val ideogramRepository: IdeogramRepository): Vie
                         )
                     }
                 )
+                viewModelScope.launch {
+                    if (ideogramEvent.ideogram.decompositions.isNullOrEmpty()) {
+                        _state.update(
+                            function = {
+                                it.copy(
+                                    decompositions = null
+                                )
+                            }
+                        )
+                    } else {
+                        _state.update(
+                            function = {
+                                it.copy(
+                                    decompositions = ideogramRepository.getIdeogramDecompositionsList(
+                                        decompositions = ideogramEvent.ideogram.decompositions
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
             }
         }
     }

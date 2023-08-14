@@ -49,7 +49,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramEvent
-import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramState
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
@@ -131,7 +130,7 @@ fun LibraryScreen(
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                             .clickable {
-                                onIdeogramEvent(IdeogramEvent.DisplayIdeogram(ideogram))
+                                onIdeogramEvent(IdeogramEvent.DisplayIdeogramInfo(ideogram))
                                 navController.navigate(Screen.Ideogram.route)
                             },
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -151,7 +150,6 @@ fun LibraryScreen(
                             )
                         }
                         CircularProgressBar(
-                            modifier = Modifier,
                             percentage = 0.8f,
                             number = 80,
                             fontSize = 16.sp,
@@ -206,13 +204,13 @@ fun SortOption(
 fun CircularProgressBar(
     percentage: Float,
     number: Int,
+    modifier: Modifier = Modifier,
     fontSize: TextUnit = 28.sp,
     radius: Dp = 50.dp,
     color: Color = MaterialTheme.colorScheme.primary,
     strokeWidth: Dp = 8.dp,
     animationDuration: Int = 1000,
     animationDelay: Int = 0,
-    modifier: Modifier
 ) {
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -223,7 +221,7 @@ fun CircularProgressBar(
             durationMillis = animationDuration,
             delayMillis = animationDelay
         ),
-        label = "progressBar"
+        label = "circularProgressBar"
     )
     LaunchedEffect(key1 = true) {
         animationPlayed = true
@@ -240,10 +238,13 @@ fun CircularProgressBar(
         ) {
             drawArc(
                 color = color,
-                -90f,
-                360 * currentPercentage.value,
+                startAngle = -90f,
+                sweepAngle = 360 * currentPercentage.value,
                 useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                style = Stroke(
+                    width = strokeWidth.toPx(),
+                    cap = StrokeCap.Round
+                )
             )
         }
         Text(

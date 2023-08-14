@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.Flow
 class IdeogramRepository(private val ideogramDao: IdeogramDao) {
     suspend fun insertIdeogram(ideogram: Ideogram) {
         ideogramDao.insertIdeogram(
-            ideogram = ideogram)
+            ideogram = ideogram
+        )
     }
     suspend fun deleteIdeogram(ideogram: Ideogram) {
         ideogramDao.deleteIdeogram(
-            ideogram = ideogram)
+            ideogram = ideogram
+        )
     }
     suspend fun getRandomIdeogram(): Ideogram {
         return ideogramDao.getIdeogramList().random()
@@ -22,5 +24,10 @@ class IdeogramRepository(private val ideogramDao: IdeogramDao) {
     }
     fun getIdeogramListOrderedByRetention(): Flow<List<Ideogram>> {
         return ideogramDao.getIdeogramListOrderedByRetention()
+    }
+    suspend fun getIdeogramDecompositionsList( decompositions: List<Char>): List<Ideogram> {
+        return ideogramDao.getIdeogramDecompositionsList(
+            decompositions = decompositions
+        )
     }
 }

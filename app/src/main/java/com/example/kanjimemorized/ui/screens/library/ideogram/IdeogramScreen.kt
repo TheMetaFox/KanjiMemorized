@@ -1,5 +1,8 @@
 package com.example.kanjimemorized.ui.screens.library.ideogram
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,13 +13,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -137,7 +152,8 @@ fun IdeogramScreen(
             }
             Column(
                 modifier = Modifier
-                    .width(600.dp),
+                    .width(600.dp)
+                    .padding(bottom = 5.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 Row(
@@ -193,11 +209,106 @@ fun IdeogramScreen(
                 }
             }
             Column {
-
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 5.dp)
+                ) {
+                    Text(
+                        text = "Decompositions:",
+                        modifier = Modifier.align(Alignment.Center),
+                        fontSize = 34.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                Column {
+                    ideogramState.decompositions?.forEach { ideogram ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                            ) {
+                                Text(
+                                    text = ideogram.unicode.toString(),
+                                    modifier = Modifier.align(Alignment.Center),
+                                    fontSize = 32.sp,
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                            HorizontalProgressBar(
+                                percentage = .8f,
+                                width = 100.dp,
+                                height = 20.dp
+                            )
+                            Box(
+                                modifier = Modifier
+                            ) {
+                                Text(
+                                    text = ideogram.meanings.toString(),
+                                    modifier = Modifier.align(Alignment.Center),
+                                    fontSize = 32.sp,
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
+
+@Composable
+fun HorizontalProgressBar(
+    percentage: Float,
+    width: Dp,
+    height: Dp,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+    strokeWidth: Dp = 8.dp,
+    animationDuration: Int = 1000,
+    animationDelay: Int = 0,
+    ) {
+    var animationPlayed by remember {
+        mutableStateOf(false)
+    }
+    val currentPercentage = animateFloatAsState(
+        targetValue = if(animationPlayed) percentage else 0f,
+        animationSpec = tween(
+            durationMillis = animationDuration,
+            delayMillis = animationDelay
+        ),
+        label = "horizontalProgressBar"
+    )
+    LaunchedEffect(key1 = true) {
+        animationPlayed = true
+    }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(
+                width = width,
+                height = height
+            )
+    ) {
+        Canvas(
+            modifier = modifier
+                .size(
+                    width = width,
+                    height = height
+                )
+        ) {
+            drawLine(
+                color = color,
+                start = Offset(0f, height.toPx()/2),
+                end = Offset(width.toPx()*currentPercentage.value, height.toPx()/2),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
