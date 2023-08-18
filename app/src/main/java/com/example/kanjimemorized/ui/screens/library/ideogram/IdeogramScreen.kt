@@ -238,7 +238,9 @@ fun IdeogramScreen(
                             HorizontalProgressBar(
                                 percentage = .8f,
                                 width = 100.dp,
-                                height = 20.dp
+                                height = 20.dp,
+                                modifier = Modifier
+                                    .padding(5.dp)
                             )
                             Box(
                                 modifier = Modifier

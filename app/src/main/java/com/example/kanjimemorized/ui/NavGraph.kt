@@ -80,8 +80,7 @@ fun SetupNavGraph(
             route = Screen.Library.route
         ) {
             LibraryScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 libraryState = libraryState,
                 onLibraryEvent = onLibraryEvent,

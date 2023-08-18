@@ -43,8 +43,10 @@ fun FlashcardScreen(
         ) {
             Card(
                 modifier = Modifier
-                    .size(200.dp, 175.dp)
-                    .clickable { onFlashcardEvent(FlashcardEvent.FlipFlashcard) }
+                    .size(300.dp, 225.dp)
+                    .clickable {
+                        onFlashcardEvent(FlashcardEvent.FlipFlashcard)
+                    }
             ) {
                 if (!flashcardState.isAnswerShowing) {
                     Ideogram(
