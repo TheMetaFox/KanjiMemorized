@@ -6,6 +6,7 @@ import javax.inject.Singleton
 object IdeogramData {
     @Singleton
     val radicalIdeogramData: Array<Ideogram> = arrayOf(
+/*https://www.kanjidamage.com/kanji*/
         Ideogram(unicode = '\u2F00', meanings = listOf("one"), strokes = 1),
         Ideogram(unicode = '\u2F01', meanings = listOf("line"), strokes = 1),
         Ideogram(unicode = '\u2F02', meanings = listOf("dot"), strokes = 1),
