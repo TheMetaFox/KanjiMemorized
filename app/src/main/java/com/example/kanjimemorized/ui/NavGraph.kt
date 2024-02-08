@@ -53,7 +53,8 @@ fun SetupNavGraph(
             StudyScreen(
                 modifier = modifier
                     .padding(5.dp),
-                navController = navController)
+                navController = navController,
+                onFlashcardEvent = onFlashcardEvent)
         }
         composable(
             route = Screen.StudyPlayground.route

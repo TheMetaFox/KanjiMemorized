@@ -8,10 +8,10 @@ object IdeogramData {
     val radicalIdeogramData: Array<Ideogram> = arrayOf(
 /*https://www.kanjidamage.com/kanji*/
         Ideogram(unicode = '\u2F00', meanings = listOf("one"), strokes = 1),
-        Ideogram(unicode = '\u2F01', meanings = listOf("line"), strokes = 1),
+        //Ideogram(unicode = '\u2F01', meanings = listOf("line"), strokes = 1),
         Ideogram(unicode = '\u2F02', meanings = listOf("dot"), strokes = 1),
-        Ideogram(unicode = '\u2F03', meanings = listOf("slash"), strokes = 1),
-        Ideogram(unicode = '\u2F04', meanings = listOf("second"), strokes = 1),
+        //Ideogram(unicode = '\u2F03', meanings = listOf("slash"), strokes = 1),
+        //Ideogram(unicode = '\u2F04', meanings = listOf("second"), strokes = 1),
         Ideogram(unicode = '\u2F05', meanings = listOf("hook"), strokes = 1),
         Ideogram(unicode = '\u2F06', meanings = listOf("two"), strokes = 2, decompositions = listOf('\u2F00')),
         Ideogram(unicode = '\u2F07', meanings = listOf("lid"), strokes = 2),

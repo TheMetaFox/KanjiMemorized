@@ -10,11 +10,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,6 +44,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
+import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
@@ -215,13 +222,20 @@ fun IdeogramScreen(
                 ) {
                     Text(
                         text = "Decompositions:",
-                        modifier = Modifier.align(Alignment.Center),
-                        fontSize = 34.sp,
+                        modifier = Modifier
+                            .align(alignment = Alignment.Center),
+
+                    fontSize = 34.sp,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
                     ideogramState.decompositions?.forEach { ideogram ->
+                        /*
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -252,6 +266,38 @@ fun IdeogramScreen(
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
+                        }*/
+                        Row(
+                            modifier = Modifier
+                                .height(75.dp)
+                                .padding(horizontal = 16.dp)
+                                .clickable {
+                                    onIdeogramEvent(IdeogramEvent.DisplayIdeogramInfo(ideogram))
+                                    navController.navigate(Screen.Ideogram.route)
+                                },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                            ) {
+                                Text(
+                                    text = ideogram.unicode.toString(),
+                                    fontSize = 20.sp
+                                )
+                                Text(
+                                    text = ideogram.meanings.toString().replace("[", "").replace("]",""),
+                                    fontSize = 12.sp
+                                )
+                            }
+                            CircularProgressBar(
+                                percentage = 0.8f,
+                                number = 80,
+                                fontSize = 16.sp,
+                                radius = 26.dp,
+                                strokeWidth = 4.dp,
+                            )
                         }
                     }
                 }

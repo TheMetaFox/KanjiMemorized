@@ -20,13 +20,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
 fun StudyScreen(
     modifier: Modifier,
     navController: NavHostController,
-    ) {
+    onFlashcardEvent: (FlashcardEvent) -> Unit
+) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -59,6 +61,7 @@ fun StudyScreen(
                     navController.navigate(
                         route = Screen.Flashcard.route
                     )
+                    onFlashcardEvent(FlashcardEvent.GetRandomFlashcard);
                 }
             ) {
                 Text(
@@ -75,5 +78,5 @@ fun StudyScreen(
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(Modifier, rememberNavController())
+    StudyScreen(Modifier, rememberNavController(), onFlashcardEvent = { })
 }
