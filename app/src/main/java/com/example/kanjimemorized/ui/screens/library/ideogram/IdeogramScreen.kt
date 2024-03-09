@@ -176,7 +176,6 @@ fun IdeogramScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
                     Box(
                         modifier = Modifier
                     ) {
@@ -187,7 +186,6 @@ fun IdeogramScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
                 }
                 Row(
                     verticalAlignment = Alignment.Bottom
@@ -202,7 +200,6 @@ fun IdeogramScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
                     Box(
                         modifier = Modifier
                     ) {

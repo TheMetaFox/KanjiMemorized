@@ -8,11 +8,6 @@ class IdeogramRepository(private val ideogramDao: IdeogramDao) {
             ideogram = ideogram
         )
     }
-    suspend fun deleteIdeogram(ideogram: Ideogram) {
-        ideogramDao.deleteIdeogram(
-            ideogram = ideogram
-        )
-    }
     suspend fun getRandomIdeogram(): Ideogram {
         return ideogramDao.getIdeogramList().random()
     }

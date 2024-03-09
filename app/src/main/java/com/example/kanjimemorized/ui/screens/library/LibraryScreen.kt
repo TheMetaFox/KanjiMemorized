@@ -59,9 +59,6 @@ fun LibraryScreen(
     onLibraryEvent: (LibraryEvent) -> Unit,
     onIdeogramEvent: (IdeogramEvent) -> Unit
 ) {
-    if (libraryState.isAddingIdeogram) {
-        AddIdeogramDialog(state = libraryState, onEvent = onLibraryEvent)
-    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -71,18 +68,6 @@ fun LibraryScreen(
                 top = MaterialTheme.spacing.small,
                 end = MaterialTheme.spacing.small
             ),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onLibraryEvent(LibraryEvent.ShowDialog)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Ideogram"
-                )
-            }
-        },
     ) { contentPadding ->
         Column(
             modifier = modifier
@@ -158,7 +143,6 @@ fun LibraryScreen(
                         )
                         IconButton(
                             onClick = {
-                                onLibraryEvent(LibraryEvent.DeleteIdeogram(ideogram))
                             },
                             modifier = Modifier
                         ) {

@@ -1,6 +1,13 @@
 package com.example.kanjimemorized.data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDate.parse
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class Converter {
 
@@ -35,5 +42,15 @@ class Converter {
     @TypeConverter
     fun stringToCharacterList(decompositionsCharacterString: String): List<Char> {
         return decompositionsCharacterString.toList()
+    }
+
+    @TypeConverter
+    fun localDateToString(phaseLocalDate: LocalDate): String {
+        return(phaseLocalDate.toString())
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    @TypeConverter
+    fun stringToLocalDate(phaseString: String): LocalDate {
+        return(parse(phaseString))
     }
 }

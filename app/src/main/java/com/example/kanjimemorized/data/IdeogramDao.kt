@@ -12,9 +12,6 @@ interface IdeogramDao {
     @Upsert
     suspend fun insertIdeogram(ideogram: Ideogram)
 
-    @Delete
-    suspend fun deleteIdeogram(ideogram: Ideogram)
-
     @Query("SELECT * FROM ideogram")
     suspend fun getIdeogramList(): List<Ideogram>
 

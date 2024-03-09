@@ -1,8 +1,10 @@
 package com.example.kanjimemorized
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.example.kanjimemorized.IdeogramData.radicalIdeogramData
+import com.example.kanjimemorized.IdeogramData.IdeogramData
 import com.example.kanjimemorized.data.Ideogram
 import com.example.kanjimemorized.data.IdeogramDao
 import com.example.kanjimemorized.data.IdeogramDatabase
@@ -39,13 +41,14 @@ object DatabaseModule {
         dao: IdeogramDao
     ) = IdeogramRepository(dao)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     @Provides
     fun provideIdeogramData(ideogramRepository: IdeogramRepository) {
         CoroutineScope(Dispatchers.IO).launch() {
-            radicalIdeogramData.forEach {Ideogram ->
+            IdeogramData.forEach {ideogram ->
                 ideogramRepository.insertIdeogram(
-                    Ideogram
+                    ideogram
                 )
             }
         }
