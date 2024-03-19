@@ -63,7 +63,7 @@ class LibraryViewModel(private val ideogramRepository: IdeogramRepository): View
         libraryEvent: LibraryEvent
     ) {
         when(libraryEvent) {
-            is  LibraryEvent.SortIdeograms -> {
+            is LibraryEvent.SortIdeograms -> {
                 _sortType.value = libraryEvent.sortType
             }
         }

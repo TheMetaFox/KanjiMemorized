@@ -6,7 +6,8 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Ideogram::class],
-    version = 2
+    version = 2,
+    exportSchema = false
 )
 @TypeConverters(
     value = [Converter::class]

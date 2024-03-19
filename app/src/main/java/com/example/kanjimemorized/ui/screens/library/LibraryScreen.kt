@@ -18,9 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -100,7 +98,7 @@ fun LibraryScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        SortType.values().forEach { sortType ->
+                        SortType.entries.forEach { sortType ->
                             SortOption(
                                 sortType = sortType,
                                 selected = mutableStateOf(libraryState.sortType == sortType),
@@ -135,8 +133,8 @@ fun LibraryScreen(
                             )
                         }
                         CircularProgressBar(
-                            percentage = 0.8f,
-                            number = 80,
+                            percentage = ideogram.retention,
+                            number = ideogram.coercivity.toInt(),
                             fontSize = 16.sp,
                             radius = 26.dp,
                             strokeWidth = 4.dp,

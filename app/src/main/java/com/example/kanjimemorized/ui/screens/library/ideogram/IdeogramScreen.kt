@@ -15,12 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,14 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
-import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
@@ -125,7 +117,7 @@ fun IdeogramScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = ideogramState.ideogram?.retention.toString(),
+                                text = String.format("%.2f", ideogramState.ideogram?.retention),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -148,7 +140,7 @@ fun IdeogramScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = ideogramState.ideogram?.coercivity.toString(),
+                                text = String.format("%.0f",ideogramState.ideogram?.coercivity),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground

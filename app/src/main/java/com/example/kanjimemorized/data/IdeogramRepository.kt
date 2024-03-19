@@ -8,8 +8,16 @@ class IdeogramRepository(private val ideogramDao: IdeogramDao) {
             ideogram = ideogram
         )
     }
+    suspend fun updateIdeogram(ideogram: Ideogram) {
+        ideogramDao.updateIdeogram(
+            ideogram = ideogram
+        )
+    }
     suspend fun getRandomIdeogram(): Ideogram {
         return ideogramDao.getIdeogramList().random()
+    }
+    suspend fun getRandomStudyableIdeogram(): Ideogram {
+        return ideogramDao.getStudyableIdeogramList().random()
     }
     fun getIdeogramListOrderedByUnicode(): Flow<List<Ideogram>> {
         return ideogramDao.getIdeogramListOrderedByUnicode()

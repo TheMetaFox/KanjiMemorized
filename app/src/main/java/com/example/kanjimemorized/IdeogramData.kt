@@ -1,12 +1,9 @@
 package com.example.kanjimemorized
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.kanjimemorized.data.Ideogram
 import javax.inject.Singleton
 
 object IdeogramData {
-    @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     val IdeogramData: Array<Ideogram> = arrayOf(
 /*https://www.kanjidamage.com/kanji*/
