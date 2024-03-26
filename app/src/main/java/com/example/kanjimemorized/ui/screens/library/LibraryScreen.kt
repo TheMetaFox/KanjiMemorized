@@ -19,11 +19,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,8 +49,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
-import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramEvent
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
+import java.time.Duration
+import java.time.LocalDateTime
+import kotlin.math.exp
 
 @Composable
 fun LibraryScreen(
@@ -55,7 +61,7 @@ fun LibraryScreen(
     navController: NavHostController,
     libraryState: LibraryState,
     onLibraryEvent: (LibraryEvent) -> Unit,
-    onIdeogramEvent: (IdeogramEvent) -> Unit
+    onKanjiEvent: (KanjiEvent) -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -89,6 +95,7 @@ fun LibraryScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
                     Row(
@@ -102,19 +109,38 @@ fun LibraryScreen(
                             SortOption(
                                 sortType = sortType,
                                 selected = mutableStateOf(libraryState.sortType == sortType),
-                                onIdeogramEvent = onLibraryEvent
+                                onLibraryEvent = onLibraryEvent
                             )
                         }
                     }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+                    ) {
+                        Switch(
+                            checked = libraryState.filterNonStudyable,
+                            onCheckedChange = { onLibraryEvent(LibraryEvent.ToggleFilterNonStudyable(libraryState.filterNonStudyable)) }
+                        )
+
+                        Text(
+                            text = "Filter Non-Studyable"
+                        )
+                    }
+
                 }
-                items(libraryState.ideograms) { ideogram ->
+                items(libraryState.kanji.zip(libraryState.date)) { (kanji, date)  ->
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                             .clickable {
-                                onIdeogramEvent(IdeogramEvent.DisplayIdeogramInfo(ideogram))
-                                navController.navigate(Screen.Ideogram.route)
+                                onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanji))
+                                navController.navigate(Screen.Kanji.route)
                             },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -124,17 +150,20 @@ fun LibraryScreen(
                                 .fillMaxSize(0.5f)
                         ) {
                             Text(
-                                text = ideogram.unicode.toString(),
+                                text = kanji.unicode.toString(),
                                 fontSize = 20.sp
                             )
                             Text(
-                                text = ideogram.meanings.toString().replace("[", "").replace("]",""),
+                                text = kanji.meanings.toString().replace("[", "").replace("]",""),
                                 fontSize = 12.sp
                             )
                         }
                         CircularProgressBar(
-                            percentage = ideogram.retention,
-                            number = ideogram.coercivity.toInt(),
+                            percentage = exp(-(((Duration.between(
+                                date,
+                                LocalDateTime.now()
+                            ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat(),//(1/i++).toFloat(),//retention,
+                            number = kanji.durability.toInt(),
                             fontSize = 16.sp,
                             radius = 26.dp,
                             strokeWidth = 4.dp,
@@ -146,9 +175,26 @@ fun LibraryScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Ideogram"
+                                contentDescription = "Delete Kanji"
                             )
                         }
+                    }
+                }
+                item {
+                    Button(
+                        onClick = {
+                            onLibraryEvent(LibraryEvent.ResetKanji)
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondary,
+                            disabledContentColor = MaterialTheme.colorScheme.onSecondary
+                        )
+                    ) {
+                        Text(
+                            text = "Reset Kanji Data"
+                        )
                     }
                 }
             }
@@ -160,20 +206,20 @@ fun LibraryScreen(
 fun SortOption(
     sortType: SortType,
     selected: MutableState<Boolean>,
-    onIdeogramEvent: (LibraryEvent) -> Unit
+    onLibraryEvent: (LibraryEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                onIdeogramEvent(LibraryEvent.SortIdeograms(sortType))
+                onLibraryEvent(LibraryEvent.SortKanji(sortType))
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         RadioButton(
                     selected = selected.value,
-            onClick = { onIdeogramEvent(LibraryEvent.SortIdeograms(sortType)) }
+            onClick = { onLibraryEvent(LibraryEvent.SortKanji(sortType)) }
         )
 
         Text(
@@ -230,7 +276,7 @@ fun CircularProgressBar(
             )
         }
         Text(
-            text = (currentPercentage.value + number).toInt().toString(),
+            text = number.toString(),
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold

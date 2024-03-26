@@ -1,8 +1,8 @@
 package com.example.kanjimemorized.data
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
-import java.time.LocalDate.parse
+import java.time.LocalDateTime.parse
+import java.time.LocalDateTime
 
 class Converter {
 
@@ -31,11 +31,11 @@ class Converter {
     }
 
     @TypeConverter
-    fun localDateToString(phaseLocalDate: LocalDate): String {
+    fun localDateTimeToString(phaseLocalDate: LocalDateTime): String {
         return(phaseLocalDate.toString())
     }
     @TypeConverter
-    fun stringToLocalDate(phaseString: String): LocalDate {
+    fun stringToLocalDateTime(phaseString: String): LocalDateTime {
         return(parse(phaseString))
     }
 }

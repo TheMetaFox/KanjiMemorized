@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.library.ideogram
+package com.example.kanjimemorized.ui.screens.library.kanji
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -15,8 +15,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,19 +41,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
+import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IdeogramScreen(
+fun KanjiScreen(
     modifier: Modifier,
     navController: NavController,
-    ideogramState: IdeogramState,
-    onIdeogramEvent: (IdeogramEvent) -> Unit
+    kanjiState: KanjiState,
+    onKanjiEvent: (KanjiEvent) -> Unit
 ) {
+    if (kanjiState.isShowingReviewData) {
+        KanjiReviewDataDialog(onKanjiEvent = onKanjiEvent, kanjiState = kanjiState)
+    }
     Scaffold (
         modifier = modifier
             .fillMaxSize()
@@ -71,7 +85,7 @@ fun IdeogramScreen(
                     .padding(bottom = 5.dp),
             ) {
                 Text(
-                    text = "Ideogram",
+                    text = "Kanji",
                     modifier = Modifier
                         .align(alignment = Alignment.Center),
                     fontSize = 50.sp
@@ -89,7 +103,7 @@ fun IdeogramScreen(
                         .weight(1f),
                 ) {
                     Text(
-                        text = ideogramState.ideogram?.unicode.toString(),
+                        text = kanjiState.kanji?.unicode.toString(),
                         modifier = Modifier.align(Alignment.Center),
                         fontSize = 100.sp,
                         lineHeight = 50.sp,
@@ -117,7 +131,7 @@ fun IdeogramScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format("%.2f", ideogramState.ideogram?.retention),
+                                text = String.format("%.2f", kanjiState.retention),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -130,7 +144,7 @@ fun IdeogramScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = "Coercivity:",
+                                text = "Durability:",
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 24.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -140,7 +154,7 @@ fun IdeogramScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format("%.0f",ideogramState.ideogram?.coercivity),
+                                text = String.format("%.0f",kanjiState.kanji?.durability),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -172,7 +186,7 @@ fun IdeogramScreen(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = ideogramState.ideogram?.meanings.toString().replace("[", "").replace("]",""),
+                            text = kanjiState.kanji?.meanings.toString().replace("[", "").replace("]",""),
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 26.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -196,7 +210,7 @@ fun IdeogramScreen(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = ideogramState.ideogram?.strokes.toString(),
+                            text = kanjiState.kanji?.strokes.toString(),
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 26.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -204,13 +218,16 @@ fun IdeogramScreen(
                     }
                 }
             }
-            Column {
+            Column(
+                modifier = Modifier
+                    .height(height = 400.dp)
+            ) {
                 Box(
                     modifier = Modifier
                         .padding(bottom = 5.dp)
                 ) {
                     Text(
-                        text = "Decompositions:",
+                        text = "Components:",
                         modifier = Modifier
                             .align(alignment = Alignment.Center),
 
@@ -223,7 +240,7 @@ fun IdeogramScreen(
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    ideogramState.decompositions?.forEach { ideogram ->
+                    kanjiState.components?.forEach { kanji ->
                         /*
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -232,7 +249,7 @@ fun IdeogramScreen(
                                 modifier = Modifier
                             ) {
                                 Text(
-                                    text = ideogram.unicode.toString(),
+                                    text = kanji.unicode.toString(),
                                     modifier = Modifier.align(Alignment.Center),
                                     fontSize = 32.sp,
                                     color = MaterialTheme.colorScheme.onBackground
@@ -249,7 +266,7 @@ fun IdeogramScreen(
                                 modifier = Modifier
                             ) {
                                 Text(
-                                    text = ideogram.meanings.toString(),
+                                    text = kanji.meanings.toString(),
                                     modifier = Modifier.align(Alignment.Center),
                                     fontSize = 32.sp,
                                     color = MaterialTheme.colorScheme.onBackground
@@ -261,8 +278,8 @@ fun IdeogramScreen(
                                 .height(75.dp)
                                 .padding(horizontal = 16.dp)
                                 .clickable {
-                                    onIdeogramEvent(IdeogramEvent.DisplayIdeogramInfo(ideogram))
-                                    navController.navigate(Screen.Ideogram.route)
+                                    onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanji))
+                                    navController.navigate(Screen.Kanji.route)
                                 },
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
@@ -272,17 +289,17 @@ fun IdeogramScreen(
                                     .fillMaxWidth(0.5f)
                             ) {
                                 Text(
-                                    text = ideogram.unicode.toString(),
+                                    text = kanji.unicode.toString(),
                                     fontSize = 20.sp
                                 )
                                 Text(
-                                    text = ideogram.meanings.toString().replace("[", "").replace("]",""),
+                                    text = kanji.meanings.toString().replace("[", "").replace("]",""),
                                     fontSize = 12.sp
                                 )
                             }
                             CircularProgressBar(
-                                percentage = 0.8f,
-                                number = 80,
+                                percentage = kanji.durability,
+                                number = kanji.durability.toInt(),
                                 fontSize = 16.sp,
                                 radius = 26.dp,
                                 strokeWidth = 4.dp,
@@ -290,6 +307,21 @@ fun IdeogramScreen(
                         }
                     }
                 }
+            }
+            Button(
+                onClick = {
+                    onKanjiEvent(KanjiEvent.ShowKanjiReviewData)
+                },
+                colors = ButtonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondary,
+                    disabledContentColor = MaterialTheme.colorScheme.onSecondary
+                )
+            ) {
+                Text(
+                    text = "Review Data"
+                )
             }
         }
     }
@@ -349,6 +381,6 @@ fun HorizontalProgressBar(
 
 @Preview(showBackground = true)
 @Composable
-fun IdeogramScreenPreview() {
-    IdeogramScreen(modifier = Modifier, navController = rememberNavController(), ideogramState = IdeogramState(), onIdeogramEvent = {})
+fun KanjiScreenPreview() {
+    KanjiScreen(modifier = Modifier, navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
 }

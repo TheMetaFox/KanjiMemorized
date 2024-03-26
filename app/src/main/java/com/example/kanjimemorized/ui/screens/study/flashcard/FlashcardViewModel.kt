@@ -2,15 +2,17 @@ package com.example.kanjimemorized.ui.screens.study.flashcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kanjimemorized.data.Ideogram
-import com.example.kanjimemorized.data.IdeogramRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kanjimemorized.data.entities.Kanji
+import com.example.kanjimemorized.data.KanjiRepository
+import com.example.kanjimemorized.data.entities.Review
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 
-class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): ViewModel() {
+class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
 
     private val _state: MutableStateFlow<FlashcardState> = MutableStateFlow(
         value = FlashcardState()
@@ -33,16 +35,17 @@ class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): Vi
                 )
             }
             is FlashcardEvent.GetRandomFlashcard -> {
+
                 viewModelScope.launch(
                     block = {
                         _state.update(
                             function = {
-                                var i = ideogramRepository.getRandomStudyableIdeogram()
-                                while (state.value.ideogram == i) {
-                                    i = ideogramRepository.getRandomStudyableIdeogram()
+                                var i = kanjiRepository.getRandomKanji()
+                                while (state.value.kanji == i) {
+                                    i = kanjiRepository.getRandomKanji()
                                 }
                                 it.copy(
-                                    ideogram = i,
+                                    kanji = i,
                                     isAnswerShowing = false
                                 )
                             }
@@ -51,97 +54,86 @@ class FlashcardViewModel(private val ideogramRepository: IdeogramRepository): Vi
                 )
             }
             is FlashcardEvent.WrongCard -> {
-                var retention: Float = state.value.ideogram!!.retention
-                var coercivity: Float = state.value.ideogram!!.coercivity
-                retention += retention/2
-                coercivity -= 1
-                val phase: LocalDate = LocalDate.now()
-                val period = Math.floor(retention*coercivity.toDouble()).toInt()
+                var durability: Float = state.value.kanji!!.durability
+                if (durability < 1) {
+                    durability = 0f
+                } else {
+                    durability -= 1
+                }
 
-                val ideogram: Ideogram = Ideogram(
-                    unicode = state.value.ideogram!!.unicode,
-                    meanings = state.value.ideogram!!.meanings,
-                    strokes = state.value.ideogram!!.strokes,
-                    decompositions = state.value.ideogram!!.decompositions,
-                    retention = retention,
-                    coercivity = coercivity,
-                    phase = phase,
-                    period = period,
+                val kanji = Kanji(
+                    unicode = state.value.kanji!!.unicode,
+                    meanings = state.value.kanji!!.meanings,
+                    strokes = state.value.kanji!!.strokes,
+                    durability = durability,
                 )
+
+                val review = Review(
+                    date = LocalDateTime.now(),
+                    unicode = state.value.kanji!!.unicode,
+                    rating = 1
+                )
+
                 viewModelScope.launch {
-                    ideogramRepository.updateIdeogram(
-                        ideogram = ideogram
+                    kanjiRepository.upsertKanji(
+                        kanji = kanji
+                    )
+                    kanjiRepository.upsertReview(
+                        review = review
                     )
                 }
-                _state.update(
-                    function = {
-                        it.copy(
-                            ideogram = ideogram
-                        )
-                    }
-                )
             }
             is FlashcardEvent.CorrectCard -> {
-                var retention: Float = state.value.ideogram!!.retention
-                var coercivity: Float = state.value.ideogram!!.coercivity
-                retention += (1 - retention)/2
-                coercivity += 1
-                val phase: LocalDate = LocalDate.now()
-                val period = Math.floor(retention*coercivity.toDouble()).toInt()
+                var durability: Float = state.value.kanji!!.durability
+                durability += 1
 
-                val ideogram: Ideogram = Ideogram(
-                    unicode = state.value.ideogram!!.unicode,
-                    meanings = state.value.ideogram!!.meanings,
-                    strokes = state.value.ideogram!!.strokes,
-                    decompositions = state.value.ideogram!!.decompositions,
-                    retention = retention,
-                    coercivity = coercivity,
-                    phase = phase,
-                    period = period,
+                val kanji = Kanji(
+                    unicode = state.value.kanji!!.unicode,
+                    meanings = state.value.kanji!!.meanings,
+                    strokes = state.value.kanji!!.strokes,
+                    durability = durability,
                 )
+
+                val review = Review(
+                    date = LocalDateTime.now(),
+                    unicode = state.value.kanji!!.unicode,
+                    rating = 2
+                )
+
                 viewModelScope.launch {
-                    ideogramRepository.updateIdeogram(
-                        ideogram = ideogram
+                    kanjiRepository.upsertKanji(
+                        kanji = kanji
+                    )
+                    kanjiRepository.upsertReview(
+                        review = review
                     )
                 }
-                _state.update(
-                    function = {
-                        it.copy(
-                            ideogram = ideogram
-                        )
-                    }
-                )
             }
             is FlashcardEvent.EasyCard -> {
-                var retention: Float = state.value.ideogram!!.retention
-                var coercivity: Float = state.value.ideogram!!.coercivity
-                retention += (1 - retention)*4/5
-                coercivity += 2
-                val phase: LocalDate = LocalDate.now()
-                val period = Math.floor(retention*coercivity.toDouble()).toInt()
+                var durability: Float = state.value.kanji!!.durability
+                durability += 2
 
-                val ideogram: Ideogram = Ideogram(
-                    unicode = state.value.ideogram!!.unicode,
-                    meanings = state.value.ideogram!!.meanings,
-                    strokes = state.value.ideogram!!.strokes,
-                    decompositions = state.value.ideogram!!.decompositions,
-                    retention = retention,
-                    coercivity = coercivity,
-                    phase = phase,
-                    period = period,
+                val kanji = Kanji(
+                    unicode = state.value.kanji!!.unicode,
+                    meanings = state.value.kanji!!.meanings,
+                    strokes = state.value.kanji!!.strokes,
+                    durability = durability,
                 )
+
+                val review = Review(
+                    date = LocalDateTime.now(),
+                    unicode = state.value.kanji!!.unicode,
+                    rating = 3
+                )
+
                 viewModelScope.launch {
-                    ideogramRepository.updateIdeogram(
-                        ideogram = ideogram
+                    kanjiRepository.upsertKanji(
+                        kanji = kanji
+                    )
+                    kanjiRepository.upsertReview(
+                        review = review
                     )
                 }
-                _state.update(
-                    function = {
-                        it.copy(
-                            ideogram = ideogram
-                        )
-                    }
-                )
             }
         }
     }

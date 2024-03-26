@@ -12,9 +12,9 @@ import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryState
 import com.example.kanjimemorized.ui.screens.*
 import com.example.kanjimemorized.ui.screens.library.LibraryScreen
-import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramEvent
-import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramScreen
-import com.example.kanjimemorized.ui.screens.library.ideogram.IdeogramState
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiScreen
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiState
 import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
 import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
@@ -29,10 +29,10 @@ fun SetupNavGraph(
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
     libraryState: LibraryState,
-    ideogramState: IdeogramState,
+    kanjiState: KanjiState,
     flashcardState: FlashcardState,
     onLibraryEvent: (LibraryEvent) -> Unit,
-    onIdeogramEvent: (IdeogramEvent) -> Unit,
+    onKanjiEvent: (KanjiEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
 ) {
     NavHost(
@@ -85,17 +85,17 @@ fun SetupNavGraph(
                 navController = navController,
                 libraryState = libraryState,
                 onLibraryEvent = onLibraryEvent,
-                onIdeogramEvent = onIdeogramEvent
+                onKanjiEvent = onKanjiEvent
             )
         }
         composable(
-            route = Screen.Ideogram.route
+            route = Screen.Kanji.route
         ) {
-            IdeogramScreen(
+            KanjiScreen(
                 modifier = modifier,
                 navController = navController,
-                ideogramState = ideogramState,
-                onIdeogramEvent = onIdeogramEvent
+                kanjiState = kanjiState,
+                onKanjiEvent = onKanjiEvent
             )
         }
     }

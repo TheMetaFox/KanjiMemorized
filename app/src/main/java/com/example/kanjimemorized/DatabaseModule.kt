@@ -2,10 +2,13 @@ package com.example.kanjimemorized
 
 import android.content.Context
 import androidx.room.Room
-import com.example.kanjimemorized.IdeogramData.IdeogramData
-import com.example.kanjimemorized.data.IdeogramDao
-import com.example.kanjimemorized.data.IdeogramDatabase
-import com.example.kanjimemorized.data.IdeogramRepository
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.kanjimemorized.KanjiData.KanjiData
+import com.example.kanjimemorized.ComponentData.ComponentData
+import com.example.kanjimemorized.data.KanjiDao
+import com.example.kanjimemorized.data.KanjiDatabase
+import com.example.kanjimemorized.data.KanjiRepository
 import com.google.android.datatransport.runtime.dagger.Module
 import com.google.android.datatransport.runtime.dagger.Provides
 import kotlinx.coroutines.CoroutineScope
@@ -15,36 +18,62 @@ import javax.inject.Singleton
 
 @Module
 object DatabaseModule {
-
+private lateinit var kanjiDatabase: KanjiDatabase
     @Singleton
     @Provides
     fun provideDatabase(
         context: Context
-    ) = Room.databaseBuilder(
-        context = context,
-        klass = IdeogramDatabase::class.java,
-        name = "Ideogram.db"
-    ).fallbackToDestructiveMigration().build()
-
+    ): KanjiDatabase {
+         kanjiDatabase = Room
+            .databaseBuilder(
+                context = context,
+                klass = KanjiDatabase::class.java,
+                name = "Kanji.db"
+            )
+            .addCallback(
+                callback = object: RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        provideKanjiData(KanjiRepository(kanjiDatabase.kanjiDao))
+                        provideKanjiComponentData(KanjiRepository(kanjiDatabase.kanjiDao))
+                    }
+                })
+            .fallbackToDestructiveMigration()
+            .build()
+        return kanjiDatabase
+    }
     @Singleton
     @Provides
     fun provideDao(
-        database: IdeogramDatabase
-    ) = database.ideogramDao
+        database: KanjiDatabase
+    ) = database.kanjiDao
 
     @Singleton
     @Provides
     fun provideRepository(
-        dao: IdeogramDao
-    ) = IdeogramRepository(dao)
+        dao: KanjiDao
+    ) = KanjiRepository(dao)
+
 
     @Singleton
     @Provides
-    fun provideIdeogramData(ideogramRepository: IdeogramRepository) {
+    fun provideKanjiData(kanjiRepository: KanjiRepository) {
         CoroutineScope(Dispatchers.IO).launch() {
-            IdeogramData.forEach {ideogram ->
-                ideogramRepository.insertIdeogram(
-                    ideogram
+            KanjiData.forEach {kanji ->
+                kanjiRepository.upsertKanji(
+                    kanji
+                )
+            }
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun provideKanjiComponentData(kanjiRepository: KanjiRepository) {
+        CoroutineScope(Dispatchers.IO).launch() {
+            ComponentData.forEach { component ->
+                kanjiRepository.insertKanjiComponent(
+                    component
                 )
             }
         }

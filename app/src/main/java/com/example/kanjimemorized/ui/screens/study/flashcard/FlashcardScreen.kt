@@ -55,7 +55,7 @@ fun FlashcardScreen(
                         .size(150.dp,100.dp)
                 ) {
                     Text(
-                        text = flashcardState.ideogram?.unicode.toString(),
+                        text = flashcardState.kanji?.unicode.toString(),
                         modifier = modifier.align(Center),
                         fontSize = 50.sp,
                         textAlign = TextAlign.Center
@@ -67,7 +67,7 @@ fun FlashcardScreen(
                             .size(400.dp,100.dp)
                     ) {
                         Text(
-                            text = flashcardState.ideogram?.meanings.toString().replace("[", "").replace("]", ""),
+                            text = flashcardState.kanji?.meanings.toString().replace("[", "").replace("]", ""),
                             modifier = modifier.align(Center),
                             fontSize = 40.sp,
                             textAlign = TextAlign.Center
