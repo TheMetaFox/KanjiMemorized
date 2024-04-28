@@ -52,9 +52,9 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
                     SortType.UNICODE -> kanjiRepository
                         .getLatestDateOrderedByUnicode()
                     SortType.STROKES -> kanjiRepository
-                        .getLatestDateOrderedByUnicode()
+                        .getLatestDateOrderedByStrokes()
                     SortType.DURABILITY -> kanjiRepository
-                        .getLatestDateOrderedByUnicode()
+                        .getLatestDateOrderedByDurability()
                 }
             }
         )
@@ -64,53 +64,6 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
                 .WhileSubscribed(),
             initialValue = emptyList()
         )
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val _retention: StateFlow<List<Float>> =  _sortType
-        .flatMapLatest(
-            transform = { sortType ->
-                when(sortType) {
-                    SortType.UNICODE -> kanjiRepository
-                        .getRetentionOrderedByUnicode()
-                    SortType.STROKES -> kanjiRepository
-                        .getRetentionOrderedByUnicode()
-                    SortType.DURABILITY -> kanjiRepository
-                        .getRetentionOrderedByUnicode()
-                }
-            }
-        )
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted
-                .WhileSubscribed(),
-            initialValue = emptyList()
-        )
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val _kanjiRetention: StateFlow<List<Pair<Kanji, Float>>> = _sortType
-        .flatMapLatest(
-            transform = { sortType ->
-                when(sortType) {
-                    SortType.UNICODE -> kanjiRepository
-                        .getKanjiRetentionOrderedByUnicode()
-                    SortType.STROKES -> kanjiRepository
-                        .getKanjiRetentionOrderedByUnicode()
-                    SortType.DURABILITY -> kanjiRepository
-                        .getKanjiRetentionOrderedByUnicode()
-                }
-            }
-        )
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted
-                .WhileSubscribed(),
-            initialValue = emptyList()
-        )
-    private val _kanjiRetention1: Flow<List<Pair<Kanji, Float>>> = combine(
-        flow = _kanji,
-        flow2 = _retention,
-        transform = { kanji, retention ->
-            kanji.zip(retention)
-        }
-    )
     private val _state: MutableStateFlow<LibraryState> = MutableStateFlow(
         value = LibraryState()
     )
@@ -119,13 +72,11 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
         flow2 = _sortType,
         flow3 = _kanji,
         flow4 = _date,
-        flow5 = _retention,
-        transform = { state, sortType, kanji, date, retention ->
+        transform = { state, sortType, kanji, date ->
             state.copy(
+                sortType = sortType,
                 kanji = kanji,
                 date = date,
-                sortType = sortType,
-                retention = retention,
             )
         }
     )
@@ -149,18 +100,6 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
             is LibraryEvent.ResetKanji -> {
                 viewModelScope.launch {
                     kanjiRepository.initializeKanjiData()
-                }
-            }
-            is LibraryEvent.GetRetentionFromKanji -> {
-                viewModelScope.launch {
-                    _state.update(
-                        function = {
-                            it.copy(
-                                retention1 = kanjiRepository.getRetentionFromKanji(
-                                    kanji = libraryEvent.kanji)
-                            )
-                        }
-                    )
                 }
             }
         }

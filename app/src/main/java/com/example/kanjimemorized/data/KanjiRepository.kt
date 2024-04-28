@@ -102,6 +102,13 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     fun getLatestDateOrderedByUnicode(): Flow<List<LocalDateTime>> {
         return kanjiDao.getLatestDateOrderedByUnicode()
     }
+    fun getLatestDateOrderedByStrokes(): Flow<List<LocalDateTime>> {
+        return kanjiDao.getLatestDateOrderedByStrokes()
+    }
+    fun getLatestDateOrderedByDurability(): Flow<List<LocalDateTime>> {
+        return kanjiDao.getLatestDateOrderedByDurability()
+    }
+
 
     suspend fun getRetentionOrderedByUnicode(): Flow<List<Float>> {
         val retention: List<Float> = listOf()

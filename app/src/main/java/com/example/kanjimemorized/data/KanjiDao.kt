@@ -38,6 +38,12 @@ interface KanjiDao {
     @Query("SELECT MAX(date) as date FROM review WHERE rating > 1 GROUP BY unicode ORDER BY unicode ASC ")
     fun getLatestDateOrderedByUnicode(): Flow<List<LocalDateTime>>
 
+    @Query("SELECT MAX(date) as date FROM review JOIN kanji WHERE rating > 1 GROUP BY review.unicode ORDER BY strokes ASC ")
+    fun getLatestDateOrderedByStrokes(): Flow<List<LocalDateTime>>
+
+    @Query("SELECT MAX(date) as date FROM review JOIN kanji WHERE rating > 1 GROUP BY review.unicode ORDER BY durability DESC ")
+    fun getLatestDateOrderedByDurability(): Flow<List<LocalDateTime>>
+
 
     @Query("SELECT * FROM review WHERE unicode = :kanji")
     suspend fun getReviewsFromKanji(kanji: Char): List<Review>

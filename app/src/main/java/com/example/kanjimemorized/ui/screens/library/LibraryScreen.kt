@@ -159,10 +159,10 @@ fun LibraryScreen(
                             )
                         }
                         CircularProgressBar(
-                            percentage = exp(-(((Duration.between(
+                            percentage = if (kanji.durability == 0f) 0f else (exp(-(((Duration.between(
                                 date,
                                 LocalDateTime.now()
-                            ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat(),//(1/i++).toFloat(),//retention,
+                            ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),//(1/i++).toFloat(),//retention,
                             number = kanji.durability.toInt(),
                             fontSize = 16.sp,
                             radius = 26.dp,

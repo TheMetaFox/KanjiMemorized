@@ -55,7 +55,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.WrongCard -> {
                 var durability: Float = state.value.kanji!!.durability
-                if (durability < 1) {
+                if (durability <= 1) {
                     durability = 0f
                 } else {
                     durability -= 1
