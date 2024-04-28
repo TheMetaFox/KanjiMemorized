@@ -75,6 +75,12 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         ).toMinutes()).toDouble()
         return exp(-((minutes/1440) / durability).toFloat())
     }
+    suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime {
+        return parse(kanjiDao.getLatestDateFromKanji(
+            kanji = kanji
+        ))
+    }
+
     suspend fun getRandomKanji(): Kanji {
         return kanjiDao.getKanjiList().random()
     }

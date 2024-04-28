@@ -40,6 +40,9 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                                 ),
                                 retention = kanjiRepository.getRetentionFromKanji(
                                     kanji = kanjiEvent.kanji.unicode
+                                ),
+                                latestDate = kanjiRepository.getLatestDateFromKanji(
+                                    kanji = kanjiEvent.kanji.unicode
                                 )
                             )
                         }

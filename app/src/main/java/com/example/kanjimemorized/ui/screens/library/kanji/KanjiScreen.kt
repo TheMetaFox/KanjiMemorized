@@ -44,10 +44,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.theme.spacing
+import java.time.Duration
+import java.time.LocalDateTime
+import kotlin.math.exp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -298,7 +302,10 @@ fun KanjiScreen(
                                 )
                             }
                             CircularProgressBar(
-                                percentage = kanji.durability,
+                                percentage = if (kanji.durability == 0f) 0f else (exp(-(((Duration.between(
+                                    kanjiState.latestDate,
+                                    LocalDateTime.now()
+                                ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),
                                 number = kanji.durability.toInt(),
                                 fontSize = 16.sp,
                                 radius = 26.dp,
