@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.study.flashcard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -10,7 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.math.exp
 
 class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
 
@@ -41,7 +44,25 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         _state.update(
                             function = {
                                 var i = kanjiRepository.getRandomKanji()
-                                while (state.value.kanji == i) {
+                                var available = true
+                                kanjiRepository.getKanjiComponentsFromKanji(i.unicode).forEach { kanji ->
+                                    print(kanji.meanings + kanji.durability)
+                                    Log.i("KanjiMemorized",
+                                        (kanji.meanings + kanji.durability).toString()
+                                    );
+                                    if (kanji.durability == 0f) {
+                                        available = false
+                                    }
+                                    val retention = exp(-(((Duration.between(
+                                        kanjiRepository.getLatestDateFromKanji(kanji.unicode),
+                                        LocalDateTime.now()
+                                    ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()
+                                    if (retention < 80f) {
+                                        available = false
+                                    }
+                                }
+                                Log.i("KanjiMemorized", available.toString())
+                                while (state.value.kanji == i || !available) {
                                     i = kanjiRepository.getRandomKanji()
                                 }
                                 it.copy(
