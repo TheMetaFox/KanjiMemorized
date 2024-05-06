@@ -81,11 +81,11 @@ fun StudyPlaygroundScreen(
             Box(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Screen.Home.route)
+                        navController.navigate(Screen.Study.route)
                     }
             ) {
                 Text(
-                    text = "Study",
+                    text = "Playground",
                     modifier = Modifier
                         .align(alignment = Center),
                     fontSize = 50.sp

@@ -1,6 +1,7 @@
 package com.example.kanjimemorized.ui.screens.study.flashcard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.theme.spacing
 @Composable
 fun FlashcardScreen(
     modifier: Modifier,
+    navController: NavHostController,
     flashcardState: FlashcardState,
     onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
@@ -38,105 +43,127 @@ fun FlashcardScreen(
             .padding(MaterialTheme.spacing.small),
     ) { contentPadding ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(contentPadding),
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
+            Box(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.Study.route)
+                    }
+            ) {
+                Text(
+                    text = "Flashcard",
+                    modifier = Modifier
+                        .align(alignment = Alignment.Center),
+                    fontSize = 50.sp
+                )
+            }
+
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.5f),
+                    .fillMaxSize(),
                 horizontalAlignment = CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Box(
+                Column(
                     modifier = Modifier
-                        .size(150.dp,100.dp)
+                        .fillMaxHeight(0.5f),
+                    horizontalAlignment = CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
                 ) {
-                    Text(
-                        text = flashcardState.kanji?.unicode.toString(),
-                        modifier = modifier.align(Center),
-                        fontSize = 50.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                if (flashcardState.isAnswerShowing) {
                     Box(
                         modifier = Modifier
-                            .size(400.dp,100.dp)
+                            .size(150.dp,100.dp)
                     ) {
                         Text(
-                            text = flashcardState.kanji?.meanings.toString().replace("[", "").replace("]", ""),
+                            text = flashcardState.kanji?.unicode.toString(),
                             modifier = modifier.align(Center),
-                            fontSize = 40.sp,
+                            fontSize = 50.sp,
                             textAlign = TextAlign.Center
                         )
                     }
-                }
-            }
-            if (flashcardState.isAnswerShowing) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = {
-                            onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                            onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
-                            onFlashcardEvent(FlashcardEvent.WrongCard)
-                        },
-                        modifier = Modifier
-                            .size(125.dp,50.dp),
-                    ) {
-                        Text(
-                            text = "Wrong",
-                            fontSize = 20.sp
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                            onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
-                            onFlashcardEvent(FlashcardEvent.CorrectCard)
-                        },
-                        modifier = Modifier
-                            .size(125.dp,50.dp),
-                    ) {
-                        Text(
-                            text = "Correct",
-                            fontSize = 20.sp
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                            onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
-                            onFlashcardEvent(FlashcardEvent.EasyCard)
-                        },
-                        modifier = Modifier
-                            .size(125.dp,50.dp),
-                    ) {
-                        Text(
-                            text = "Easy",
-                            fontSize = 20.sp
-                        )
+                    if (flashcardState.isAnswerShowing) {
+                        Box(
+                            modifier = Modifier
+                                .size(400.dp,100.dp)
+                        ) {
+                            Text(
+                                text = flashcardState.kanji?.meanings.toString().replace("[", "").replace("]", ""),
+                                modifier = modifier.align(Center),
+                                fontSize = 40.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
-            } else {
-                Button(
-                    onClick = { onFlashcardEvent(FlashcardEvent.FlipFlashcard) },
-                    modifier = Modifier
-                        .size(225.dp,100.dp),
-                ) {
-                    Text(
-                        text = "Show Answer",
-                        fontSize = 30.sp
-                    )
+                if (flashcardState.isAnswerShowing) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Button(
+                            onClick = {
+                                onFlashcardEvent(FlashcardEvent.FlipFlashcard)
+                                onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
+                                onFlashcardEvent(FlashcardEvent.WrongCard)
+                            },
+                            modifier = Modifier
+                                .size(125.dp,50.dp),
+                        ) {
+                            Text(
+                                text = "Wrong",
+                                fontSize = 20.sp
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                onFlashcardEvent(FlashcardEvent.FlipFlashcard)
+                                onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
+                                onFlashcardEvent(FlashcardEvent.CorrectCard)
+                            },
+                            modifier = Modifier
+                                .size(125.dp,50.dp),
+                        ) {
+                            Text(
+                                text = "Correct",
+                                fontSize = 20.sp
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                onFlashcardEvent(FlashcardEvent.FlipFlashcard)
+                                onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
+                                onFlashcardEvent(FlashcardEvent.EasyCard)
+                            },
+                            modifier = Modifier
+                                .size(125.dp,50.dp),
+                        ) {
+                            Text(
+                                text = "Easy",
+                                fontSize = 20.sp
+                            )
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = { onFlashcardEvent(FlashcardEvent.FlipFlashcard) },
+                        modifier = Modifier
+                            .size(225.dp,100.dp),
+                    ) {
+                        Text(
+                            text = "Show Answer",
+                            fontSize = 30.sp
+                        )
+                    }
                 }
+
             }
         }
     }
@@ -145,5 +172,5 @@ fun FlashcardScreen(
 @Preview
 @Composable
 fun FlashcardScreenPreview() {
-    FlashcardScreen(modifier = Modifier, flashcardState = FlashcardState(), onFlashcardEvent = { })
+    FlashcardScreen(modifier = Modifier, navController = rememberNavController(),flashcardState = FlashcardState(), onFlashcardEvent = { })
 }

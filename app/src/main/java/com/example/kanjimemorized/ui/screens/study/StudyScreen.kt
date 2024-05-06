@@ -1,7 +1,9 @@
 package com.example.kanjimemorized.ui.screens.study
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.theme.spacing
-
 @Composable
 fun StudyScreen(
     modifier: Modifier,
@@ -32,41 +33,62 @@ fun StudyScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(MaterialTheme.spacing.small),
-
         ) { contentPadding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(contentPadding)
-                .padding(5.dp),
+                .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = {
-                    navController.navigate(
-                        route = Screen.StudyPlayground.route
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.Home.route)
+                    }
             ) {
                 Text(
-                    text = "Playground",
-                    fontSize = 35.sp
+                    text = "Study",
+                    modifier = Modifier
+                        .align(alignment = Alignment.Center),
+                    fontSize = 50.sp
                 )
             }
-            Button(
-                onClick = {
-                    navController.navigate(
-                        route = Screen.Flashcard.route
-                    )
-                    onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
-                }
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+                    .padding(5.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(
-                    text = "Flashcard",
-                    fontSize = 35.sp
-                )
-                
+                Button(
+                    onClick = {
+                        navController.navigate(
+                            route = Screen.StudyPlayground.route
+                        )
+                    }
+                ) {
+                    Text(
+                        text = "Playground",
+                        fontSize = 35.sp
+                    )
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(
+                            route = Screen.Flashcard.route
+                        )
+                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
+                    }
+                ) {
+                    Text(
+                        text = "Flashcard",
+                        fontSize = 35.sp
+                    )
+
+                }
+
             }
         }
 

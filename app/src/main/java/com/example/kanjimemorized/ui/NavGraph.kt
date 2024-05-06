@@ -73,6 +73,7 @@ fun SetupNavGraph(
             FlashcardScreen(
                 modifier = modifier
                     .padding(5.dp),
+                navController = navController,
                 flashcardState = flashcardState,
                 onFlashcardEvent = onFlashcardEvent
             )
