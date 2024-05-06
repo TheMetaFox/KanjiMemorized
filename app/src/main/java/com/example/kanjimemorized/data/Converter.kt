@@ -1,8 +1,10 @@
 package com.example.kanjimemorized.data
 
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime.parse
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Converter {
 
@@ -32,10 +34,12 @@ class Converter {
 
     @TypeConverter
     fun localDateTimeToString(phaseLocalDate: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        phaseLocalDate.format(formatter)
         return(phaseLocalDate.toString())
     }
     @TypeConverter
     fun stringToLocalDateTime(phaseString: String): LocalDateTime {
-        return(parse(phaseString))
+        return(parse(phaseString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
     }
 }

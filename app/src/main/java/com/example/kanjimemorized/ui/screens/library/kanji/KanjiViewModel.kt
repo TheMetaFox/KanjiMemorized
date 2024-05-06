@@ -32,16 +32,16 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     _state.update(
                         function = {
                             it.copy(
-                                components = kanjiRepository.getKanjiComponentsFromKanji(
-                                    kanji = kanjiEvent.kanji.unicode
-                                ),
-                                reviews = kanjiRepository.getReviewsFromKanji(
-                                    kanji = kanjiEvent.kanji.unicode
-                                ),
                                 retention = kanjiRepository.getRetentionFromKanji(
                                     kanji = kanjiEvent.kanji.unicode
                                 ),
-                                latestDate = kanjiRepository.getLatestDateFromKanji(
+                                components = kanjiRepository.getKanjiComponentsFromKanji(
+                                    kanji = kanjiEvent.kanji.unicode
+                                ),
+                                componentsLatestDates = kanjiRepository.getKanjiComponentsLatestDatesFromKanji(
+                                    kanji = kanjiEvent.kanji.unicode
+                                ),
+                                reviews = kanjiRepository.getReviewsFromKanji(
                                     kanji = kanjiEvent.kanji.unicode
                                 )
                             )

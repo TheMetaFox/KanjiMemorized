@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.library.kanji
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -244,39 +245,8 @@ fun KanjiScreen(
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    kanjiState.components?.forEach { kanji ->
-                        /*
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                            ) {
-                                Text(
-                                    text = kanji.unicode.toString(),
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontSize = 32.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                            HorizontalProgressBar(
-                                percentage = .8f,
-                                width = 100.dp,
-                                height = 20.dp,
-                                modifier = Modifier
-                                    .padding(5.dp)
-                            )
-                            Box(
-                                modifier = Modifier
-                            ) {
-                                Text(
-                                    text = kanji.meanings.toString(),
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontSize = 32.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                        }*/
+                    Log.i("KanjiScreen.kt", kanjiState.components.toString()+kanjiState.componentsLatestDates.toString())
+                    kanjiState.components?.zip(kanjiState.componentsLatestDates)?.forEach { (kanji, latestDate) ->
                         Row(
                             modifier = Modifier
                                 .height(75.dp)
@@ -302,8 +272,8 @@ fun KanjiScreen(
                                 )
                             }
                             CircularProgressBar(
-                                percentage = if (kanji.durability == 0f) 0f else (exp(-(((Duration.between(
-                                    kanjiState.latestDate,
+                                percentage = if (kanji.durability == 0f || latestDate == null) 0f else (exp(-(((Duration.between(
+                                    latestDate,
                                     LocalDateTime.now()
                                 ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),
                                 number = kanji.durability.toInt(),

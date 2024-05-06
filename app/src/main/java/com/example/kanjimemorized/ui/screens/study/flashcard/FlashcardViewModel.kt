@@ -3,7 +3,6 @@ package com.example.kanjimemorized.ui.screens.study.flashcard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Review
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.exp
 
 class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
@@ -43,28 +43,30 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     block = {
                         _state.update(
                             function = {
-                                var i = kanjiRepository.getRandomKanji()
-                                var available = true
-                                kanjiRepository.getKanjiComponentsFromKanji(i.unicode).forEach { kanji ->
-                                    print(kanji.meanings + kanji.durability)
-                                    Log.i("KanjiMemorized",
-                                        (kanji.meanings + kanji.durability).toString()
-                                    );
-                                    if (kanji.durability == 0f) {
-                                        available = false
-                                    }
-                                    val retention = exp(-(((Duration.between(
-                                        kanjiRepository.getLatestDateFromKanji(kanji.unicode),
-                                        LocalDateTime.now()
-                                    ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()
-                                    if (retention < 80f) {
-                                        available = false
-                                    }
-                                }
-                                Log.i("KanjiMemorized", available.toString())
-                                while (state.value.kanji == i || !available) {
+                                var i : Kanji
+                                var available : Boolean
+                                //Log.i("KanjiMemorized", available.toString())
+                                do {
                                     i = kanjiRepository.getRandomKanji()
-                                }
+                                    available = true
+                                    Log.i("FlashcardViewModel.kt", "Checking if ${i} is available...")
+                                    kanjiRepository.getKanjiComponentsFromKanji(i.unicode).forEach { kanji ->
+                                        Log.i("FlashcardViewModel.kt", "Checking composition ${kanji.unicode}-${kanji.meanings}...")
+                                        if (kanji.durability == 0f) {
+                                            Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
+                                            available = false
+                                        }
+                                        val latestDate = kanjiRepository.getLatestDateFromKanji(kanji.unicode)
+                                        val retention = if (latestDate == null) 0f else exp(-(((Duration.between(
+                                            kanjiRepository.getLatestDateFromKanji(kanji.unicode),
+                                            LocalDateTime.now()
+                                        ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()
+                                        if (retention < .80f) {
+                                            Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention less than 80%.")
+                                            available = false
+                                        }
+                                    }
+                                } while (state.value.kanji == i || !available)
                                 it.copy(
                                     kanji = i,
                                     isAnswerShowing = false
@@ -90,7 +92,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 )
 
                 val review = Review(
-                    date = LocalDateTime.now(),
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     unicode = state.value.kanji!!.unicode,
                     rating = 1
                 )
@@ -116,7 +118,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 )
 
                 val review = Review(
-                    date = LocalDateTime.now(),
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     unicode = state.value.kanji!!.unicode,
                     rating = 2
                 )
@@ -142,7 +144,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 )
 
                 val review = Review(
-                    date = LocalDateTime.now(),
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     unicode = state.value.kanji!!.unicode,
                     rating = 3
                 )

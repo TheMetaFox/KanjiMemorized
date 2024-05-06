@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.library
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -48,11 +49,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalDateTime.parse
+import java.time.format.DateTimeFormatter
 import kotlin.math.exp
 
 @Composable
@@ -113,27 +117,17 @@ fun LibraryScreen(
                             )
                         }
                     }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clickable {
-
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
-                    ) {
-                        Switch(
-                            checked = libraryState.filterNonStudyable,
-                            onCheckedChange = { onLibraryEvent(LibraryEvent.ToggleFilterNonStudyable(libraryState.filterNonStudyable)) }
-                        )
-
-                        Text(
-                            text = "Filter Non-Studyable"
-                        )
-                    }
-
                 }
-                items(libraryState.kanji.zip(libraryState.date)) { (kanji, date)  ->
+                Log.i("LibraryScreen.kt", "Items")
+                if (libraryState.date.isEmpty()) {
+                    Log.i("LibraryScreen.kt", "libraryState.date is an empty list")
+                } else {
+                    Log.i("LibraryScreen.kt", libraryState.date.toString())
+                }
+                items(libraryState.kanji.zip(libraryState.date) { a: Kanji, b: String ->
+                    if (b != null) Pair(a,parse(b, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) else Pair(a,null)
+                }) { (kanji, date)  ->
+                    Log.i("LibraryScreen.kt", kanji.meanings.toString())
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
@@ -159,7 +153,7 @@ fun LibraryScreen(
                             )
                         }
                         CircularProgressBar(
-                            percentage = if (kanji.durability == 0f) 0f else (exp(-(((Duration.between(
+                            percentage = if (kanji.durability == 0f || date == null) 0f else (exp(-(((Duration.between(
                                 date,
                                 LocalDateTime.now()
                             ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),//(1/i++).toFloat(),//retention,
@@ -168,16 +162,6 @@ fun LibraryScreen(
                             radius = 26.dp,
                             strokeWidth = 4.dp,
                         )
-                        IconButton(
-                            onClick = {
-                            },
-                            modifier = Modifier
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Kanji"
-                            )
-                        }
                     }
                 }
                 item {

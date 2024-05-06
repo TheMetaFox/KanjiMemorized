@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class LibraryState(
     val kanji: List<Kanji> = emptyList(),
-    val date: List<LocalDateTime> = emptyList(),
+    val date: List<String> = emptyList(),
     val filterNonStudyable: Boolean = false,
     val sortType: SortType = SortType.UNICODE,
     )

@@ -6,9 +6,9 @@ import java.time.LocalDateTime
 
 data class KanjiState(
     val kanji: Kanji? = null,
-    val components: List<Kanji>? = listOf(),
-    val reviews: List<Review> = listOf(),
     val retention: Float = 0f,
-    val latestDate: LocalDateTime? = null,
+    val components: List<Kanji>? = listOf(),
+    val componentsLatestDates: List<LocalDateTime?> = listOf(),
+    val reviews: List<Review> = listOf(),
     val isShowingReviewData: Boolean = false
 )

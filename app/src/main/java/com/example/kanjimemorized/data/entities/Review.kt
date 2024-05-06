@@ -8,9 +8,8 @@ import java.time.LocalDateTime
 @Entity
 data class Review(
     @PrimaryKey(autoGenerate = false)
-    val date: LocalDateTime,
+    val date: String,
     val unicode: Char,
     val rating: Int
 ) {
-
 }
