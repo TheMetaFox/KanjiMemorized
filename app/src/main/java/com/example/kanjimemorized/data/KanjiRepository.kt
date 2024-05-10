@@ -3,18 +3,12 @@ package com.example.kanjimemorized.data
 import android.util.Log
 import com.example.kanjimemorized.KanjiData.KanjiData
 import com.example.kanjimemorized.ComponentData.ComponentData
+import com.example.kanjimemorized.MeaningData.MeaningData
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
+import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.forEach
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.flow.zip
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
@@ -44,8 +38,14 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         )
     }
 
-    suspend fun upsertReview(review: Review) {
-        kanjiDao.upsertReview(
+    suspend fun insertMeaning(kanjiMeaning: KanjiMeaningCrossRef) {
+        kanjiDao.insertKanjiMeaning(
+            kanjiMeaning = kanjiMeaning
+        )
+    }
+
+    suspend fun insertReview(review: Review) {
+        kanjiDao.insertReview(
             review = review
         )
     }
@@ -62,6 +62,14 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         )
     }
 
+    suspend fun getKanjiComponentMeaningsFromKanji(kanji: Char): List<List<String>> {
+        var list = listOf<List<String>>()
+        kanjiDao.getKanjiComponentsFromKanji(kanji).forEach {
+            list = list.plus(listOf(getMeaningsFromKanji(it.unicode)))
+        }
+        return list
+    }
+
     suspend fun getKanjiComponentsLatestDatesFromKanji(kanji: Char): List<LocalDateTime?> {
         var list = listOf<LocalDateTime?>()
         kanjiDao.getKanjiComponentsFromKanji(
@@ -72,6 +80,12 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         }
         Log.i("KanjiRepository.kt", "Kanji components' latest date list:$list")
         return list
+    }
+
+    suspend fun getMeaningsFromKanji(kanji: Char): List<String> {
+        return kanjiDao.getMeaningsFromKanji(
+            kanji = kanji
+        )
     }
 
     suspend fun getReviewsFromKanji(kanji: Char): List<Review> {
@@ -116,6 +130,18 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     fun getKanjiOrderedByDurability(): Flow<List<Kanji>> {
         return kanjiDao.getKanjiOrderedByDurability()
+    }
+
+    fun getMeaningOrderedByUnicode(): Flow<List<String>> {
+        return kanjiDao.getMeaningOrderedByUnicode()
+    }
+
+    fun getMeaningOrderedByStrokes(): Flow<List<String>> {
+        return kanjiDao.getMeaningOrderedByStrokes()
+    }
+
+    fun getMeaningOrderedByDurability(): Flow<List<String>> {
+        return kanjiDao.getMeaningOrderedByDurability()
     }
 
     fun getLatestDateOrderedByUnicode(): Flow<List<String>> {

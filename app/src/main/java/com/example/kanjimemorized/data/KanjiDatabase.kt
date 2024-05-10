@@ -6,10 +6,11 @@ import androidx.room.TypeConverters
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
+import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 
 @Database(
-    entities = [Kanji::class, Review::class, KanjiComponentCrossRef::class],
-    version = 2,
+    entities = [Kanji::class, Review::class, KanjiMeaningCrossRef::class, KanjiComponentCrossRef::class],
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(

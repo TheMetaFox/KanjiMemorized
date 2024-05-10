@@ -1,21 +1,15 @@
 package com.example.kanjimemorized
 
-import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Kanji
-import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Singleton
 
 object KanjiData {
     val KanjiData: Array<Kanji> = arrayOf(
 /*https://www.kanjidamage.com/kanji*/
-        Kanji(unicode = '\u597d', meanings = listOf("fond", "pleasing", "like"), strokes = 6),
-        Kanji(unicode = '\u5973', meanings = listOf("woman", "female"), strokes = 3),
-        Kanji(unicode = '\u5B50', meanings = listOf("child", "sign of the rat"), strokes = 3),
-        Kanji(unicode = '\u674E', meanings = listOf("plum"), strokes = 7),
-        Kanji(unicode = '\u6728', meanings = listOf("tree", "wood"), strokes = 4),
+        Kanji(unicode = '\u597d', strokes = 6),
+        Kanji(unicode = '\u5973', strokes = 3),
+        Kanji(unicode = '\u5B50', strokes = 3),
+        Kanji(unicode = '\u674E', strokes = 7),
+        Kanji(unicode = '\u6728', strokes = 4),
 
         /*
         Kanji(unicode = '\u4E00', meanings = listOf("one"), strokes = 1),

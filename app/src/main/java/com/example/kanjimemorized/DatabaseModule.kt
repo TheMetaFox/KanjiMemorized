@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.kanjimemorized.KanjiData.KanjiData
+import com.example.kanjimemorized.MeaningData.MeaningData
 import com.example.kanjimemorized.ComponentData.ComponentData
 import com.example.kanjimemorized.data.KanjiDao
 import com.example.kanjimemorized.data.KanjiDatabase
@@ -35,6 +36,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         provideKanjiData(KanjiRepository(kanjiDatabase.kanjiDao))
+                        provideKanjiMeaningData(KanjiRepository(kanjiDatabase.kanjiDao))
                         provideKanjiComponentData(KanjiRepository(kanjiDatabase.kanjiDao))
                     }
                 })
@@ -59,9 +61,21 @@ private lateinit var kanjiDatabase: KanjiDatabase
     @Provides
     fun provideKanjiData(kanjiRepository: KanjiRepository) {
         CoroutineScope(Dispatchers.IO).launch() {
-            KanjiData.forEach {kanji ->
+            KanjiData.forEach { kanji ->
                 kanjiRepository.upsertKanji(
                     kanji
+                )
+            }
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun provideKanjiMeaningData(kanjiRepository: KanjiRepository) {
+        CoroutineScope(Dispatchers.IO).launch() {
+            MeaningData.forEach { meaning ->
+                kanjiRepository.insertMeaning(
+                    meaning
                 )
             }
         }

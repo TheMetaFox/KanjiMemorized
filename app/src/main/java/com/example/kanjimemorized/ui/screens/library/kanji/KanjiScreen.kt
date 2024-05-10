@@ -191,7 +191,7 @@ fun KanjiScreen(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = kanjiState.kanji?.meanings.toString().replace("[", "").replace("]",""),
+                            text = kanjiState.meaning.toString().replace("[", "").replace("]",""),
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 26.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -240,19 +240,19 @@ fun KanjiScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Log.i("KanjiScreen.kt", kanjiState.components.toString()+kanjiState.componentsLatestDates.toString())
-                    kanjiState.components?.zip(kanjiState.componentsLatestDates)?.forEach { (kanji, latestDate) ->
+                    items(kanjiState.components.size) {
                         Row(
                             modifier = Modifier
                                 .height(75.dp)
                                 .padding(horizontal = 16.dp)
                                 .clickable {
-                                    onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanji))
+                                    onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanjiState.components[it]))
                                     navController.navigate(Screen.Kanji.route)
                                 },
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -263,25 +263,28 @@ fun KanjiScreen(
                                     .fillMaxWidth(0.5f)
                             ) {
                                 Text(
-                                    text = kanji.unicode.toString(),
+                                    text = kanjiState.components[it].unicode.toString(),
                                     fontSize = 20.sp
                                 )
                                 Text(
-                                    text = kanji.meanings.toString().replace("[", "").replace("]",""),
+                                    text = kanjiState.componentMeaning[it].toString().replace("[", "").replace("]",""),
                                     fontSize = 12.sp
                                 )
                             }
                             CircularProgressBar(
-                                percentage = if (kanji.durability == 0f || latestDate == null) 0f else (exp(-(((Duration.between(
-                                    latestDate,
+                                percentage = if (kanjiState.components[it].durability == 0f || kanjiState.componentsLatestDates[it] == null) 0f else (exp(-(((Duration.between(
+                                    kanjiState.componentsLatestDates[it],
                                     LocalDateTime.now()
-                                ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),
-                                number = kanji.durability.toInt(),
+                                ).toMinutes()).toDouble()/1440) / kanjiState.components[it].durability)).toFloat()),
+                                number = kanjiState.components[it].durability.toInt(),
                                 fontSize = 16.sp,
                                 radius = 26.dp,
                                 strokeWidth = 4.dp,
                             )
                         }
+
+                    }
+                    kanjiState.components.zip(kanjiState.componentsLatestDates).forEach { (kanji, latestDate) ->
                     }
                 }
             }

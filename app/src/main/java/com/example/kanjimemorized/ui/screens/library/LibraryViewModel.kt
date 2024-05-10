@@ -45,6 +45,26 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
             initialValue = emptyList()
         )
     @OptIn(ExperimentalCoroutinesApi::class)
+    private val _meaning: StateFlow<List<String>> = _sortType
+        .flatMapLatest(
+            transform = { sortType ->
+                when(sortType) {
+                    SortType.UNICODE -> kanjiRepository
+                        .getMeaningOrderedByUnicode()
+                    SortType.STROKES -> kanjiRepository
+                        .getMeaningOrderedByStrokes()
+                    SortType.DURABILITY -> kanjiRepository
+                        .getMeaningOrderedByDurability()
+                }
+            }
+        )
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted
+                .WhileSubscribed(),
+            initialValue = emptyList()
+        )
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val _date: StateFlow<List<String>> = _sortType
         .flatMapLatest(
             transform = { sortType ->
@@ -71,11 +91,13 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
         flow = _state,
         flow2 = _sortType,
         flow3 = _kanji,
-        flow4 = _date,
-        transform = { state, sortType, kanji, date ->
+        flow4 = _meaning,
+        flow5 = _date,
+        transform = { state, sortType, kanji, meaning, date ->
             state.copy(
                 sortType = sortType,
                 kanji = kanji,
+                meaning = meaning,
                 date = date,
             )
         }

@@ -58,7 +58,7 @@ fun FlashcardScreen(
                 Text(
                     text = "Flashcard",
                     modifier = Modifier
-                        .align(alignment = Alignment.Center),
+                        .align(alignment = Center),
                     fontSize = 50.sp
                 )
             }
@@ -92,7 +92,7 @@ fun FlashcardScreen(
                                 .size(400.dp,100.dp)
                         ) {
                             Text(
-                                text = flashcardState.kanji?.meanings.toString().replace("[", "").replace("]", ""),
+                                text = flashcardState.meanings.toString().replace("[", "").replace("]", ""),
                                 modifier = modifier.align(Center),
                                 fontSize = 40.sp,
                                 textAlign = TextAlign.Center

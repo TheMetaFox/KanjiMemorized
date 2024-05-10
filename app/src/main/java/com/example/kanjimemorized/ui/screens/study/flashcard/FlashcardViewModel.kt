@@ -38,7 +38,6 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 )
             }
             is FlashcardEvent.GetRandomFlashcard -> {
-
                 viewModelScope.launch(
                     block = {
                         _state.update(
@@ -49,9 +48,9 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 do {
                                     i = kanjiRepository.getRandomKanji()
                                     available = true
-                                    Log.i("FlashcardViewModel.kt", "Checking if ${i} is available...")
+                                    Log.i("FlashcardViewModel.kt", "Checking if $i is available...")
                                     kanjiRepository.getKanjiComponentsFromKanji(i.unicode).forEach { kanji ->
-                                        Log.i("FlashcardViewModel.kt", "Checking composition ${kanji.unicode}-${kanji.meanings}...")
+                                        Log.i("FlashcardViewModel.kt", "Checking composition ${kanji.unicode}...")
                                         if (kanji.durability == 0f) {
                                             Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
                                             available = false
@@ -69,6 +68,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 } while (state.value.kanji == i || !available)
                                 it.copy(
                                     kanji = i,
+                                    meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
                                     isAnswerShowing = false
                                 )
                             }
@@ -86,7 +86,6 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
 
                 val kanji = Kanji(
                     unicode = state.value.kanji!!.unicode,
-                    meanings = state.value.kanji!!.meanings,
                     strokes = state.value.kanji!!.strokes,
                     durability = durability,
                 )
@@ -101,7 +100,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     kanjiRepository.upsertKanji(
                         kanji = kanji
                     )
-                    kanjiRepository.upsertReview(
+                    kanjiRepository.insertReview(
                         review = review
                     )
                 }
@@ -112,7 +111,6 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
 
                 val kanji = Kanji(
                     unicode = state.value.kanji!!.unicode,
-                    meanings = state.value.kanji!!.meanings,
                     strokes = state.value.kanji!!.strokes,
                     durability = durability,
                 )
@@ -127,7 +125,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     kanjiRepository.upsertKanji(
                         kanji = kanji
                     )
-                    kanjiRepository.upsertReview(
+                    kanjiRepository.insertReview(
                         review = review
                     )
                 }
@@ -138,7 +136,6 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
 
                 val kanji = Kanji(
                     unicode = state.value.kanji!!.unicode,
-                    meanings = state.value.kanji!!.meanings,
                     strokes = state.value.kanji!!.strokes,
                     durability = durability,
                 )
@@ -153,7 +150,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     kanjiRepository.upsertKanji(
                         kanji = kanji
                     )
-                    kanjiRepository.upsertReview(
+                    kanjiRepository.insertReview(
                         review = review
                     )
                 }

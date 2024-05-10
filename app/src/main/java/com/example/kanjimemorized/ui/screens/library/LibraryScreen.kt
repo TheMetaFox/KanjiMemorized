@@ -124,16 +124,14 @@ fun LibraryScreen(
                 } else {
                     Log.i("LibraryScreen.kt", libraryState.date.toString())
                 }
-                items(libraryState.kanji.zip(libraryState.date) { a: Kanji, b: String ->
-                    if (b != null) Pair(a,parse(b, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) else Pair(a,null)
-                }) { (kanji, date)  ->
-                    Log.i("LibraryScreen.kt", kanji.meanings.toString())
+                items(libraryState.kanji.size) {
+                    Log.i("LibraryScreen.kt", libraryState.meaning[it])
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                             .clickable {
-                                onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanji))
+                                onKanjiEvent(KanjiEvent.DisplayKanjiInfo(libraryState.kanji[it]))
                                 navController.navigate(Screen.Kanji.route)
                             },
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -144,20 +142,20 @@ fun LibraryScreen(
                                 .fillMaxSize(0.5f)
                         ) {
                             Text(
-                                text = kanji.unicode.toString(),
+                                text = libraryState.kanji[it].unicode.toString(),
                                 fontSize = 20.sp
                             )
                             Text(
-                                text = kanji.meanings.toString().replace("[", "").replace("]",""),
+                                text = libraryState.meaning[it].replace("[", "").replace("]","").replace(",", ", "),
                                 fontSize = 12.sp
                             )
                         }
                         CircularProgressBar(
-                            percentage = if (kanji.durability == 0f || date == null) 0f else (exp(-(((Duration.between(
-                                date,
+                            percentage = if (libraryState.kanji[it].durability == 0f || libraryState.date[it] == null) 0f else (exp(-(((Duration.between(
+                                parse(libraryState.date[it], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                                 LocalDateTime.now()
-                            ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()),//(1/i++).toFloat(),//retention,
-                            number = kanji.durability.toInt(),
+                            ).toMinutes()).toDouble()/1440) / libraryState.kanji[it].durability)).toFloat()),//(1/i++).toFloat(),//retention,
+                            number = libraryState.kanji[it].durability.toInt(),
                             fontSize = 16.sp,
                             radius = 26.dp,
                             strokeWidth = 4.dp,

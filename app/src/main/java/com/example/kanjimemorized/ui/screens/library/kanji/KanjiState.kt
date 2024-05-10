@@ -6,8 +6,10 @@ import java.time.LocalDateTime
 
 data class KanjiState(
     val kanji: Kanji? = null,
+    val meaning: List<String>? = listOf(),
     val retention: Float = 0f,
-    val components: List<Kanji>? = listOf(),
+    val components: List<Kanji> = listOf(),
+    val componentMeaning: List<List<String>> = listOf(listOf()),
     val componentsLatestDates: List<LocalDateTime?> = listOf(),
     val reviews: List<Review> = listOf(),
     val isShowingReviewData: Boolean = false
