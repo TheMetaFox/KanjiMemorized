@@ -1,6 +1,5 @@
 package com.example.kanjimemorized.ui.screens.library
 
-import com.example.kanjimemorized.data.entities.Kanji
 
 sealed interface LibraryEvent {
     data class SortKanji(val sortType: SortType): LibraryEvent

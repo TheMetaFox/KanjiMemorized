@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kanjimemorized.ui.theme.spacing
-import java.time.temporal.TemporalField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +33,8 @@ fun KanjiReviewDataDialog(
     BasicAlertDialog(
         onDismissRequest = {
             onKanjiEvent(KanjiEvent.HideKanjiReviewData)
-        }
+        },
+        modifier = modifier
     ) {
         Surface(
             modifier = Modifier

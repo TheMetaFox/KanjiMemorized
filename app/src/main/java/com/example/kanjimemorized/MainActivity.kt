@@ -30,8 +30,6 @@ import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 

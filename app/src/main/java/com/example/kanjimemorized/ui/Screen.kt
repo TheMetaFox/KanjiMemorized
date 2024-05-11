@@ -1,10 +1,10 @@
 package com.example.kanjimemorized.ui
 
 sealed class Screen(val route: String) {
-    object Home: Screen(route = "home_screen")
-    object Study: Screen(route = "study_screen")
-    object StudyPlayground: Screen(route = "study_playground_screen")
-    object Flashcard: Screen(route = "flashcard_screen")
-    object Library: Screen(route = "library_screen")
-    object Kanji: Screen(route = "kanji_screen")
+    data object Home: Screen(route = "home_screen")
+    data object Study: Screen(route = "study_screen")
+    data object StudyPlayground: Screen(route = "study_playground_screen")
+    data object Flashcard: Screen(route = "flashcard_screen")
+    data object Library: Screen(route = "library_screen")
+    data object Kanji: Screen(route = "kanji_screen")
 }

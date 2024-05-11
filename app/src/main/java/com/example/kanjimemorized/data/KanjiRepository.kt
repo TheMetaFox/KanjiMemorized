@@ -3,7 +3,6 @@ package com.example.kanjimemorized.data
 import android.util.Log
 import com.example.kanjimemorized.KanjiData.KanjiData
 import com.example.kanjimemorized.ComponentData.ComponentData
-import com.example.kanjimemorized.MeaningData.MeaningData
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef

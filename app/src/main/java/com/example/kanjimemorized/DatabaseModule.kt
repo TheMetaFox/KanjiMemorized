@@ -60,7 +60,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
     @Singleton
     @Provides
     fun provideKanjiData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch() {
+        CoroutineScope(Dispatchers.IO).launch {
             KanjiData.forEach { kanji ->
                 kanjiRepository.upsertKanji(
                     kanji
@@ -72,7 +72,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
     @Singleton
     @Provides
     fun provideKanjiMeaningData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch() {
+        CoroutineScope(Dispatchers.IO).launch {
             MeaningData.forEach { meaning ->
                 kanjiRepository.insertMeaning(
                     meaning
@@ -84,7 +84,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
     @Singleton
     @Provides
     fun provideKanjiComponentData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch() {
+        CoroutineScope(Dispatchers.IO).launch {
             ComponentData.forEach { component ->
                 kanjiRepository.insertKanjiComponent(
                     component

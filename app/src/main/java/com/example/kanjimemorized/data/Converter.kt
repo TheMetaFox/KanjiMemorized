@@ -1,7 +1,6 @@
 package com.example.kanjimemorized.data
 
 import androidx.room.TypeConverter
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime.parse
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

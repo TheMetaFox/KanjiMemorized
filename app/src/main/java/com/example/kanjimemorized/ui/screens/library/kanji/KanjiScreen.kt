@@ -17,15 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,19 +37,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
-import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.theme.spacing
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.Locale
 import kotlin.math.exp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KanjiScreen(
     modifier: Modifier,
@@ -121,7 +113,7 @@ fun KanjiScreen(
                         .align(Alignment.CenterVertically),
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    Column() {
+                    Column {
                         Box(
                             modifier = Modifier
                         ) {
@@ -136,7 +128,7 @@ fun KanjiScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format("%.2f", kanjiState.retention),
+                                text = String.format(Locale.ENGLISH ,"%.2f", kanjiState.retention),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -144,7 +136,7 @@ fun KanjiScreen(
                         }
 
                     }
-                    Column() {
+                    Column {
                         Box(
                             modifier = Modifier
                         ) {
@@ -159,7 +151,7 @@ fun KanjiScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format("%.0f",kanjiState.kanji?.durability),
+                                text = String.format(Locale.ENGLISH,"%.0f",kanjiState.kanji?.durability),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -282,9 +274,6 @@ fun KanjiScreen(
                                 strokeWidth = 4.dp,
                             )
                         }
-
-                    }
-                    kanjiState.components.zip(kanjiState.componentsLatestDates).forEach { (kanji, latestDate) ->
                     }
                 }
             }

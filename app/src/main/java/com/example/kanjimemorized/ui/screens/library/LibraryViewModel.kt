@@ -5,17 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.KanjiRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
     private val _sortType: MutableStateFlow<SortType> = MutableStateFlow(
