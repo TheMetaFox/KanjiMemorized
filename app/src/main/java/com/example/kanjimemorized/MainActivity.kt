@@ -28,6 +28,9 @@ import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModelFactory
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
+import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
+import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModel
+import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
 
@@ -50,6 +53,12 @@ class MainActivity : ComponentActivity() {
             factory = kanjiViewModelFactory
         )[KanjiViewModel::class.java]
 
+        val reviewViewModelFactory = ReviewViewModelFactory(kanjiRepository)
+        val reviewViewModel: ReviewViewModel = ViewModelProvider(
+            owner = this,
+            factory = reviewViewModelFactory
+        )[ReviewViewModel::class.java]
+
         val flashcardViewModelFactory = FlashcardViewModelFactory(kanjiRepository)
         val flashcardViewModel: FlashcardViewModel = ViewModelProvider(
             owner = this,
@@ -65,10 +74,12 @@ class MainActivity : ComponentActivity() {
 
                 val libraryState by libraryViewModel.state.collectAsState()
                 val kanjiState by kanjiViewModel.state.collectAsState()
+                val reviewState by reviewViewModel.state.collectAsState()
                 val flashcardState by flashcardViewModel.state.collectAsState()
 
                 val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
                 val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
+                val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
                 val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
                 SetupNavGraph(
                     modifier = Modifier
@@ -79,9 +90,11 @@ class MainActivity : ComponentActivity() {
                     coroutineScope = coroutineScope,
                     libraryState = libraryState,
                     kanjiState = kanjiState,
+                    reviewState = reviewState,
                     flashcardState = flashcardState,
                     onLibraryEvent = onLibraryEvent,
                     onKanjiEvent = onKanjiEvent,
+                    onReviewEvent = onReviewEvent,
                     onFlashcardEvent = onFlashcardEvent,
                 )
             }

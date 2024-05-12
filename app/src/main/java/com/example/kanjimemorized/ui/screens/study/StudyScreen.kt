@@ -21,11 +21,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.theme.spacing
 @Composable
 fun StudyScreen(
     modifier: Modifier,
     navController: NavHostController,
+    onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
     Scaffold(
@@ -77,6 +79,19 @@ fun StudyScreen(
                 Button(
                     onClick = {
                         navController.navigate(
+                            route = Screen.Review.route
+                        )
+                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                    }
+                ) {
+                    Text(
+                        text = "Review",
+                        fontSize = 35.sp
+                    )
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(
                             route = Screen.Flashcard.route
                         )
                         onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
@@ -86,17 +101,14 @@ fun StudyScreen(
                         text = "Flashcard",
                         fontSize = 35.sp
                     )
-
                 }
-
             }
         }
-
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(Modifier, rememberNavController(), onFlashcardEvent = { })
+    StudyScreen(Modifier, rememberNavController(), onReviewEvent = { }, onFlashcardEvent = { })
 }

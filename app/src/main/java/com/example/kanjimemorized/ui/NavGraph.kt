@@ -20,6 +20,10 @@ import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardState
+import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
+import com.example.kanjimemorized.ui.screens.study.review.ReviewScreen
+import com.example.kanjimemorized.ui.screens.study.review.ReviewState
+
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -30,9 +34,11 @@ fun SetupNavGraph(
     coroutineScope: CoroutineScope,
     libraryState: LibraryState,
     kanjiState: KanjiState,
+    reviewState: ReviewState,
     flashcardState: FlashcardState,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit,
+    onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
 ) {
     NavHost(
@@ -54,6 +60,7 @@ fun SetupNavGraph(
                 modifier = modifier
                     .padding(5.dp),
                 navController = navController,
+                onReviewEvent = onReviewEvent,
                 onFlashcardEvent = onFlashcardEvent)
         }
         composable(
@@ -65,6 +72,17 @@ fun SetupNavGraph(
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope
+            )
+        }
+        composable(
+            route = Screen.Review.route
+        ) {
+            ReviewScreen(
+                modifier = modifier
+                    .padding(5.dp),
+                navController = navController,
+                reviewState = reviewState,
+                onReviewEvent = onReviewEvent
             )
         }
         composable(
