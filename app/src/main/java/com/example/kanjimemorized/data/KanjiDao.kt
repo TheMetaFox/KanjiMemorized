@@ -49,7 +49,7 @@ interface KanjiDao {
 
     @Query("SELECT GROUP_CONCAT(meaning) as meaning FROM kanji " +
             "JOIN kanjimeaningcrossref ON kanji.unicode = kanjimeaningcrossref.unicode " +
-            "GROUP BY kanji.unicode ORDER BY durability DESC")
+            "GROUP BY kanji.unicode ORDER BY durability DESC, kanji.unicode ASC")
     fun getMeaningOrderedByDurability(): Flow<List<String>>
 
     @Query("SELECT MAX(date) as date FROM (" +
