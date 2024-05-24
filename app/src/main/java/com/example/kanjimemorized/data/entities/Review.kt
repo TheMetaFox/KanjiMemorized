@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 data class Review(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val date: String,
+    val datetime: String,
     val unicode: Char,
     val rating: Int
 ) {
     constructor(date: String, unicode: Char, rating: Int) : this(
-        id = 0, date = date, unicode = unicode, rating = rating
+        id = 0, datetime = date, unicode = unicode, rating = rating
     )
 }

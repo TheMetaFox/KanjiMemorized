@@ -83,7 +83,7 @@ fun KanjiReviewDataDialog(
                                 modifier = Modifier
                             ) {
                                 Text(
-                                    text = review.date,
+                                    text = review.datetime,
                                     modifier = Modifier.align(Alignment.Center),
                                     fontSize = 18.sp,
                                     color = MaterialTheme.colorScheme.onBackground

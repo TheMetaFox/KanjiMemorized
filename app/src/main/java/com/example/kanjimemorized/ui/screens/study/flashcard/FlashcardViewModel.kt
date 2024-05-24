@@ -44,7 +44,6 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                             function = {
                                 var i : Kanji
                                 var available : Boolean
-                                //Log.i("KanjiMemorized", available.toString())
                                 do {
                                     i = kanjiRepository.getRandomKanji()
                                     available = true

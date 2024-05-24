@@ -10,7 +10,7 @@ import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 
 @Database(
     entities = [Kanji::class, Review::class, KanjiMeaningCrossRef::class, KanjiComponentCrossRef::class],
-    version = 5,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(

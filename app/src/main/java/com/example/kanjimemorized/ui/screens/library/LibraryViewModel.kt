@@ -17,9 +17,6 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
     private val _sortType: MutableStateFlow<SortType> = MutableStateFlow(
         value = SortType.UNICODE
     )
-    private val _filterNonStudyable: MutableStateFlow<Boolean> = MutableStateFlow(
-        value = false
-    )
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _kanji: StateFlow<List<Kanji>> = _sortType
         .flatMapLatest(
@@ -112,12 +109,9 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
             is LibraryEvent.SortKanji -> {
                 _sortType.value = libraryEvent.sortType
             }
-            is LibraryEvent.ToggleFilterNonStudyable -> {
-                _filterNonStudyable.value != libraryEvent.filterNonStudyable
-            }
             is LibraryEvent.ResetKanji -> {
                 viewModelScope.launch {
-                    kanjiRepository.initializeKanjiData()
+                    kanjiRepository.resetKanjiData()
                 }
             }
         }

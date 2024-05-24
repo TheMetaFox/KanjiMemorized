@@ -41,6 +41,8 @@ class MainActivity : ComponentActivity() {
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
 
+
+
         val libraryViewModelFactory = LibraryViewModelFactory(kanjiRepository)
         val libraryViewModel: LibraryViewModel = ViewModelProvider(
             owner = this,

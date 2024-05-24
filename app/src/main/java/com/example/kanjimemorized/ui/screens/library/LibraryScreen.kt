@@ -112,6 +112,16 @@ fun LibraryScreen(
                     }
                 }
                 Log.i("LibraryScreen.kt", "Items")
+                if (libraryState.kanji.isEmpty()) {
+                    Log.i("LibraryScreen.kt", "libraryState.kanji is an empty list")
+                } else {
+                    Log.i("LibraryScreen.kt", libraryState.kanji.toString())
+                }
+                if (libraryState.meaning.isEmpty()) {
+                    Log.i("LibraryScreen.kt", "libraryState.meaning is an empty list")
+                } else {
+                    Log.i("LibraryScreen.kt", libraryState.meaning.toString())
+                }
                 if (libraryState.date.isEmpty()) {
                     Log.i("LibraryScreen.kt", "libraryState.date is an empty list")
                 } else {

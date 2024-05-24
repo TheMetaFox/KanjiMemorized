@@ -1,12 +1,8 @@
 package com.example.kanjimemorized.data
 
 import android.util.Log
-import com.example.kanjimemorized.KanjiData.KanjiData
-import com.example.kanjimemorized.ComponentData.ComponentData
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
-import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
-import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 import kotlinx.coroutines.flow.Flow
 import java.time.Duration
 import java.time.LocalDateTime
@@ -15,20 +11,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.exp
 
 class KanjiRepository(private val kanjiDao: KanjiDao) {
-    suspend fun initializeKanjiData() {
-        kanjiDao.deleteAllKanji()
-        kanjiDao.deleteAllKanjiComponent()
+    suspend fun resetKanjiData() {
+        kanjiDao.resetKanjiData()
         kanjiDao.deleteAllReviews()
-        KanjiData.forEach {
-            kanjiDao.upsertKanji(
-                kanji = it
-            )
-        }
-        ComponentData.forEach {
-            kanjiDao.insertKanjiComponent(
-                kanjiComponent = it
-            )
-        }
     }
 
     suspend fun upsertKanji(kanji: Kanji) {
@@ -37,21 +22,9 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         )
     }
 
-    suspend fun insertMeaning(kanjiMeaning: KanjiMeaningCrossRef) {
-        kanjiDao.insertKanjiMeaning(
-            kanjiMeaning = kanjiMeaning
-        )
-    }
-
     suspend fun insertReview(review: Review) {
         kanjiDao.insertReview(
             review = review
-        )
-    }
-
-    suspend fun insertKanjiComponent(kanjiComponent: KanjiComponentCrossRef) {
-        kanjiDao.insertKanjiComponent(
-            kanjiComponent = kanjiComponent
         )
     }
 

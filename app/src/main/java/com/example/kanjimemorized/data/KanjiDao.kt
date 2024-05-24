@@ -52,26 +52,26 @@ interface KanjiDao {
             "GROUP BY kanji.unicode ORDER BY durability DESC, kanji.unicode ASC")
     fun getMeaningOrderedByDurability(): Flow<List<String>>
 
-    @Query("SELECT MAX(date) as date FROM (" +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+    @Query("SELECT MAX(datetime) as datetime FROM (" +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "UNION ALL " +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE kanji.unicode = NULL AND rating > 1) " +
             "GROUP BY unicode ORDER BY unicode ASC")
     fun getLatestDateOrderedByUnicode(): Flow<List<String>>
 
-    @Query("SELECT MAX(date) as date FROM (" +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+    @Query("SELECT MAX(datetime) as datetime FROM (" +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "UNION ALL " +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE kanji.unicode = NULL AND rating > 1) " +
             "GROUP BY unicode ORDER BY strokes ASC")
     fun getLatestDateOrderedByStrokes(): Flow<List<String>>
 
-    @Query("SELECT MAX(date) as date FROM (" +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+    @Query("SELECT MAX(datetime) as datetime FROM (" +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "UNION ALL " +
-            "SELECT kanji.unicode, strokes, durability, date, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
+            "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE kanji.unicode = NULL AND rating > 1) " +
             "GROUP BY unicode ORDER BY durability DESC")
     fun getLatestDateOrderedByDurability(): Flow<List<String>>
@@ -90,14 +90,20 @@ interface KanjiDao {
     @Query("SELECT durability FROM kanji WHERE unicode = :kanji")
     suspend fun getDurabilityFromKanji(kanji: Char): Float
 
-    @Query("SELECT date FROM review WHERE unicode = :kanji AND rating > 1 ORDER BY date DESC LIMIT 1")
+    @Query("SELECT datetime FROM review WHERE unicode = :kanji AND rating > 1 ORDER BY datetime DESC LIMIT 1")
     suspend fun getLatestDateFromKanji(kanji: Char): String
 
     @Query("DELETE FROM kanji")
     suspend fun deleteAllKanji()
 
+    @Query("DELETE FROM kanjimeaningcrossref")
+    suspend fun deleteAllMeaning()
+
     @Query("DELETE FROM kanjicomponentcrossref")
     suspend fun deleteAllKanjiComponent()
+
+    @Query("UPDATE kanji SET durability = 0.0")
+    suspend fun resetKanjiData()
 
     @Query("DELETE FROM review")
     suspend fun deleteAllReviews()

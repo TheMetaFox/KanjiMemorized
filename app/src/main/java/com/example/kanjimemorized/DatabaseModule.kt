@@ -2,19 +2,11 @@ package com.example.kanjimemorized
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.kanjimemorized.KanjiData.KanjiData
-import com.example.kanjimemorized.MeaningData.MeaningData
-import com.example.kanjimemorized.ComponentData.ComponentData
 import com.example.kanjimemorized.data.KanjiDao
 import com.example.kanjimemorized.data.KanjiDatabase
 import com.example.kanjimemorized.data.KanjiRepository
 import com.google.android.datatransport.runtime.dagger.Module
 import com.google.android.datatransport.runtime.dagger.Provides
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Module
@@ -31,16 +23,8 @@ private lateinit var kanjiDatabase: KanjiDatabase
                 klass = KanjiDatabase::class.java,
                 name = "Kanji.db"
             )
-            .addCallback(
-                callback = object: RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        provideKanjiData(KanjiRepository(kanjiDatabase.kanjiDao))
-                        provideKanjiMeaningData(KanjiRepository(kanjiDatabase.kanjiDao))
-                        provideKanjiComponentData(KanjiRepository(kanjiDatabase.kanjiDao))
-                    }
-                })
             .fallbackToDestructiveMigration()
+            .createFromAsset("Kanji.db")
             .build()
         return kanjiDatabase
     }
@@ -55,41 +39,4 @@ private lateinit var kanjiDatabase: KanjiDatabase
     fun provideRepository(
         dao: KanjiDao
     ) = KanjiRepository(dao)
-
-
-    @Singleton
-    @Provides
-    fun provideKanjiData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch {
-            KanjiData.forEach { kanji ->
-                kanjiRepository.upsertKanji(
-                    kanji
-                )
-            }
-        }
-    }
-
-    @Singleton
-    @Provides
-    fun provideKanjiMeaningData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch {
-            MeaningData.forEach { meaning ->
-                kanjiRepository.insertMeaning(
-                    meaning
-                )
-            }
-        }
-    }
-
-    @Singleton
-    @Provides
-    fun provideKanjiComponentData(kanjiRepository: KanjiRepository) {
-        CoroutineScope(Dispatchers.IO).launch {
-            ComponentData.forEach { component ->
-                kanjiRepository.insertKanjiComponent(
-                    component
-                )
-            }
-        }
-    }
 }
