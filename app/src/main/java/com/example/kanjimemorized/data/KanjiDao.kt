@@ -31,10 +31,10 @@ interface KanjiDao {
     @Query("SELECT * FROM kanji ORDER BY unicode ASC")
     fun getKanjiOrderedByUnicode(): Flow<List<Kanji>>
 
-    @Query("SELECT * FROM kanji ORDER BY strokes ASC")
+    @Query("SELECT * FROM kanji ORDER BY strokes ASC, unicode ASC")
     fun getKanjiOrderedByStrokes(): Flow<List<Kanji>>
 
-    @Query("SELECT * FROM kanji ORDER BY durability DESC")
+    @Query("SELECT * FROM kanji ORDER BY durability DESC, unicode ASC")
     fun getKanjiOrderedByDurability(): Flow<List<Kanji>>
 
     @Query("SELECT GROUP_CONCAT(meaning) as meaning FROM kanji " +
@@ -44,7 +44,7 @@ interface KanjiDao {
 
     @Query("SELECT GROUP_CONCAT(meaning) as meaning FROM kanji " +
             "JOIN kanjimeaningcrossref ON kanji.unicode = kanjimeaningcrossref.unicode " +
-            "GROUP BY kanji.unicode ORDER BY strokes ASC")
+            "GROUP BY kanji.unicode ORDER BY strokes ASC, kanji.unicode ASC")
     fun getMeaningOrderedByStrokes(): Flow<List<String>>
 
     @Query("SELECT GROUP_CONCAT(meaning) as meaning FROM kanji " +
@@ -65,7 +65,7 @@ interface KanjiDao {
             "UNION ALL " +
             "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE kanji.unicode = NULL AND rating > 1) " +
-            "GROUP BY unicode ORDER BY strokes ASC")
+            "GROUP BY unicode ORDER BY strokes ASC, unicode ASC")
     fun getLatestDateOrderedByStrokes(): Flow<List<String>>
 
     @Query("SELECT MAX(datetime) as datetime FROM (" +
@@ -73,7 +73,7 @@ interface KanjiDao {
             "UNION ALL " +
             "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE kanji.unicode = NULL AND rating > 1) " +
-            "GROUP BY unicode ORDER BY durability DESC")
+            "GROUP BY unicode ORDER BY durability DESC, unicode ASC")
     fun getLatestDateOrderedByDurability(): Flow<List<String>>
 
     @Query("SELECT meaning FROM kanjimeaningcrossref WHERE unicode = :kanji")
