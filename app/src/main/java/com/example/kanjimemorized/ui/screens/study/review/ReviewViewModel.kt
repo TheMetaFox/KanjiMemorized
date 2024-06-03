@@ -65,7 +65,8 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                                 it.copy(
                                     kanji = i,
                                     meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
-                                    isAnswerShowing = false
+                                    isAnswerShowing = false,
+                                    isReviewAvailable = true,
                                 )
                             }
                         )
@@ -99,6 +100,13 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    _state.update(
+                        function = {
+                            it.copy(
+                                isReviewAvailable = false
+                            )
+                        }
+                    )
                 }
             }
             is ReviewEvent.CorrectCard -> {
@@ -124,6 +132,14 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    _state.update(
+                        function = {
+                            it.copy(
+                                isReviewAvailable = false
+                            )
+                        }
+                    )
+
                 }
             }
             is ReviewEvent.EasyCard -> {
@@ -149,6 +165,14 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    _state.update(
+                        function = {
+                            it.copy(
+                                isReviewAvailable = false
+                            )
+                        }
+                    )
+
                 }
             }
         }

@@ -63,107 +63,120 @@ fun ReviewScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly,
-            ) {
+            if (reviewState.isReviewAvailable) {
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight(0.5f),
+                        .fillMaxSize(),
                     horizontalAlignment = CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                    verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .size(150.dp,100.dp)
+                            .fillMaxHeight(0.5f),
+                        horizontalAlignment = CenterHorizontally,
+                        verticalArrangement = Arrangement.Top
                     ) {
-                        Text(
-                            text = reviewState.kanji?.unicode.toString(),
-                            modifier = modifier.align(Center),
-                            fontSize = 50.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    if (reviewState.isAnswerShowing) {
                         Box(
                             modifier = Modifier
-                                .size(400.dp,100.dp)
+                                .size(150.dp,100.dp)
                         ) {
                             Text(
-                                text = reviewState.meanings.toString().replace("[", "").replace("]", ""),
+                                text = reviewState.kanji?.unicode.toString(),
                                 modifier = modifier.align(Center),
-                                fontSize = 40.sp,
+                                fontSize = 50.sp,
                                 textAlign = TextAlign.Center
                             )
                         }
+                        if (reviewState.isAnswerShowing) {
+                            Box(
+                                modifier = Modifier
+                                    .size(400.dp,100.dp)
+                            ) {
+                                Text(
+                                    text = reviewState.meanings.toString().replace("[", "").replace("]", ""),
+                                    modifier = modifier.align(Center),
+                                    fontSize = 40.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    }
+                    if (reviewState.isAnswerShowing) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Button(
+                                onClick = {
+                                    onReviewEvent(ReviewEvent.FlipFlashcard)
+                                    onReviewEvent(ReviewEvent.WrongCard)
+                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                },
+                                modifier = Modifier
+                                    .size(125.dp,50.dp),
+                            ) {
+                                Text(
+                                    text = "Wrong",
+                                    fontSize = 20.sp
+                                )
+                            }
+                            Button(
+                                onClick = {
+                                    onReviewEvent(ReviewEvent.FlipFlashcard)
+                                    onReviewEvent(ReviewEvent.CorrectCard)
+                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                },
+                                modifier = Modifier
+                                    .size(125.dp,50.dp),
+                            ) {
+                                Text(
+                                    text = "Correct",
+                                    fontSize = 20.sp
+                                )
+                            }
+                            Button(
+                                onClick = {
+                                    onReviewEvent(ReviewEvent.FlipFlashcard)
+                                    onReviewEvent(ReviewEvent.EasyCard)
+                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                },
+                                modifier = Modifier
+                                    .size(125.dp,50.dp),
+                            ) {
+                                Text(
+                                    text = "Easy",
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    } else {
+                        Button(
+                            onClick = { onReviewEvent(ReviewEvent.FlipFlashcard) },
+                            modifier = Modifier
+                                .size(225.dp,100.dp),
+                        ) {
+                            Text(
+                                text = "Show Answer",
+                                fontSize = 30.sp
+                            )
+                        }
                     }
                 }
-                if (reviewState.isAnswerShowing) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Button(
-                            onClick = {
-                                onReviewEvent(ReviewEvent.FlipFlashcard)
-                                onReviewEvent(ReviewEvent.GetRandomFlashcard)
-                                onReviewEvent(ReviewEvent.WrongCard)
-                            },
-                            modifier = Modifier
-                                .size(125.dp,50.dp),
-                        ) {
-                            Text(
-                                text = "Wrong",
-                                fontSize = 20.sp
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                onReviewEvent(ReviewEvent.FlipFlashcard)
-                                onReviewEvent(ReviewEvent.GetRandomFlashcard)
-                                onReviewEvent(ReviewEvent.CorrectCard)
-                            },
-                            modifier = Modifier
-                                .size(125.dp,50.dp),
-                        ) {
-                            Text(
-                                text = "Correct",
-                                fontSize = 20.sp
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                onReviewEvent(ReviewEvent.FlipFlashcard)
-                                onReviewEvent(ReviewEvent.GetRandomFlashcard)
-                                onReviewEvent(ReviewEvent.EasyCard)
-                            },
-                            modifier = Modifier
-                                .size(125.dp,50.dp),
-                        ) {
-                            Text(
-                                text = "Easy",
-                                fontSize = 20.sp
-                            )
-                        }
-                    }
-                } else {
-                    Button(
-                        onClick = { onReviewEvent(ReviewEvent.FlipFlashcard) },
-                        modifier = Modifier
-                            .size(225.dp,100.dp),
-                    ) {
-                        Text(
-                            text = "Show Answer",
-                            fontSize = 30.sp
-                        )
-                    }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(300.dp,100.dp)
+                ) {
+                    Text(
+                        text = "No Reviews Available",
+                        modifier = modifier.align(Center),
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
-
             }
         }
     }
