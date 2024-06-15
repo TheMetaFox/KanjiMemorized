@@ -88,6 +88,10 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return if (date.isNullOrEmpty()) null else parse(date, formatter)
     }
 
+    suspend fun getKanjiList(): List<Kanji> {
+        return kanjiDao.getKanjiList()
+    }
+
     suspend fun getRandomKanji(): Kanji {
         return kanjiDao.getKanjiList().random()
     }

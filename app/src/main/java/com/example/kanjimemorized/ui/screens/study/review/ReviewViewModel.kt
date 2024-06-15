@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.PriorityQueue
+import java.util.Queue
 import kotlin.math.exp
 
 class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
@@ -40,36 +42,34 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
             is ReviewEvent.GetRandomFlashcard -> {
                 viewModelScope.launch(
                     block = {
-                        _state.update(
-                            function = {
-                                var i : Kanji
-                                var ready : Boolean
-                                do {
-                                    i = kanjiRepository.getRandomKanji()
-                                    ready = true
-                                    Log.i("ReviewViewModel.kt", "Checking if $i is ready for review...")
-                                    if (i.durability == 0f) {
-                                        Log.i("ReviewViewModel.kt", "${i.unicode} has no durability.")
-                                        ready = false
-                                    }
-                                    val latestDate = kanjiRepository.getLatestDateFromKanji(i.unicode)
-                                    val retention = if (latestDate == null) 0f else exp(-(((Duration.between(
-                                        latestDate,
-                                        LocalDateTime.now()
-                                    ).toMinutes()).toDouble()/1440) / i.durability)).toFloat()
-                                    if (retention > .80f) {
-                                        Log.i("ReviewViewModel.kt", "${i.unicode} has retention greater than 80%.")
-                                        ready = false
-                                    }
-                                } while (state.value.kanji == i || !ready)
-                                it.copy(
-                                    kanji = i,
-                                    meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
-                                    isAnswerShowing = false,
-                                    isReviewAvailable = true,
-                                )
+                        val i : Kanji?
+                        val queue : PriorityQueue<Pair<Float, Kanji>> = state.value.queue
+                        kanjiRepository.getKanjiList().forEach { kanji ->
+                            if (kanji.durability == 0f) {
+                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has no durability.")
                             }
-                        )
+                            else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
+                            }
+                            else {
+                                queue.add(Pair(1/kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                                Log.i("ReviewViewModel.kt", "Adding ${kanji.unicode} to review queue...")
+                            }
+                        }
+                        Log.i("ReviewViewModel.kt", "Queue size: ${queue.size}")
+                        i = queue.poll()?.second
+                        if (queue.size != 0) {
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        kanji = i,
+                                        meanings = kanjiRepository.getMeaningsFromKanji(i!!.unicode),
+                                        isAnswerShowing = false,
+                                        isReviewAvailable = true,
+                                    )
+                                }
+                            )
+                        }
                     }
                 )
             }
