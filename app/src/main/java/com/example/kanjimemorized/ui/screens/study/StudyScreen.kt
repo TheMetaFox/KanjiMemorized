@@ -71,9 +71,7 @@ fun StudyScreen(
             ) {
                 Button(
                     onClick = {
-                        navController.navigate(
-                            route = Screen.StudyPlayground.route
-                        )
+                        navController.navigateUp()
                     }
                 ) {
                     Text(

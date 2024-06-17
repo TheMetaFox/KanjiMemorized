@@ -77,7 +77,7 @@ fun KanjiScreen(
             Box(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Screen.Library.route)
+                        navController.navigateUp()
                     }
                     .padding(bottom = 5.dp),
             ) {
