@@ -61,26 +61,21 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                         }
                     }
                         Log.i("LearnViewModel.kt", "Queue size: ${queue.size}")
-                        if(queue.size > 0) {
-                            Log.i("LearnViewModel.kt", "Queue: $queue")
-                            val i : Kanji = queue.poll().second
+                        if(queue.peek() != null) {
+                            val i : Kanji = queue.poll()!!.second
                             Log.i("LearnViewModel.kt", "Polling kanji ${i.unicode}")
-                            Log.i("LearnViewModel.kt", "Is queue empty: ${i == null}")
-                            if (i != null) {
-                                Log.i("LearnViewModel.kt", "State updating...")
-                                _state.update(
-                                    function = {
-                                        it.copy(
-                                            kanji = i,
-                                            meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
-                                            isReviewAvailable = true,
-                                            queue = queue
-                                        )
-                                    }
-                                )
-                                Log.i("LearnViewModel.kt", "State updated.")
-                            }
-
+                            Log.i("LearnViewModel.kt", "State updating...")
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        kanji = i,
+                                        meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                        isReviewAvailable = true,
+                                        queue = queue
+                                    )
+                                }
+                            )
+                            Log.i("LearnViewModel.kt", "State updated.")
                         }
                     }
                 )
