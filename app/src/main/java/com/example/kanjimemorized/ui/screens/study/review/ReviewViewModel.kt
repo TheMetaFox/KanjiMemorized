@@ -29,6 +29,43 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
         reviewEvent: ReviewEvent
     ) {
         when(reviewEvent) {
+            is ReviewEvent.InitializeQueue -> {
+                viewModelScope.launch(
+                    block = {
+                        val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                        kanjiRepository.getKanjiList().forEach { kanji ->
+                            if (kanji.durability == 0f) {
+                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has no durability.")
+                            }
+                            else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
+                            }
+                            else {
+                                queue.add(Pair(1/kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                                Log.i("ReviewViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${1/kanjiRepository.getRetentionFromKanji(kanji.unicode)}...")
+                            }
+                        }
+                        Log.i("ReviewViewModel.kt", "Queue size: ${queue.size}")
+                        if(queue.peek() != null) {
+                            val i : Kanji = queue.poll()!!.second
+                            Log.i("ReviewViewModel.kt", "Polling kanji ${i.unicode}")
+                            Log.i("ReviewViewModel.kt", "State updating...")
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        kanji = i,
+                                        meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                        isReviewAvailable = true,
+                                        queue = queue
+                                    )
+                                }
+                            )
+                            Log.i("ReviewViewModel.kt", "State updated.")
+                        }
+                    }
+                )
+
+            }
             is ReviewEvent.FlipFlashcard -> {
                 val isAnswerShowing: Boolean = state.value.isAnswerShowing
                 _state.update(
@@ -42,30 +79,23 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
             is ReviewEvent.GetRandomFlashcard -> {
                 viewModelScope.launch(
                     block = {
-                        val i : Kanji?
-                        val queue : PriorityQueue<Pair<Float, Kanji>> = state.value.queue
-                        kanjiRepository.getKanjiList().forEach {  kanji ->
-                            if (kanji.durability == 0f) {
-                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has no durability.")
-                            }
-                            else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
-                                Log.i("ReviewViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
-                            }
-                            else {
-                                queue.add(Pair(1/kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
-                                Log.i("ReviewViewModel.kt", "Adding ${kanji.unicode} to review queue...")
-                            }
-                        }
-                        Log.i("ReviewViewModel.kt", "Queue size: ${queue.size}")
-                        i = queue.poll()?.second
-                        if (queue.size != 0) {
+                        val i : Kanji? = state.value.queue.poll()?.second
+                        if (i != null) {
                             _state.update(
                                 function = {
                                     it.copy(
                                         kanji = i,
-                                        meanings = kanjiRepository.getMeaningsFromKanji(i!!.unicode),
-                                        isAnswerShowing = false,
-                                        isReviewAvailable = true,
+                                        meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                        isReviewAvailable = true
+                                    )
+                                }
+                            )
+                        }
+                        else {
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        isReviewAvailable = false
                                     )
                                 }
                             )
@@ -100,13 +130,6 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
-                    )
                 }
             }
             is ReviewEvent.CorrectCard -> {
@@ -132,14 +155,6 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
-                    )
-
                 }
             }
             is ReviewEvent.EasyCard -> {
@@ -165,14 +180,6 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
-                    )
-
                 }
             }
         }

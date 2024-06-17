@@ -98,7 +98,7 @@ fun StudyScreen(
                 }
                 Button(
                     onClick = {
-                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                        onReviewEvent(ReviewEvent.InitializeQueue)
                         Log.d("StudyScreen.kt", "Navigating to Review Screen...")
                         navController.navigate(
                             route = Screen.Review.route

@@ -20,28 +20,7 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
         value = LearnState()
     )
 
-//    private val _queue: StateFlow<PriorityQueue<Pair<Float, Kanji>>> = MutableStateFlow(
-//        value = kanjiRepository.getKanjiList()
-//    )
-
-
     val state: StateFlow<LearnState> = _state
-//    val state: StateFlow<LearnState> = combine(
-//            flow = _state,
-//            flow2 = _queue,
-//            transform = { state, queue ->
-//                state.copy(
-//                    queue = queue
-//                )
-//            }
-//        )
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted
-//                .WhileSubscribed(5000),
-//            initialValue = LearnState()
-//        )
-
 
     fun onEvent(
         learnEvent: LearnEvent
@@ -100,8 +79,16 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                                     it.copy(
                                         kanji = i,
                                         meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
-                                        isAnswerShowing = state.value.isAnswerShowing,
-                                        isReviewAvailable = state.value.isReviewAvailable,
+                                        isReviewAvailable = true
+                                    )
+                                }
+                            )
+                        }
+                        else {
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        isReviewAvailable = false
                                     )
                                 }
                             )
@@ -136,13 +123,6 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     kanjiRepository.insertReview(
                         review = review
                     )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
-                    )
                 }
             }
             is LearnEvent.CorrectCard -> {
@@ -168,14 +148,6 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     kanjiRepository.insertReview(
                         review = review
                     )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
-                    )
-
                 }
             }
             is LearnEvent.EasyCard -> {
@@ -200,13 +172,6 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     )
                     kanjiRepository.insertReview(
                         review = review
-                    )
-                    _state.update(
-                        function = {
-                            it.copy(
-                                isReviewAvailable = false
-                            )
-                        }
                     )
                 }
             }
