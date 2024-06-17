@@ -8,6 +8,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
 import java.time.format.DateTimeFormatter
+import java.util.PriorityQueue
 import kotlin.math.exp
 
 class KanjiRepository(private val kanjiDao: KanjiDao) {
@@ -54,7 +55,11 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return list
     }
 
-    suspend fun getMeaningsFromKanji(kanji: Char): List<String> {
+    suspend fun getMeaningsFromKanji(kanji: Char?): List<String> {
+        if (kanji == null) {
+            Log.i("KanjiRepository.kt", "No kanji provided")
+            return listOf()
+        }
         return kanjiDao.getMeaningsFromKanji(
             kanji = kanji
         )

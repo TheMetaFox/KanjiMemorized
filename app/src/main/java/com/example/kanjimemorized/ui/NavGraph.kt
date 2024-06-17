@@ -20,6 +20,9 @@ import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardState
+import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
+import com.example.kanjimemorized.ui.screens.study.learn.LearnScreen
+import com.example.kanjimemorized.ui.screens.study.learn.LearnState
 import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.screens.study.review.ReviewScreen
 import com.example.kanjimemorized.ui.screens.study.review.ReviewState
@@ -34,10 +37,12 @@ fun SetupNavGraph(
     coroutineScope: CoroutineScope,
     libraryState: LibraryState,
     kanjiState: KanjiState,
+    learnState: LearnState,
     reviewState: ReviewState,
     flashcardState: FlashcardState,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit,
+    onLearnEvent: (LearnEvent) -> Unit,
     onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
 ) {
@@ -60,6 +65,7 @@ fun SetupNavGraph(
                 modifier = modifier
                     .padding(5.dp),
                 navController = navController,
+                onLearnEvent = onLearnEvent,
                 onReviewEvent = onReviewEvent,
                 onFlashcardEvent = onFlashcardEvent)
         }
@@ -72,6 +78,17 @@ fun SetupNavGraph(
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope
+            )
+        }
+        composable(
+            route = Screen.Learn.route
+        ) {
+            LearnScreen(
+                modifier = modifier
+                    .padding(5.dp),
+                navController = navController,
+                learnState = learnState,
+                onLearnEvent = onLearnEvent
             )
         }
         composable(

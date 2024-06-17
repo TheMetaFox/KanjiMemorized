@@ -28,6 +28,9 @@ import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModelFactory
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
+import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
+import com.example.kanjimemorized.ui.screens.study.learn.LearnViewModel
+import com.example.kanjimemorized.ui.screens.study.learn.LearnViewModelFactory
 import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModel
 import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModelFactory
@@ -55,6 +58,12 @@ class MainActivity : ComponentActivity() {
             factory = kanjiViewModelFactory
         )[KanjiViewModel::class.java]
 
+        val learnViewModelFactory = LearnViewModelFactory(kanjiRepository)
+        val learnViewModel: LearnViewModel = ViewModelProvider(
+            owner = this,
+            factory = learnViewModelFactory
+        )[LearnViewModel::class.java]
+
         val reviewViewModelFactory = ReviewViewModelFactory(kanjiRepository)
         val reviewViewModel: ReviewViewModel = ViewModelProvider(
             owner = this,
@@ -76,11 +85,13 @@ class MainActivity : ComponentActivity() {
 
                 val libraryState by libraryViewModel.state.collectAsState()
                 val kanjiState by kanjiViewModel.state.collectAsState()
+                val learnState by learnViewModel.state.collectAsState()
                 val reviewState by reviewViewModel.state.collectAsState()
                 val flashcardState by flashcardViewModel.state.collectAsState()
 
                 val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
                 val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
+                val onLearnEvent: (LearnEvent) -> Unit = learnViewModel::onEvent
                 val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
                 val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
                 SetupNavGraph(
@@ -92,10 +103,12 @@ class MainActivity : ComponentActivity() {
                     coroutineScope = coroutineScope,
                     libraryState = libraryState,
                     kanjiState = kanjiState,
+                    learnState = learnState,
                     reviewState = reviewState,
                     flashcardState = flashcardState,
                     onLibraryEvent = onLibraryEvent,
                     onKanjiEvent = onKanjiEvent,
+                    onLearnEvent = onLearnEvent,
                     onReviewEvent = onReviewEvent,
                     onFlashcardEvent = onFlashcardEvent,
                 )

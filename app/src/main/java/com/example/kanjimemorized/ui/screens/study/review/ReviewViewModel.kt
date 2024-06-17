@@ -44,7 +44,7 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     block = {
                         val i : Kanji?
                         val queue : PriorityQueue<Pair<Float, Kanji>> = state.value.queue
-                        kanjiRepository.getKanjiList().forEach { kanji ->
+                        kanjiRepository.getKanjiList().forEach {  kanji ->
                             if (kanji.durability == 0f) {
                                 Log.i("ReviewViewModel.kt", "${kanji.unicode} has no durability.")
                             }

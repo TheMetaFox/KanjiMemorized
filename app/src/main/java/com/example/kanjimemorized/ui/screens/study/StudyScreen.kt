@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.study
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,12 +22,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
 import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.theme.spacing
+import java.lang.Thread.sleep
+
 @Composable
 fun StudyScreen(
     modifier: Modifier,
     navController: NavHostController,
+    onLearnEvent: (LearnEvent) -> Unit,
     onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
@@ -78,10 +83,26 @@ fun StudyScreen(
                 }
                 Button(
                     onClick = {
+                        onLearnEvent(LearnEvent.InitializeQueue)
+                        sleep(50)
+                        Log.d("StudyScreen.kt", "Navigating to Learn Screen...")
+                        navController.navigate(
+                            route = Screen.Learn.route
+                        )
+                    }
+                ) {
+                    Text(
+                        text = "Learn",
+                        fontSize = 35.sp
+                    )
+                }
+                Button(
+                    onClick = {
+                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                        Log.d("StudyScreen.kt", "Navigating to Review Screen...")
                         navController.navigate(
                             route = Screen.Review.route
                         )
-                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
                     }
                 ) {
                     Text(
@@ -91,10 +112,11 @@ fun StudyScreen(
                 }
                 Button(
                     onClick = {
+                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
+                        Log.d("StudyScreen.kt", "Navigating to Flashcard Screen...")
                         navController.navigate(
                             route = Screen.Flashcard.route
                         )
-                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
                     }
                 ) {
                     Text(
@@ -110,5 +132,5 @@ fun StudyScreen(
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(Modifier, rememberNavController(), onReviewEvent = { }, onFlashcardEvent = { })
+    StudyScreen(Modifier, rememberNavController(), onLearnEvent = { }, onReviewEvent = { }, onFlashcardEvent = { })
 }
