@@ -49,7 +49,6 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                         if(queue.peek() != null) {
                             val i : Kanji = queue.poll()!!.second
                             Log.i("ReviewViewModel.kt", "Polling kanji ${i.unicode}")
-                            Log.i("ReviewViewModel.kt", "State updating...")
                             _state.update(
                                 function = {
                                     it.copy(
@@ -60,7 +59,6 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                                     )
                                 }
                             )
-                            Log.i("ReviewViewModel.kt", "State updated.")
                         }
                     }
                 )
@@ -130,6 +128,9 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    state.value.queue.add(Pair(1/kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                    Log.i("ReviewViewModel.kt", "Adding ${kanji.unicode} back into queue...")
+
                 }
             }
             is ReviewEvent.CorrectCard -> {

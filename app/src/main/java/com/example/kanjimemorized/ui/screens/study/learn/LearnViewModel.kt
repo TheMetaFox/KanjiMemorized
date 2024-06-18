@@ -32,7 +32,7 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0f) {
-                            Log.i("LearnViewModel.kt", "${kanji.unicode} has durability greater than 0...")
+                            Log.i("LearnViewModel.kt", "${kanji.unicode} has durability greater than 0.")
                         }
                         else {
                             queue.add(Pair(kanji.strokes.toFloat(), kanji))
@@ -42,8 +42,7 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                         Log.i("LearnViewModel.kt", "Queue size: ${queue.size}")
                         if(queue.peek() != null) {
                             val i : Kanji = queue.poll()!!.second
-                            Log.i("LearnViewModel.kt", "Polling kanji ${i.unicode}")
-                            Log.i("LearnViewModel.kt", "State updating...")
+                            Log.i("LearnViewModel.kt", "Polling kanji ${i.unicode}...")
                             _state.update(
                                 function = {
                                     it.copy(
@@ -54,17 +53,15 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                                     )
                                 }
                             )
-                            Log.i("LearnViewModel.kt", "State updated.")
                         }
                     }
                 )
             }
             is LearnEvent.FlipFlashcard -> {
-                val isAnswerShowing: Boolean = state.value.isAnswerShowing
                 _state.update(
                     function = {
                         it.copy(
-                            isAnswerShowing = !isAnswerShowing
+                            isAnswerShowing = !state.value.isAnswerShowing
                         )
                     }
                 )
@@ -74,6 +71,7 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     block = {
                         val i : Kanji? = state.value.queue.poll()?.second
                         if (i != null) {
+                            Log.i("LearnViewModel.kt", "Polling kanji ${i.unicode}...")
                             _state.update(
                                 function = {
                                     it.copy(
@@ -123,6 +121,8 @@ class LearnViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    state.value.queue.add(Pair(kanji.strokes.toFloat(), kanji))
+                    Log.i("LearnViewModel.kt", "Adding ${kanji.unicode} back into queue...")
                 }
             }
             is LearnEvent.CorrectCard -> {

@@ -64,7 +64,6 @@ fun LearnScreen(
                     fontSize = 50.sp
                 )
             }
-            Log.i("LearnScreen.kt", "Is Review Available: ${learnState.isReviewAvailable}")
             if (learnState.isReviewAvailable) {
                 Column(
                     modifier = Modifier

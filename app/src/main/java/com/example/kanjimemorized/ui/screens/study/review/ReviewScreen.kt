@@ -62,7 +62,6 @@ fun ReviewScreen(
                     fontSize = 50.sp
                 )
             }
-
             if (reviewState.isReviewAvailable) {
                 Column(
                     modifier = Modifier
