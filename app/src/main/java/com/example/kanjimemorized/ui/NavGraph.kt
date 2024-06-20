@@ -33,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 fun SetupNavGraph(
     modifier: Modifier,
     navController: NavHostController,
+    bottomNavBar: @Composable () -> Unit,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
     libraryState: LibraryState,
@@ -55,16 +56,17 @@ fun SetupNavGraph(
         ) {
             HomeScreen(
                 modifier = modifier,
-                navController = navController
+                navController = navController,
+                bottomNavBar = bottomNavBar
             )
         }
         composable(
             route = Screen.Study.route
         ) {
             StudyScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
+                bottomNavBar = bottomNavBar,
                 onLearnEvent = onLearnEvent,
                 onReviewEvent = onReviewEvent,
                 onFlashcardEvent = onFlashcardEvent)
@@ -73,8 +75,7 @@ fun SetupNavGraph(
             route = Screen.StudyPlayground.route
         ) {
             StudyPlaygroundScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope
@@ -84,8 +85,7 @@ fun SetupNavGraph(
             route = Screen.Learn.route
         ) {
             LearnScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 learnState = learnState,
                 onLearnEvent = onLearnEvent
@@ -95,8 +95,7 @@ fun SetupNavGraph(
             route = Screen.Review.route
         ) {
             ReviewScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 reviewState = reviewState,
                 onReviewEvent = onReviewEvent
@@ -106,8 +105,7 @@ fun SetupNavGraph(
             route = Screen.Flashcard.route
         ) {
             FlashcardScreen(
-                modifier = modifier
-                    .padding(5.dp),
+                modifier = modifier,
                 navController = navController,
                 flashcardState = flashcardState,
                 onFlashcardEvent = onFlashcardEvent
@@ -119,9 +117,10 @@ fun SetupNavGraph(
             LibraryScreen(
                 modifier = modifier,
                 navController = navController,
+                bottomNavBar = bottomNavBar,
                 libraryState = libraryState,
                 onLibraryEvent = onLibraryEvent,
-                onKanjiEvent = onKanjiEvent
+                onKanjiEvent = onKanjiEvent,
             )
         }
         composable(

@@ -31,6 +31,7 @@ import java.lang.Thread.sleep
 fun StudyScreen(
     modifier: Modifier,
     navController: NavHostController,
+    bottomNavBar: @Composable () -> Unit,
     onLearnEvent: (LearnEvent) -> Unit,
     onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit
@@ -39,8 +40,11 @@ fun StudyScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(MaterialTheme.spacing.small),
-        ) { contentPadding ->
+            .padding(top = MaterialTheme.spacing.small),
+        bottomBar = {
+            bottomNavBar()
+        }
+    ) { contentPadding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -130,5 +134,5 @@ fun StudyScreen(
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(Modifier, rememberNavController(), onLearnEvent = { }, onReviewEvent = { }, onFlashcardEvent = { })
+    StudyScreen(Modifier, rememberNavController(), { }, onLearnEvent = { }, onReviewEvent = { }, onFlashcardEvent = { })
 }

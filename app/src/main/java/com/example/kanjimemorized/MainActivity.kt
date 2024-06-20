@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.DatabaseModule.provideDao
 import com.example.kanjimemorized.DatabaseModule.provideDatabase
 import com.example.kanjimemorized.DatabaseModule.provideRepository
+import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryViewModel
 import com.example.kanjimemorized.ui.SetupNavGraph
@@ -99,6 +100,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background),
                     navController = navController,
+                    bottomNavBar = { BottomNavBar(navController) },
                     snackbarHostState =  snackbarHostState,
                     coroutineScope = coroutineScope,
                     libraryState = libraryState,

@@ -56,6 +56,7 @@ import kotlin.math.exp
 fun LibraryScreen(
     modifier: Modifier,
     navController: NavHostController,
+    bottomNavBar: @Composable () -> Unit,
     libraryState: LibraryState,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit
@@ -63,16 +64,19 @@ fun LibraryScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(
-                start = MaterialTheme.spacing.small,
-                top = MaterialTheme.spacing.small,
-                end = MaterialTheme.spacing.small
-            ),
+            .background(MaterialTheme.colorScheme.background),
+        bottomBar = {
+            bottomNavBar()
+        }
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .padding(contentPadding),
+                .padding(contentPadding)
+                .padding(
+                    start = MaterialTheme.spacing.small,
+                    top = MaterialTheme.spacing.small,
+                    end = MaterialTheme.spacing.small
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
@@ -272,5 +276,5 @@ fun CircularProgressBar(
 @Preview(showBackground = true)
 @Composable
 fun LibraryScreenPreview() {
-    LibraryScreen(Modifier, rememberNavController(), LibraryState(), { }, { })
+    LibraryScreen(Modifier, rememberNavController(), { }, LibraryState(), { }, { })
 }
