@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -22,15 +21,15 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate(Screen.Home.route )
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Home,
-                        contentDescription = "Home Icon"
-                    )
-                }
-            )
+                navController.navigate(Screen.Home.route)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Home,
+                    contentDescription = "Home Icon"
+                )
+            }
+        )
         NavigationBarItem(
             selected = false,
             onClick = {
@@ -58,7 +57,7 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate(Screen.Study.route)
+                navController.navigate(Screen.Statistics.route)
             },
             icon = {
                 Icon(

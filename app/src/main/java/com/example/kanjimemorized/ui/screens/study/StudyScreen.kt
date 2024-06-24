@@ -75,7 +75,10 @@ fun StudyScreen(
             ) {
                 Button(
                     onClick = {
-                        navController.navigateUp()
+                        Log.d("StudyScreen.kt", "Navigating to Playground Screen...")
+                        navController.navigate(
+                            route = Screen.StudyPlayground.route
+                        )
                     }
                 ) {
                     Text(
@@ -86,7 +89,6 @@ fun StudyScreen(
                 Button(
                     onClick = {
                         onLearnEvent(LearnEvent.InitializeQueue)
-                        sleep(50)
                         Log.d("StudyScreen.kt", "Navigating to Learn Screen...")
                         navController.navigate(
                             route = Screen.Learn.route

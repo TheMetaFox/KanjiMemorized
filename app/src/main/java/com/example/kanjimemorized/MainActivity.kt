@@ -26,6 +26,9 @@ import com.example.kanjimemorized.ui.screens.library.LibraryViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModel
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModelFactory
+import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
+import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModel
+import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFactory
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
@@ -77,6 +80,11 @@ class MainActivity : ComponentActivity() {
             factory = flashcardViewModelFactory
         )[FlashcardViewModel::class.java]
 
+        val statisticsViewModelFactory = StatisticsViewModelFactory(kanjiRepository)
+        val statisticsViewModel: StatisticsViewModel = ViewModelProvider(
+            owner = this,
+            factory = statisticsViewModelFactory
+        )[StatisticsViewModel::class.java]
 
         setContent {
             KanjiMemorizedTheme {
@@ -89,12 +97,14 @@ class MainActivity : ComponentActivity() {
                 val learnState by learnViewModel.state.collectAsState()
                 val reviewState by reviewViewModel.state.collectAsState()
                 val flashcardState by flashcardViewModel.state.collectAsState()
+                val statisticsState by statisticsViewModel.state.collectAsState()
 
                 val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
                 val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
                 val onLearnEvent: (LearnEvent) -> Unit = learnViewModel::onEvent
                 val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
                 val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
+                val onStatisticsEvent: (StatisticsEvent) -> Unit = statisticsViewModel::onEvent
                 SetupNavGraph(
                     modifier = Modifier
                         .fillMaxSize()
@@ -113,7 +123,8 @@ class MainActivity : ComponentActivity() {
                     onLearnEvent = onLearnEvent,
                     onReviewEvent = onReviewEvent,
                     onFlashcardEvent = onFlashcardEvent,
-                )
+                    onStatisticsEvent = onStatisticsEvent
+                    )
             }
         }
     }

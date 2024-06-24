@@ -15,6 +15,8 @@ import com.example.kanjimemorized.ui.screens.library.LibraryScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiState
+import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
+import com.example.kanjimemorized.ui.screens.statistics.StatisticsScreen
 import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
 import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
@@ -46,6 +48,7 @@ fun SetupNavGraph(
     onLearnEvent: (LearnEvent) -> Unit,
     onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
+    onStatisticsEvent: (StatisticsEvent) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -131,6 +134,15 @@ fun SetupNavGraph(
                 navController = navController,
                 kanjiState = kanjiState,
                 onKanjiEvent = onKanjiEvent
+            )
+        }
+        composable(
+            route = Screen.Statistics.route
+        ) {
+            StatisticsScreen(
+                navController = navController,
+                bottomNavBar = bottomNavBar,
+                onStatisticsEvent = onStatisticsEvent
             )
         }
     }
