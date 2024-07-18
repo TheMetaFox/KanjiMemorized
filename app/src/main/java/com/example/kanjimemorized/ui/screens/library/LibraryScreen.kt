@@ -1,6 +1,10 @@
 package com.example.kanjimemorized.ui.screens.library
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -52,9 +56,11 @@ import java.time.LocalDateTime.parse
 import java.time.format.DateTimeFormatter
 import kotlin.math.exp
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun LibraryScreen(
+fun SharedTransitionScope.LibraryScreen(
     modifier: Modifier,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navController: NavHostController,
     bottomNavBar: @Composable () -> Unit,
     libraryState: LibraryState,
@@ -150,7 +156,15 @@ fun LibraryScreen(
                         ) {
                             Text(
                                 text = libraryState.kanji[it].unicode.toString(),
-                                fontSize = 20.sp
+                                fontSize = 20.sp,
+                                modifier = Modifier
+                                    .sharedBounds(
+                                        rememberSharedContentState(key = libraryState.kanji[it].unicode.toString()),
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                        boundsTransform = {_, _ ->
+                                            tween(durationMillis = 1000)
+                                        }
+                                    )
                             )
                             Text(
                                 text = libraryState.meaning[it].replace("[", "").replace("]","").replace(",", ", "),
@@ -273,8 +287,9 @@ fun CircularProgressBar(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LibraryScreenPreview() {
-    LibraryScreen(Modifier, rememberNavController(), { }, LibraryState(), { }, { })
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LibraryScreenPreview() {
+//    Animate
+//    LibraryScreen(Modifier, AnimatedContentScope, rememberNavController(), { }, LibraryState(), { }, { })
+//}

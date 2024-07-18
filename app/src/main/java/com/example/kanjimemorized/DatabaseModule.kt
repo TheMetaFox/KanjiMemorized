@@ -23,7 +23,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
                 klass = KanjiDatabase::class.java,
                 name = "Kanji.db"
             )
-            .fallbackToDestructiveMigrationOnDowngrade()
+            .fallbackToDestructiveMigration()
             .createFromAsset("Kanji.db")
             .build()
         return kanjiDatabase

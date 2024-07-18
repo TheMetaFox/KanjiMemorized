@@ -1,6 +1,13 @@
 package com.example.kanjimemorized.ui.screens.library.kanji
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -47,9 +54,11 @@ import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.math.exp
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun KanjiScreen(
+fun SharedTransitionScope.KanjiScreen(
     modifier: Modifier,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navController: NavController,
     kanjiState: KanjiState,
     onKanjiEvent: (KanjiEvent) -> Unit
@@ -101,7 +110,16 @@ fun KanjiScreen(
                 ) {
                     Text(
                         text = kanjiState.kanji?.unicode.toString(),
-                        modifier = Modifier.align(Alignment.Center),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .sharedBounds(
+                                rememberSharedContentState(key = kanjiState.kanji?.unicode.toString()),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                boundsTransform = {_, _ ->
+                                    tween(durationMillis = 1000)
+                                }
+                            )
+                        ,
                         fontSize = 100.sp,
                         lineHeight = 50.sp,
                         color = MaterialTheme.colorScheme.onBackground
@@ -348,8 +366,11 @@ fun HorizontalProgressBar(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun KanjiScreenPreview() {
-    KanjiScreen(modifier = Modifier, navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
-}
+//@OptIn(ExperimentalSharedTransitionApi::class)
+//@Preview(showBackground = true)
+//@Composable
+//fun KanjiScreenPreview() {
+//    AnimatedContent { targetState ->
+//        KanjiScreen(modifier = Modifier, this , navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
+//    }
+//}

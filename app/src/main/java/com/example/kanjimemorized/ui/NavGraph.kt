@@ -1,5 +1,8 @@
 package com.example.kanjimemorized.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -8,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryState
 import com.example.kanjimemorized.ui.screens.*
@@ -31,11 +35,10 @@ import com.example.kanjimemorized.ui.screens.study.review.ReviewState
 
 import kotlinx.coroutines.CoroutineScope
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SetupNavGraph(
     modifier: Modifier,
-    navController: NavHostController,
-    bottomNavBar: @Composable () -> Unit,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
     libraryState: LibraryState,
@@ -50,7 +53,11 @@ fun SetupNavGraph(
     onFlashcardEvent: (FlashcardEvent) -> Unit,
     onStatisticsEvent: (StatisticsEvent) -> Unit
 ) {
-    NavHost(
+    SharedTransitionLayout {
+        val navController: NavHostController = rememberNavController()
+        val bottomNavBar: @Composable () -> Unit = { BottomNavBar(navController = navController) }
+
+        NavHost(
         navController = navController,
         startDestination = Screen.Home.route
     ) {
@@ -120,6 +127,7 @@ fun SetupNavGraph(
             LibraryScreen(
                 modifier = modifier,
                 navController = navController,
+                animatedVisibilityScope = this,
                 bottomNavBar = bottomNavBar,
                 libraryState = libraryState,
                 onLibraryEvent = onLibraryEvent,
@@ -131,6 +139,7 @@ fun SetupNavGraph(
         ) {
             KanjiScreen(
                 modifier = modifier,
+                animatedVisibilityScope = this,
                 navController = navController,
                 kanjiState = kanjiState,
                 onKanjiEvent = onKanjiEvent
@@ -145,5 +154,5 @@ fun SetupNavGraph(
                 onStatisticsEvent = onStatisticsEvent
             )
         }
-    }
+    }}
 }

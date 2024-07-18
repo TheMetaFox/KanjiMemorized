@@ -3,6 +3,9 @@ package com.example.kanjimemorized
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +46,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -88,7 +92,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KanjiMemorizedTheme {
-                val navController: NavHostController = rememberNavController()
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
@@ -105,27 +108,28 @@ class MainActivity : ComponentActivity() {
                 val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
                 val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
                 val onStatisticsEvent: (StatisticsEvent) -> Unit = statisticsViewModel::onEvent
-                SetupNavGraph(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background),
-                    navController = navController,
-                    bottomNavBar = { BottomNavBar(navController) },
-                    snackbarHostState =  snackbarHostState,
-                    coroutineScope = coroutineScope,
-                    libraryState = libraryState,
-                    kanjiState = kanjiState,
-                    learnState = learnState,
-                    reviewState = reviewState,
-                    flashcardState = flashcardState,
-                    onLibraryEvent = onLibraryEvent,
-                    onKanjiEvent = onKanjiEvent,
-                    onLearnEvent = onLearnEvent,
-                    onReviewEvent = onReviewEvent,
-                    onFlashcardEvent = onFlashcardEvent,
-                    onStatisticsEvent = onStatisticsEvent
+                    SetupNavGraph(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
+                        //navController = navController,
+                        //bottomNavBar = { BottomNavBar(navController) },
+                        snackbarHostState =  snackbarHostState,
+                        coroutineScope = coroutineScope,
+                        libraryState = libraryState,
+                        kanjiState = kanjiState,
+                        learnState = learnState,
+                        reviewState = reviewState,
+                        flashcardState = flashcardState,
+                        onLibraryEvent = onLibraryEvent,
+                        onKanjiEvent = onKanjiEvent,
+                        onLearnEvent = onLearnEvent,
+                        onReviewEvent = onReviewEvent,
+                        onFlashcardEvent = onFlashcardEvent,
+                        onStatisticsEvent = onStatisticsEvent
                     )
+
+                }
             }
         }
     }
-}

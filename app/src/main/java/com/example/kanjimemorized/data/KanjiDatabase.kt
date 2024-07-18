@@ -14,9 +14,9 @@ import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
     entities = [Kanji::class, Review::class, KanjiMeaningCrossRef::class, KanjiComponentCrossRef::class],
     version = 1,
     exportSchema = true,
-    autoMigrations = [
-        AutoMigration(from = 1, to = 2)
-    ]
+//    autoMigrations = [
+//        AutoMigration(from = 1, to = 2)
+//    ]
 )
 @TypeConverters(
     value = [Converter::class]
