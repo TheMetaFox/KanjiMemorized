@@ -58,8 +58,9 @@ import kotlin.math.exp
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.LibraryScreen(
+fun LibraryScreen(
     modifier: Modifier,
+    sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navController: NavHostController,
     bottomNavBar: @Composable () -> Unit,
@@ -154,18 +155,22 @@ fun SharedTransitionScope.LibraryScreen(
                             modifier = Modifier
                                 .fillMaxSize(0.5f)
                         ) {
-                            Text(
-                                text = libraryState.kanji[it].unicode.toString(),
-                                fontSize = 20.sp,
-                                modifier = Modifier
-                                    .sharedBounds(
-                                        rememberSharedContentState(key = libraryState.kanji[it].unicode.toString()),
-                                        animatedVisibilityScope = animatedVisibilityScope,
-                                        boundsTransform = {_, _ ->
-                                            tween(durationMillis = 1000)
-                                        }
-                                    )
-                            )
+                            with(sharedTransitionScope) {
+                                Text(
+                                    text = libraryState.kanji[it].unicode.toString(),
+                                    fontSize = 20.sp,
+                                    modifier = Modifier
+                                        .sharedBounds(
+                                            rememberSharedContentState(key = libraryState.kanji[it].unicode.toString()),
+                                            animatedVisibilityScope = animatedVisibilityScope,
+                                            boundsTransform = {_, _ ->
+                                                tween(durationMillis = 1000)
+                                            },
+                                            zIndexInOverlay = 1f
+                                        )
+                                )
+
+                            }
                             Text(
                                 text = libraryState.meaning[it].replace("[", "").replace("]","").replace(",", ", "),
                                 fontSize = 12.sp

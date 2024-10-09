@@ -121,6 +121,7 @@ class MainActivity : ComponentActivity() {
                         learnState = learnState,
                         reviewState = reviewState,
                         flashcardState = flashcardState,
+                        statisticsState = statisticsState,
                         onLibraryEvent = onLibraryEvent,
                         onKanjiEvent = onKanjiEvent,
                         onLearnEvent = onLearnEvent,

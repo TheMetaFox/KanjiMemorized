@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,9 +57,11 @@ import kotlin.math.exp
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.KanjiScreen(
+fun KanjiScreen(
     modifier: Modifier,
+    sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedContentScope: AnimatedContentScope,
     navController: NavController,
     kanjiState: KanjiState,
     onKanjiEvent: (KanjiEvent) -> Unit
@@ -66,6 +69,10 @@ fun SharedTransitionScope.KanjiScreen(
     if (kanjiState.isShowingReviewData) {
         KanjiReviewDataDialog(onKanjiEvent = onKanjiEvent, kanjiState = kanjiState)
     }
+//    Log.i("KanjiScreen.kt", "Setting Selected to 0...")
+//    val selected = remember {
+//        mutableIntStateOf(-1)
+//    }
     Scaffold (
         modifier = modifier
             .fillMaxSize()
@@ -108,22 +115,35 @@ fun SharedTransitionScope.KanjiScreen(
                         .size(180.dp)
                         .weight(1f),
                 ) {
-                    Text(
-                        text = kanjiState.kanji?.unicode.toString(),
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .sharedBounds(
-                                rememberSharedContentState(key = kanjiState.kanji?.unicode.toString()),
-                                animatedVisibilityScope = animatedVisibilityScope,
-                                boundsTransform = {_, _ ->
-                                    tween(durationMillis = 1000)
-                                }
-                            )
-                        ,
-                        fontSize = 100.sp,
-                        lineHeight = 50.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                    with(sharedTransitionScope) {
+//                        Log.i("KanjiScreen.kt", "Shared Kanji Key: " + kanjiState.kanji.unicode.toString())
+//                        Log.i("KanjiScreen.kt", "Shared Kanji Key: ${selected.intValue}")
+                        Text(
+                            text = kanjiState.kanji.unicode.toString(),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .sharedBounds(
+                                    rememberSharedContentState(key = kanjiState.kanji.unicode.toString()),
+                                    animatedVisibilityScope = animatedVisibilityScope,
+                                    boundsTransform = { _, _ ->
+                                        tween(durationMillis = 1000)
+                                    },
+                                    zIndexInOverlay = 1f
+                                )
+//                                .sharedBounds(
+//                                    rememberSharedContentState(key = selected.intValue),
+//                                    animatedVisibilityScope = animatedVisibilityScope,
+//                                    boundsTransform = { _, _ ->
+//                                        tween(durationMillis = 1000)
+//                                    },
+//                                    zIndexInOverlay = 1f
+//                                )
+                                ,
+                            fontSize = 100.sp,
+                            lineHeight = 50.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
@@ -262,8 +282,9 @@ fun SharedTransitionScope.KanjiScreen(
                                 .height(75.dp)
                                 .padding(horizontal = 16.dp)
                                 .clickable {
+//                                    selected.intValue = it
                                     onKanjiEvent(KanjiEvent.DisplayKanjiInfo(kanjiState.components[it]))
-                                    navController.navigate(Screen.Kanji.route)
+                                    //navController.navigate(Screen.Kanji.route)
                                 },
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
@@ -272,10 +293,31 @@ fun SharedTransitionScope.KanjiScreen(
                                 modifier = Modifier
                                     .fillMaxWidth(0.5f)
                             ) {
-                                Text(
-                                    text = kanjiState.components[it].unicode.toString(),
-                                    fontSize = 20.sp
-                                )
+                                with(sharedTransitionScope) {
+//                                    Log.i("KanjiScreen.kt", "Shared Component Key: " + kanjiState.components[it].unicode.toString())
+//                                    Log.i("KanjiScreen.kt", "Shared Component Key: ${selected.intValue}")
+                                    Text(
+                                        text = kanjiState.components[it].unicode.toString(),
+                                        fontSize = 20.sp,
+                                        modifier = Modifier
+                                            .sharedBounds(
+                                                rememberSharedContentState(key = kanjiState.components[it].unicode.toString()),
+                                                animatedVisibilityScope = animatedVisibilityScope,
+                                                boundsTransform = { _, _ ->
+                                                    tween(durationMillis = 1000)
+                                                },
+                                                zIndexInOverlay = 1f
+                                            )
+//                                            .sharedBounds(
+//                                                rememberSharedContentState(key = it),
+//                                                animatedVisibilityScope = animatedVisibilityScope,
+//                                                boundsTransform = { _, _ ->
+//                                                    tween(durationMillis = 1000)
+//                                                },
+//                                                zIndexInOverlay = 1f
+//                                            )
+                                    )
+                                }
                                 Text(
                                     text = kanjiState.componentMeaning[it].toString().replace("[", "").replace("]",""),
                                     fontSize = 12.sp
