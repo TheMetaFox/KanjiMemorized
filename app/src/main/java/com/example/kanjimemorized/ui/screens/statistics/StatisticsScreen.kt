@@ -32,6 +32,7 @@ import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
 fun StatisticsScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     bottomNavBar: @Composable () -> Unit,
     statisticsState: StatisticsState,
@@ -223,5 +224,5 @@ data class PieChartInput(
 @Preview(showBackground = true)
 @Composable
 fun StatisticsScreenPreview() {
-    StatisticsScreen(navController = rememberNavController(), bottomNavBar = {}, StatisticsState(), {})
+    StatisticsScreen(navController = rememberNavController(), bottomNavBar = {}, statisticsState = StatisticsState(), onStatisticsEvent = {})
 }

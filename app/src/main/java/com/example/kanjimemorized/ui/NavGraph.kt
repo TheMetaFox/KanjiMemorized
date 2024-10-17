@@ -1,21 +1,19 @@
 package com.example.kanjimemorized.ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kanjimemorized.ui.screens.home.HomeEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryState
-import com.example.kanjimemorized.ui.screens.*
+import com.example.kanjimemorized.ui.screens.home.HomeScreen
+import com.example.kanjimemorized.ui.screens.home.HomeState
 import com.example.kanjimemorized.ui.screens.library.LibraryScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiScreen
@@ -43,12 +41,14 @@ fun SetupNavGraph(
     modifier: Modifier,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
+    homeState: HomeState,
     libraryState: LibraryState,
     kanjiState: KanjiState,
     learnState: LearnState,
     reviewState: ReviewState,
     flashcardState: FlashcardState,
     statisticsState: StatisticsState,
+    onHomeEvent: (HomeEvent) -> Unit,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit,
     onLearnEvent: (LearnEvent) -> Unit,
@@ -67,10 +67,12 @@ fun SetupNavGraph(
             composable(
                 route = Screen.Home.route
             ) {
-                    HomeScreen(
+                HomeScreen(
                     modifier = modifier,
                     navController = navController,
-                    bottomNavBar = bottomNavBar
+                    bottomNavBar = bottomNavBar,
+                    homeState = homeState,
+                    onHomeEvent = onHomeEvent
                 )
             }
             composable(
@@ -101,7 +103,8 @@ fun SetupNavGraph(
                     modifier = modifier,
                     navController = navController,
                     learnState = learnState,
-                    onLearnEvent = onLearnEvent
+                    onLearnEvent = onLearnEvent,
+                    onKanjiEvent = onKanjiEvent
                 )
             }
             composable(

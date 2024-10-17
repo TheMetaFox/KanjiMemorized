@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens
+package com.example.kanjimemorized.ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,26 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -42,16 +33,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.R
-import com.example.kanjimemorized.ui.BottomNavBar
-import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     navController: NavHostController,
-    bottomNavBar: @Composable () -> Unit
+    bottomNavBar: @Composable () -> Unit,
+    homeState: HomeState,
+    onHomeEvent: (HomeEvent) -> Unit
 ) {
+    onHomeEvent(HomeEvent.LoadHomeData)
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -73,6 +65,16 @@ fun HomeScreen(
                 painter = painterResource(R.drawable.study_anime),
                 contentDescription = "An adolescent human female studying in their room.",
             )
+            Box(
+                modifier = Modifier,
+            ) {
+                Text(
+                    text = "Home",
+                    modifier = Modifier
+                        .align(alignment = Center),
+                    fontSize = 50.sp,
+                )
+            }
             Column(
                 modifier = modifier
                     .padding(MaterialTheme.spacing.small)
@@ -84,46 +86,10 @@ fun HomeScreen(
                     modifier = Modifier,
                 ) {
                     Text(
-                        text = "Home",
+                        text = "Reviews: ${homeState.currentReviews}",
                         modifier = Modifier
                             .align(alignment = Center),
-                        fontSize = 50.sp,
-                    )
-                }
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.Study.route)
-                    },
-                    modifier = Modifier
-                ) {
-                    Text(
-                        text = "Study",
-                        modifier = Modifier.align(alignment = CenterVertically),
-                        fontSize = 35.sp
-                    )
-                }
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.Library.route)
-                    },
-                    modifier = Modifier
-                ) {
-                    Text(
-                        text = "Library",
-                        modifier = Modifier.align(alignment = CenterVertically),
-                        fontSize = 35.sp
-                    )
-                }
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.Library.route)
-                    },
-                    modifier = Modifier
-                ) {
-                    Text(
-                        text = "Statistics",
-                        modifier = Modifier.align(alignment = CenterVertically),
-                        fontSize = 35.sp
+                        fontSize = 36.sp,
                     )
                 }
             }
@@ -201,5 +167,5 @@ fun ImageCard(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(Modifier, rememberNavController(), {})
+    HomeScreen(navController = rememberNavController(), bottomNavBar = {}, homeState = HomeState(), onHomeEvent = { })
 }

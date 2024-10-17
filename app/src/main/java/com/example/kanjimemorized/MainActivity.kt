@@ -25,6 +25,9 @@ import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryViewModel
 import com.example.kanjimemorized.ui.SetupNavGraph
+import com.example.kanjimemorized.ui.screens.home.HomeEvent
+import com.example.kanjimemorized.ui.screens.home.HomeViewModel
+import com.example.kanjimemorized.ui.screens.home.HomeViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.LibraryViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModel
@@ -53,6 +56,12 @@ class MainActivity : ComponentActivity() {
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
 
 
+
+        val homeViewModelFactory = HomeViewModelFactory(kanjiRepository)
+        val homeViewModel: HomeViewModel = ViewModelProvider(
+            owner = this,
+            factory = homeViewModelFactory
+        )[HomeViewModel::class.java]
 
         val libraryViewModelFactory = LibraryViewModelFactory(kanjiRepository)
         val libraryViewModel: LibraryViewModel = ViewModelProvider(
@@ -90,11 +99,13 @@ class MainActivity : ComponentActivity() {
             factory = statisticsViewModelFactory
         )[StatisticsViewModel::class.java]
 
+
         setContent {
             KanjiMemorizedTheme {
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
+                val homeState by homeViewModel.state.collectAsState()
                 val libraryState by libraryViewModel.state.collectAsState()
                 val kanjiState by kanjiViewModel.state.collectAsState()
                 val learnState by learnViewModel.state.collectAsState()
@@ -102,6 +113,7 @@ class MainActivity : ComponentActivity() {
                 val flashcardState by flashcardViewModel.state.collectAsState()
                 val statisticsState by statisticsViewModel.state.collectAsState()
 
+                val onHomeEvent: (HomeEvent) -> Unit = homeViewModel::onEvent
                 val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
                 val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
                 val onLearnEvent: (LearnEvent) -> Unit = learnViewModel::onEvent
@@ -116,12 +128,14 @@ class MainActivity : ComponentActivity() {
                         //bottomNavBar = { BottomNavBar(navController) },
                         snackbarHostState =  snackbarHostState,
                         coroutineScope = coroutineScope,
+                        homeState = homeState,
                         libraryState = libraryState,
                         kanjiState = kanjiState,
                         learnState = learnState,
                         reviewState = reviewState,
                         flashcardState = flashcardState,
                         statisticsState = statisticsState,
+                        onHomeEvent = onHomeEvent,
                         onLibraryEvent = onLibraryEvent,
                         onKanjiEvent = onKanjiEvent,
                         onLearnEvent = onLearnEvent,
@@ -129,7 +143,6 @@ class MainActivity : ComponentActivity() {
                         onFlashcardEvent = onFlashcardEvent,
                         onStatisticsEvent = onStatisticsEvent
                     )
-
                 }
             }
         }

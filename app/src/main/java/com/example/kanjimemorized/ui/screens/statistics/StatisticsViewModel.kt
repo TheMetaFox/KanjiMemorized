@@ -24,7 +24,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
             is StatisticsEvent.LoadStatistics -> {
                 viewModelScope.launch {
                     var unlocked = 0
-                    kanjiRepository.getKanjiList().forEach {kanji ->
+                    kanjiRepository.getKanjiList().forEach { kanji ->
                         var isLocked = false
                         kanjiRepository.getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
                             if (kanjiRepository.getRetentionFromKanji(component.unicode) <= .80f) {

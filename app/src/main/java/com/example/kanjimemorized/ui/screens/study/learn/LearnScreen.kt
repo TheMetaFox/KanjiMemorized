@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
 import com.example.kanjimemorized.ui.screens.study.learn.LearnState
 import com.example.kanjimemorized.ui.theme.spacing
@@ -36,7 +37,8 @@ fun LearnScreen(
     modifier: Modifier,
     navController: NavHostController,
     learnState: LearnState,
-    onLearnEvent: (LearnEvent) -> Unit
+    onLearnEvent: (LearnEvent) -> Unit,
+    onKanjiEvent: (KanjiEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -103,54 +105,75 @@ fun LearnScreen(
                         }
                     }
                     if (learnState.isAnswerShowing) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(100.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .height(150.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Button(
                                 onClick = {
-                                    onLearnEvent(LearnEvent.FlipFlashcard)
-                                    onLearnEvent(LearnEvent.WrongCard)
-                                    onLearnEvent(LearnEvent.GetRandomFlashcard)
+                                    onKanjiEvent(KanjiEvent.DisplayKanjiInfo(learnState.kanji!!))
+                                    navController.navigate(Screen.Kanji.route)
                                 },
                                 modifier = Modifier
-                                    .size(125.dp,50.dp),
+                                    .size(375.dp,50.dp),
                             ) {
                                 Text(
-                                    text = "Wrong",
+                                    text = "View Kanji",
                                     fontSize = 20.sp
                                 )
                             }
-                            Button(
-                                onClick = {
-                                    onLearnEvent(LearnEvent.FlipFlashcard)
-                                    onLearnEvent(LearnEvent.CorrectCard)
-                                    onLearnEvent(LearnEvent.GetRandomFlashcard)
-                                },
+                            Row(
                                 modifier = Modifier
-                                    .size(125.dp,50.dp),
+                                    .fillMaxWidth()
+                                    .height(100.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(
-                                    text = "Correct",
-                                    fontSize = 20.sp
-                                )
-                            }
-                            Button(
-                                onClick = {
-                                    onLearnEvent(LearnEvent.FlipFlashcard)
-                                    onLearnEvent(LearnEvent.EasyCard)
-                                    onLearnEvent(LearnEvent.GetRandomFlashcard)
-                                },
-                                modifier = Modifier
-                                    .size(125.dp,50.dp),
-                            ) {
-                                Text(
-                                    text = "Easy",
-                                    fontSize = 20.sp
-                                )
+                                Button(
+                                    onClick = {
+                                        onLearnEvent(LearnEvent.FlipFlashcard)
+                                        onLearnEvent(LearnEvent.WrongCard)
+                                        onLearnEvent(LearnEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp,50.dp),
+                                ) {
+                                    Text(
+                                        text = "Wrong",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Button(
+                                    onClick = {
+                                        onLearnEvent(LearnEvent.FlipFlashcard)
+                                        onLearnEvent(LearnEvent.CorrectCard)
+                                        onLearnEvent(LearnEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp,50.dp),
+                                ) {
+                                    Text(
+                                        text = "Correct",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Button(
+                                    onClick = {
+                                        onLearnEvent(LearnEvent.FlipFlashcard)
+                                        onLearnEvent(LearnEvent.EasyCard)
+                                        onLearnEvent(LearnEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp,50.dp),
+                                ) {
+                                    Text(
+                                        text = "Easy",
+                                        fontSize = 20.sp
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -186,5 +209,5 @@ fun LearnScreen(
 @Preview
 @Composable
 fun LearnScreenPreview() {
-    LearnScreen(modifier = Modifier, navController = rememberNavController(), learnState = LearnState(), onLearnEvent = { })
+    LearnScreen(modifier = Modifier, navController = rememberNavController(), learnState = LearnState(), onLearnEvent = { }, onKanjiEvent = { })
 }

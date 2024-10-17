@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.InsertChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -28,6 +29,9 @@ fun BottomNavBar(
                     imageVector = Icons.Outlined.Home,
                     contentDescription = "Home Icon"
                 )
+            },
+            label = {
+                Text(text = "Home")
             }
         )
         NavigationBarItem(
@@ -40,6 +44,9 @@ fun BottomNavBar(
                     imageVector = Icons.Outlined.Edit,
                     contentDescription = "Study Icon"
                 )
+            },
+            label = {
+                Text(text = "Study")
             }
         )
         NavigationBarItem(
@@ -52,6 +59,9 @@ fun BottomNavBar(
                     imageVector = Icons.Outlined.Book,
                     contentDescription = "Library Icon"
                 )
+            },
+            label = {
+                Text(text = "Library")
             }
         )
         NavigationBarItem(
@@ -64,6 +74,9 @@ fun BottomNavBar(
                     imageVector = Icons.Outlined.InsertChart,
                     contentDescription = "Statistics Icon"
                 )
+            },
+            label = {
+                Text(text = "Statistics")
             }
         )
     }
