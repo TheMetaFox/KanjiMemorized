@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,6 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.R
+import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.study.flashcard.StudyType
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
@@ -41,7 +45,8 @@ fun HomeScreen(
     navController: NavHostController,
     bottomNavBar: @Composable () -> Unit,
     homeState: HomeState,
-    onHomeEvent: (HomeEvent) -> Unit
+    onHomeEvent: (HomeEvent) -> Unit,
+    onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
     onHomeEvent(HomeEvent.LoadHomeData)
     Scaffold(
@@ -86,11 +91,39 @@ fun HomeScreen(
                     modifier = Modifier,
                 ) {
                     Text(
-                        text = "Reviews: ${homeState.currentReviews}",
+                        text = "New Kanji: ${homeState.currentNewCount}",
                         modifier = Modifier
                             .align(alignment = Center),
                         fontSize = 36.sp,
                     )
+                }
+                Box(
+                    modifier = Modifier,
+                ) {
+                    Text(
+                        text = "Reviews: ${homeState.currentReviewCount}",
+                        modifier = Modifier
+                            .align(alignment = Center),
+                        fontSize = 36.sp,
+                    )
+                }
+                Button(
+                    onClick = {
+                        onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Mixed))
+                        onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                        navController.navigate(route = Screen.Flashcard.route)
+                    }
+                ) {
+                    Box(
+                        modifier = Modifier
+                    ) {
+                        Text(
+                            text = "Guided Review",
+                            modifier = Modifier
+                                .align(alignment = Center),
+                        fontSize = 36.sp,
+                        )
+                    }
                 }
             }
         }
@@ -167,5 +200,5 @@ fun ImageCard(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), bottomNavBar = {}, homeState = HomeState(), onHomeEvent = { })
+    HomeScreen(navController = rememberNavController(), bottomNavBar = {}, homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
 }

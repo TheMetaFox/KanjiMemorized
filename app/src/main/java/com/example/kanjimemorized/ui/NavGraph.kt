@@ -18,6 +18,9 @@ import com.example.kanjimemorized.ui.screens.library.LibraryScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiState
+import com.example.kanjimemorized.ui.screens.settings.SettingsEvent
+import com.example.kanjimemorized.ui.screens.settings.SettingsScreen
+import com.example.kanjimemorized.ui.screens.settings.SettingsState
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsScreen
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsState
@@ -48,13 +51,15 @@ fun SetupNavGraph(
     reviewState: ReviewState,
     flashcardState: FlashcardState,
     statisticsState: StatisticsState,
+    settingsState: SettingsState,
     onHomeEvent: (HomeEvent) -> Unit,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit,
     onLearnEvent: (LearnEvent) -> Unit,
     onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
-    onStatisticsEvent: (StatisticsEvent) -> Unit
+    onStatisticsEvent: (StatisticsEvent) -> Unit,
+    onSettingsEvent: (SettingsEvent) -> Unit,
 ) {
     SharedTransitionLayout {
         val navController: NavHostController = rememberNavController()
@@ -72,7 +77,8 @@ fun SetupNavGraph(
                     navController = navController,
                     bottomNavBar = bottomNavBar,
                     homeState = homeState,
-                    onHomeEvent = onHomeEvent
+                    onHomeEvent = onHomeEvent,
+                    onFlashcardEvent = onFlashcardEvent
                 )
             }
             composable(
@@ -114,7 +120,8 @@ fun SetupNavGraph(
                     modifier = modifier,
                     navController = navController,
                     reviewState = reviewState,
-                    onReviewEvent = onReviewEvent
+                    onReviewEvent = onReviewEvent,
+                    onKanjiEvent = onKanjiEvent
                 )
             }
             composable(
@@ -124,7 +131,8 @@ fun SetupNavGraph(
                     modifier = modifier,
                     navController = navController,
                     flashcardState = flashcardState,
-                    onFlashcardEvent = onFlashcardEvent
+                    onFlashcardEvent = onFlashcardEvent,
+                    onKanjiEvent = onKanjiEvent
                 )
             }
             composable(
@@ -162,6 +170,17 @@ fun SetupNavGraph(
                     bottomNavBar = bottomNavBar,
                     statisticsState = statisticsState,
                     onStatisticsEvent = onStatisticsEvent
+                )
+            }
+            composable(
+                route = Screen.Settings.route
+            ) {
+                SettingsScreen(
+                    modifier = modifier,
+                    navController = navController,
+                    bottomNavBar = bottomNavBar,
+                    settingsState = settingsState,
+                    onSettingsEvent = onSettingsEvent
                 )
             }
         }

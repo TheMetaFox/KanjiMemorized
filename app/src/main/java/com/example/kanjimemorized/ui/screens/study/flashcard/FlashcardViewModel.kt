@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Review
+import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.PriorityQueue
 import kotlin.math.exp
 
 class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
@@ -27,12 +29,153 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
         flashcardEvent: FlashcardEvent
     ) {
         when(flashcardEvent) {
+            is FlashcardEvent.SetStudyType -> {
+                _state.update {
+                    it.copy(
+                        studyType = flashcardEvent.studyType
+                    )
+                }
+            }
+            is FlashcardEvent.InitializeQueue -> {
+                when(state.value.studyType) {
+                    StudyType.New -> {
+                        viewModelScope.launch(
+                            block = {
+                                val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                                kanjiRepository.getUnlockedKanjiList().forEach { kanji ->
+                                    if (kanji.durability > 0f) {
+                                        //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has durability greater than 0.")
+                                        return@forEach
+                                    }
+                                    queue.add(Pair(kanji.strokes.toFloat(), kanji))
+                                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to learn queue with priority ${kanji.strokes}...")
+                                }
+                                Log.i("FlashcardViewModel.kt", "Queue size: ${queue.size}")
+                                if(queue.peek() != null) {
+                                    val i : Kanji = queue.poll()!!.second
+                                    Log.i("FlashcardViewModel.kt", "Polling kanji ${i.unicode}...")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                kanji = i,
+                                                meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                                isReviewAvailable = true,
+                                                queue = queue
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Log.i("FlashcardViewModel.kt", "Empty queue...")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                isReviewAvailable = false
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
+                    StudyType.Review -> {
+                        viewModelScope.launch(
+                            block = {
+                                val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                                kanjiRepository.getUnlockedKanjiList().forEach { kanji ->
+                                    if (kanji.durability == 0f) {
+                                        //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
+                                        return@forEach
+                                    }
+                                    else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                        //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
+                                        return@forEach
+                                    }
+                                    queue.add(Pair(kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${kanjiRepository.getRetentionFromKanji(kanji.unicode)}...")
+                                }
+                                Log.i("FlashcardViewModel.kt", "Queue size: ${queue.size}")
+                                if(queue.peek() != null) {
+                                    val i : Kanji = queue.poll()!!.second
+                                    Log.i("FlashcardViewModel.kt", "Polling kanji ${i.unicode}")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                kanji = i,
+                                                meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                                isReviewAvailable = true,
+                                                queue = queue
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Log.i("FlashcardViewModel.kt", "Empty queue...")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                isReviewAvailable = false
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
+                    StudyType.Mixed -> {
+                        viewModelScope.launch(
+                            block = {
+                                val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                                var newCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                                kanjiRepository.getUnlockedKanjiList().forEach { kanji ->
+                                    if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                        //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
+                                        return@forEach
+                                    }
+                                    else if (kanji.durability == 0f) {
+                                        if (newCount == 0) {
+                                            return@forEach
+                                        }
+                                        Log.i("FlashcardViewModel.kt", "${kanji.unicode} with Durability: ${kanji.durability}")
+                                        Log.i("FlashcardViewModel.kt", "New Kanji #$newCount: ${kanji.unicode}")
+                                        newCount--
+                                    }
+                                    queue.add(Pair(kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${kanjiRepository.getRetentionFromKanji(kanji.unicode)}...")
+                                }
+
+                                Log.i("FlashcardViewModel.kt", "Queue size: ${queue.size}")
+                                if(queue.peek() != null) {
+                                    val i : Kanji = queue.poll()!!.second
+                                    Log.i("FlashcardViewModel.kt", "Polling kanji ${i.unicode}")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                kanji = i,
+                                                meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                                isReviewAvailable = true,
+                                                queue = queue
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Log.i("FlashcardViewModel.kt", "Empty queue...")
+                                    _state.update(
+                                        function = {
+                                            it.copy(
+                                                isReviewAvailable = false
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
             is FlashcardEvent.FlipFlashcard -> {
-                val isAnswerShowing: Boolean = state.value.isAnswerShowing
                 _state.update(
                     function = {
                         it.copy(
-                            isAnswerShowing = !isAnswerShowing
+                            isAnswerShowing = !state.value.isAnswerShowing
                         )
                     }
                 )
@@ -40,68 +183,54 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             is FlashcardEvent.GetRandomFlashcard -> {
                 viewModelScope.launch(
                     block = {
-                        _state.update(
-                            function = {
-                                var i : Kanji
-                                var available : Boolean
-                                do {
-                                    i = kanjiRepository.getRandomKanji()
-                                    available = true
-                                    Log.i("FlashcardViewModel.kt", "Checking if $i is available...")
-                                    kanjiRepository.getKanjiComponentsFromKanji(i.unicode).forEach { kanji ->
-                                        Log.i("FlashcardViewModel.kt", "Checking composition ${kanji.unicode}...")
-                                        if (kanji.durability == 0f) {
-                                            Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
-                                            available = false
-                                        }
-                                        val latestDate = kanjiRepository.getLatestDateFromKanji(kanji.unicode)
-                                        val retention = if (latestDate == null) 0f else exp(-(((Duration.between(
-                                            kanjiRepository.getLatestDateFromKanji(kanji.unicode),
-                                            LocalDateTime.now()
-                                        ).toMinutes()).toDouble()/1440) / kanji.durability)).toFloat()
-                                        if (retention < .80f) {
-                                            Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention less than 80%.")
-                                            available = false
-                                        }
-                                    }
-                                } while (state.value.kanji == i || !available)
-                                it.copy(
-                                    kanji = i,
-                                    meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
-                                    isAnswerShowing = false
-                                )
-                            }
-                        )
+                        val i : Kanji? = state.value.queue.poll()?.second
+                        if (i != null) {
+                            Log.i("FlashcardViewModel.kt", "Polling kanji ${i.unicode}...")
+                            _state.update(
+                                function = {
+                                    it.copy(
+                                        kanji = i,
+                                        meanings = kanjiRepository.getMeaningsFromKanji(i.unicode),
+                                        isReviewAvailable = true
+                                    )
+                                }
+                            )
+                        }
+                        else {
+                            FlashcardEvent.InitializeQueue
+                        }
                     }
                 )
             }
             is FlashcardEvent.WrongCard -> {
-                var durability: Float = state.value.kanji!!.durability
-                if (durability <= 1) {
-                    durability = 0f
-                } else {
-                    durability -= 1
-                }
-
-                val kanji = Kanji(
-                    unicode = state.value.kanji!!.unicode,
-                    strokes = state.value.kanji!!.strokes,
-                    durability = durability,
-                )
-
-                val review = Review(
-                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    unicode = state.value.kanji!!.unicode,
-                    rating = 1
-                )
-
                 viewModelScope.launch {
+                    var durability: Float = state.value.kanji!!.durability
+                    if (durability <= 1) {
+                        durability = 0f
+                    } else {
+                        durability -= 1
+                    }
+
+                    val kanji = Kanji(
+                        unicode = state.value.kanji!!.unicode,
+                        strokes = state.value.kanji!!.strokes,
+                        durability = durability,
+                    )
+
+                    val review = Review(
+                        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        unicode = state.value.kanji!!.unicode,
+                        rating = 1
+                    )
+
                     kanjiRepository.upsertKanji(
                         kanji = kanji
                     )
                     kanjiRepository.insertReview(
                         review = review
                     )
+                    state.value.queue.add(Pair(kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} back into queue...")
                 }
             }
             is FlashcardEvent.CorrectCard -> {

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.InsertChart
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -77,6 +78,21 @@ fun BottomNavBar(
             },
             label = {
                 Text(text = "Statistics")
+            }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(Screen.Settings.route)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Settings Icon"
+                )
+            },
+            label = {
+                Text(text = "Settings")
             }
         )
     }

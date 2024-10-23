@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.study.flashcard.StudyType
 import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
 import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.theme.spacing
@@ -88,10 +89,13 @@ fun StudyScreen(
                 }
                 Button(
                     onClick = {
-                        onLearnEvent(LearnEvent.InitializeQueue)
+                        onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.New))
+                        onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                        //onLearnEvent(LearnEvent.InitializeQueue)
                         Log.d("StudyScreen.kt", "Navigating to Learn Screen...")
                         navController.navigate(
-                            route = Screen.Learn.route
+                            route = Screen.Flashcard.route
+                            //route = Screen.Learn.route
                         )
                     }
                 ) {
@@ -102,10 +106,13 @@ fun StudyScreen(
                 }
                 Button(
                     onClick = {
-                        onReviewEvent(ReviewEvent.InitializeQueue)
+                        onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Review))
+                        onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                        //onReviewEvent(ReviewEvent.InitializeQueue)
                         Log.d("StudyScreen.kt", "Navigating to Review Screen...")
                         navController.navigate(
-                            route = Screen.Review.route
+                            route = Screen.Flashcard.route
+                            //route = Screen.Review.route
                         )
                     }
                 ) {

@@ -3,11 +3,14 @@ package com.example.kanjimemorized.data
 import android.util.Log
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
+import com.example.kanjimemorized.data.entities.Settings
 import kotlinx.coroutines.flow.Flow
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
 import java.time.format.DateTimeFormatter
+import java.util.Dictionary
 import java.util.PriorityQueue
 import kotlin.math.exp
 
@@ -27,6 +30,14 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         kanjiDao.insertReview(
             review = review
         )
+    }
+
+    suspend fun updateSettings(code: String, setValue: String) {
+        kanjiDao.updateSettings(code = code, setValue = setValue)
+    }
+
+    suspend fun getSettingsFromCode(code: String): Settings {
+        return kanjiDao.getSettingsFromCode(code = code)
     }
 
     suspend fun getKanjiComponentsFromKanji(kanji: Char): List<Kanji> {
@@ -81,7 +92,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             LocalDateTime.now()
         ).toMinutes()).toDouble()
         val retention = exp(-((minutes / 1440) / durability).toFloat())
-        Log.i("KanjiRepository.kt", "Calculating retention with $minutes minutes and $durability durability: $retention")
+        //Log.i("KanjiRepository.kt", "Calculating retention with $minutes minutes and $durability durability: $retention")
         return retention
     }
 
@@ -89,12 +100,36 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         var date: String = kanjiDao.getLatestDateFromKanji(kanji = kanji)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         if (date.isNullOrEmpty()) date = ""
-        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
+        //Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
         return if (date.isNullOrEmpty()) null else parse(date, formatter)
     }
 
     suspend fun getKanjiList(): List<Kanji> {
         return kanjiDao.getKanjiList()
+    }
+
+    suspend fun getUnlockedKanjiList(): List<Kanji> {
+        var unlockedKanjiList: List<Kanji> = listOf()
+        var calculatedRetentions: MutableMap<Kanji, Float> = mutableMapOf()
+        kanjiDao.getKanjiList().forEach { kanji ->
+            var isLocked = false
+            getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
+                if (!calculatedRetentions.contains(component)) {
+                    calculatedRetentions[component] = getRetentionFromKanji(component.unicode)
+                }
+                if (calculatedRetentions[component]!! <= .80f) {
+                    isLocked = true
+                }
+            }
+            if (!isLocked) {
+                unlockedKanjiList = unlockedKanjiList.plus(kanji)
+            }
+        }
+        return unlockedKanjiList
+    }
+
+    suspend fun getEarliestDateCountFromToday(): Int {
+        return kanjiDao.getEarliestDateCountFromToday(today = LocalDate.now().toString())
     }
 
     suspend fun getRandomKanji(): Kanji {

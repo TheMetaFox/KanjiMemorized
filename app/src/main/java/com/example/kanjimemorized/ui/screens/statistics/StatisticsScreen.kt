@@ -38,7 +38,7 @@ fun StatisticsScreen(
     statisticsState: StatisticsState,
     onStatisticsEvent: (StatisticsEvent) -> Unit
 ) {
-    onStatisticsEvent(StatisticsEvent.LoadStatistics)
+    onStatisticsEvent(StatisticsEvent.LoadStatisticsData)
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

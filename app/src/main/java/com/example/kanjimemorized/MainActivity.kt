@@ -32,6 +32,9 @@ import com.example.kanjimemorized.ui.screens.library.LibraryViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModel
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModelFactory
+import com.example.kanjimemorized.ui.screens.settings.SettingsEvent
+import com.example.kanjimemorized.ui.screens.settings.SettingsViewModel
+import com.example.kanjimemorized.ui.screens.settings.SettingsViewModelFactory
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModel
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFactory
@@ -99,6 +102,25 @@ class MainActivity : ComponentActivity() {
             factory = statisticsViewModelFactory
         )[StatisticsViewModel::class.java]
 
+        val settingsViewModelFactory = SettingsViewModelFactory(kanjiRepository)
+        val settingsViewModel: SettingsViewModel = ViewModelProvider(
+            owner = this,
+            factory = settingsViewModelFactory
+        )[SettingsViewModel::class.java]
+
+
+        val onHomeEvent: (HomeEvent) -> Unit = homeViewModel::onEvent
+        val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
+        val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
+        val onLearnEvent: (LearnEvent) -> Unit = learnViewModel::onEvent
+        val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
+        val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
+        val onStatisticsEvent: (StatisticsEvent) -> Unit = statisticsViewModel::onEvent
+        val onSettingsEvent: (SettingsEvent) -> Unit = settingsViewModel::onEvent
+
+        onHomeEvent(HomeEvent.LoadHomeData)
+        onStatisticsEvent(StatisticsEvent.LoadStatisticsData)
+        onSettingsEvent(SettingsEvent.LoadSettingsData)
 
         setContent {
             KanjiMemorizedTheme {
@@ -112,38 +134,34 @@ class MainActivity : ComponentActivity() {
                 val reviewState by reviewViewModel.state.collectAsState()
                 val flashcardState by flashcardViewModel.state.collectAsState()
                 val statisticsState by statisticsViewModel.state.collectAsState()
+                val settingsState by settingsViewModel.state.collectAsState()
 
-                val onHomeEvent: (HomeEvent) -> Unit = homeViewModel::onEvent
-                val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
-                val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
-                val onLearnEvent: (LearnEvent) -> Unit = learnViewModel::onEvent
-                val onReviewEvent: (ReviewEvent) -> Unit = reviewViewModel::onEvent
-                val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
-                val onStatisticsEvent: (StatisticsEvent) -> Unit = statisticsViewModel::onEvent
-                    SetupNavGraph(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background),
-                        //navController = navController,
-                        //bottomNavBar = { BottomNavBar(navController) },
-                        snackbarHostState =  snackbarHostState,
-                        coroutineScope = coroutineScope,
-                        homeState = homeState,
-                        libraryState = libraryState,
-                        kanjiState = kanjiState,
-                        learnState = learnState,
-                        reviewState = reviewState,
-                        flashcardState = flashcardState,
-                        statisticsState = statisticsState,
-                        onHomeEvent = onHomeEvent,
-                        onLibraryEvent = onLibraryEvent,
-                        onKanjiEvent = onKanjiEvent,
-                        onLearnEvent = onLearnEvent,
-                        onReviewEvent = onReviewEvent,
-                        onFlashcardEvent = onFlashcardEvent,
-                        onStatisticsEvent = onStatisticsEvent
-                    )
-                }
+                SetupNavGraph(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                    //navController = navController,
+                    //bottomNavBar = { BottomNavBar(navController) },
+                    snackbarHostState =  snackbarHostState,
+                    coroutineScope = coroutineScope,
+                    homeState = homeState,
+                    libraryState = libraryState,
+                    kanjiState = kanjiState,
+                    learnState = learnState,
+                    reviewState = reviewState,
+                    flashcardState = flashcardState,
+                    statisticsState = statisticsState,
+                    settingsState = settingsState,
+                    onHomeEvent = onHomeEvent,
+                    onLibraryEvent = onLibraryEvent,
+                    onKanjiEvent = onKanjiEvent,
+                    onLearnEvent = onLearnEvent,
+                    onReviewEvent = onReviewEvent,
+                    onFlashcardEvent = onFlashcardEvent,
+                    onStatisticsEvent = onStatisticsEvent,
+                    onSettingsEvent = onSettingsEvent
+                )
             }
         }
     }
+}

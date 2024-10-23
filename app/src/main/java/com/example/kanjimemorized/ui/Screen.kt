@@ -10,4 +10,5 @@ sealed class Screen(val route: String) {
     data object Library: Screen(route = "library_screen")
     data object Kanji: Screen(route = "kanji_screen")
     data object Statistics: Screen(route = "statistics_screen")
+    data object Settings: Screen(route = "settings_screen")
 }

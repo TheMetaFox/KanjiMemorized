@@ -3,9 +3,11 @@ package com.example.kanjimemorized.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
+import com.example.kanjimemorized.data.entities.Settings
 import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
 import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 import kotlinx.coroutines.flow.Flow
@@ -15,16 +17,16 @@ import java.util.PriorityQueue
 interface KanjiDao {
 
     @Upsert
-    suspend fun upsertKanji(kanji: Kanji)
+    suspend fun upsertKanji(kanji: Kanji): Void
 
     @Insert
-    suspend fun insertKanjiMeaning(kanjiMeaning: KanjiMeaningCrossRef)
+    suspend fun insertReview(review: Review): Void
 
-    @Insert
-    suspend fun insertKanjiComponent(kanjiComponent: KanjiComponentCrossRef)
+    @Query("UPDATE settings SET setValue = :setValue WHERE code = :code")
+    suspend fun updateSettings(code: String, setValue: String): Void
 
-    @Insert
-    suspend fun insertReview(review: Review)
+    @Query("SELECT * FROM settings WHERE code = :code")
+    suspend fun getSettingsFromCode(code: String): Settings
 
     @Query("SELECT * FROM kanji")
     suspend fun getKanjiList(): List<Kanji>
@@ -97,14 +99,11 @@ interface KanjiDao {
     @Query("SELECT datetime FROM review WHERE unicode = :kanji AND rating > 1 ORDER BY datetime DESC LIMIT 1")
     suspend fun getLatestDateFromKanji(kanji: Char): String
 
-    @Query("DELETE FROM kanji")
-    suspend fun deleteAllKanji()
-
-    @Query("DELETE FROM kanjimeaningcrossref")
-    suspend fun deleteAllMeaning()
-
-    @Query("DELETE FROM kanjicomponentcrossref")
-    suspend fun deleteAllKanjiComponent()
+    @Query("SELECT count(unicode) FROM (" +
+            "SELECT MIN(datetime) as datetime, unicode, rating " +
+            "FROM review WHERE rating > 1 GROUP BY unicode) " +
+            "WHERE substr(datetime, 1, 10) = :today")
+    suspend fun getEarliestDateCountFromToday(today: String): Int
 
     @Query("UPDATE kanji SET durability = 0.0")
     suspend fun resetKanjiData()

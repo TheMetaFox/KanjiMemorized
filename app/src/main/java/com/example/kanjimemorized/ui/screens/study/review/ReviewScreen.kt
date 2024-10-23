@@ -28,13 +28,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
 @Composable
 fun ReviewScreen(
     modifier: Modifier,
     navController: NavHostController,
     reviewState: ReviewState,
-    onReviewEvent: (ReviewEvent) -> Unit
+    onReviewEvent: (ReviewEvent) -> Unit,
+    onKanjiEvent: (KanjiEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -101,54 +103,75 @@ fun ReviewScreen(
                         }
                     }
                     if (reviewState.isAnswerShowing) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(100.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .height(150.dp),
+                            horizontalAlignment = CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Button(
                                 onClick = {
-                                    onReviewEvent(ReviewEvent.FlipFlashcard)
-                                    onReviewEvent(ReviewEvent.WrongCard)
-                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                    onKanjiEvent(KanjiEvent.DisplayKanjiInfo(reviewState.kanji!!))
+                                    navController.navigate(Screen.Kanji.route)
                                 },
                                 modifier = Modifier
-                                    .size(125.dp,50.dp),
+                                    .size(375.dp, 50.dp),
                             ) {
                                 Text(
-                                    text = "Wrong",
+                                    text = "View Kanji",
                                     fontSize = 20.sp
                                 )
                             }
-                            Button(
-                                onClick = {
-                                    onReviewEvent(ReviewEvent.FlipFlashcard)
-                                    onReviewEvent(ReviewEvent.CorrectCard)
-                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
-                                },
+                            Row(
                                 modifier = Modifier
-                                    .size(125.dp,50.dp),
+                                    .fillMaxWidth()
+                                    .height(100.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(
-                                    text = "Correct",
-                                    fontSize = 20.sp
-                                )
-                            }
-                            Button(
-                                onClick = {
-                                    onReviewEvent(ReviewEvent.FlipFlashcard)
-                                    onReviewEvent(ReviewEvent.EasyCard)
-                                    onReviewEvent(ReviewEvent.GetRandomFlashcard)
-                                },
-                                modifier = Modifier
-                                    .size(125.dp,50.dp),
-                            ) {
-                                Text(
-                                    text = "Easy",
-                                    fontSize = 20.sp
-                                )
+                                Button(
+                                    onClick = {
+                                        onReviewEvent(ReviewEvent.FlipFlashcard)
+                                        onReviewEvent(ReviewEvent.WrongCard)
+                                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp, 50.dp),
+                                ) {
+                                    Text(
+                                        text = "Wrong",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Button(
+                                    onClick = {
+                                        onReviewEvent(ReviewEvent.FlipFlashcard)
+                                        onReviewEvent(ReviewEvent.CorrectCard)
+                                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp, 50.dp),
+                                ) {
+                                    Text(
+                                        text = "Correct",
+                                        fontSize = 20.sp
+                                    )
+                                }
+                                Button(
+                                    onClick = {
+                                        onReviewEvent(ReviewEvent.FlipFlashcard)
+                                        onReviewEvent(ReviewEvent.EasyCard)
+                                        onReviewEvent(ReviewEvent.GetRandomFlashcard)
+                                    },
+                                    modifier = Modifier
+                                        .size(125.dp, 50.dp),
+                                ) {
+                                    Text(
+                                        text = "Easy",
+                                        fontSize = 20.sp
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -184,5 +207,5 @@ fun ReviewScreen(
 @Preview
 @Composable
 fun ReviewScreenPreview() {
-    ReviewScreen(modifier = Modifier, navController = rememberNavController(), reviewState = ReviewState(), onReviewEvent = { })
+    ReviewScreen(modifier = Modifier, navController = rememberNavController(), reviewState = ReviewState(), onReviewEvent = { }, onKanjiEvent = { })
 }

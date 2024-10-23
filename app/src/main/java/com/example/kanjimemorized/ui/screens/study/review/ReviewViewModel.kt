@@ -79,6 +79,7 @@ class ReviewViewModel(private val kanjiRepository: KanjiRepository): ViewModel()
                     block = {
                         val i : Kanji? = state.value.queue.poll()?.second
                         if (i != null) {
+
                             _state.update(
                                 function = {
                                     it.copy(

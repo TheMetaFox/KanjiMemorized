@@ -21,21 +21,8 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
     ) {
         when (statisticsEvent) {
 
-            is StatisticsEvent.LoadStatistics -> {
+            is StatisticsEvent.LoadStatisticsData -> {
                 viewModelScope.launch {
-                    var unlocked = 0
-                    kanjiRepository.getKanjiList().forEach { kanji ->
-                        var isLocked = false
-                        kanjiRepository.getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
-                            if (kanjiRepository.getRetentionFromKanji(component.unicode) <= .80f) {
-                                isLocked = true
-                            }
-                        }
-                        if (!isLocked) {
-                            unlocked++
-                        }
-                    }
-
                     var unknown = 0
                     var known = 0
                     var mastered = 0
@@ -51,7 +38,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
 
                     _state.update {
                         it.copy(
-                            unlocked = unlocked,
+                            unlocked = kanjiRepository.getUnlockedKanjiList().size,
                             known = known,
                             mastered = mastered,
                             unknown = unknown
