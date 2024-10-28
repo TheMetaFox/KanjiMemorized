@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -16,10 +17,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
+
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(
+        value = true
+    )
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _state: MutableStateFlow<HomeState> = MutableStateFlow(
         value = HomeState()
     )
-
     val state: StateFlow<HomeState> = _state
 
     fun onEvent(
@@ -43,6 +49,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                             currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                         )
                     }
+                    _isLoading.value = false
                 }
             }
         }

@@ -5,10 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
+
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(
+        value = true
+    )
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _state: MutableStateFlow<StatisticsState> = MutableStateFlow(
         value = StatisticsState()
@@ -44,10 +50,9 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                             unknown = unknown
                         )
                     }
-
+                    _isLoading.value = false
                 }
             }
-            else -> {}
         }
     }
 }

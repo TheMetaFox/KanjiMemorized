@@ -12,9 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -49,16 +52,14 @@ import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModel
 import com.example.kanjimemorized.ui.screens.study.review.ReviewViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
-
-
 
         val homeViewModelFactory = HomeViewModelFactory(kanjiRepository)
         val homeViewModel: HomeViewModel = ViewModelProvider(
@@ -122,6 +123,14 @@ class MainActivity : ComponentActivity() {
         onStatisticsEvent(StatisticsEvent.LoadStatisticsData)
         onSettingsEvent(SettingsEvent.LoadSettingsData)
 
+        installSplashScreen().apply {
+            setKeepOnScreenCondition(
+                condition = {
+                    homeViewModel.isLoading.value || statisticsViewModel.isLoading.value || settingsViewModel.isLoading.value
+                }
+            )
+        }
+
         setContent {
             KanjiMemorizedTheme {
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -140,8 +149,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background),
-                    //navController = navController,
-                    //bottomNavBar = { BottomNavBar(navController) },
                     snackbarHostState =  snackbarHostState,
                     coroutineScope = coroutineScope,
                     homeState = homeState,
