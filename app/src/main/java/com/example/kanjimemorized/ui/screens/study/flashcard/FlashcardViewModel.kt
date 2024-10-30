@@ -37,8 +37,10 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 }
             }
             is FlashcardEvent.InitializeQueue -> {
+                Log.i("FlashcardViewModel.kt", state.value.studyType.name)
                 when(state.value.studyType) {
                     StudyType.New -> {
+                        Log.i("FlashcardViewModel.kt", "Initializing queue with study type New...")
                         viewModelScope.launch(
                             block = {
                                 val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
@@ -197,7 +199,8 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                             )
                         }
                         else {
-                            FlashcardEvent.InitializeQueue
+                            Log.i("FlashcardViewModel.kt", "Refreshing queue...")
+                            onEvent(FlashcardEvent.InitializeQueue)
                         }
                     }
                 )

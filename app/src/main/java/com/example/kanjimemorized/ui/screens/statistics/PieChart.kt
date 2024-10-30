@@ -59,7 +59,6 @@ fun PieChart(
     ) {
         Canvas(
             modifier = Modifier
-                .fillMaxSize()
                 .pointerInput(true){
                     detectTapGestures(
                         onTap = { offset ->  

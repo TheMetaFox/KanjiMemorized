@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Dictionary
 import java.util.PriorityQueue
 import kotlin.math.exp
+import kotlin.math.ln
+import kotlin.math.pow
 
 class KanjiRepository(private val kanjiDao: KanjiDao) {
     suspend fun resetKanjiData() {
@@ -96,6 +98,21 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return retention
     }
 
+    suspend fun getForecastFromKanji(kanji: Char): Float {
+        val durability: Int = kanjiDao.getDurabilityFromKanji(kanji = kanji).toInt()
+        if (durability == 0) {
+            return 0f
+        }
+        val minutes: Double = (Duration.between(
+            getLatestDateFromKanji(kanji = kanji),
+            LocalDateTime.now()
+        ).toMinutes()).toDouble()
+        val forecast = (1440*ln(0.8.pow(-durability)) - minutes).toFloat()
+        Log.i("KanjiRepository.kt", "Minutes: $minutes with Forecast: $forecast")
+
+        return forecast
+    }
+
     suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime? {
         var date: String = kanjiDao.getLatestDateFromKanji(kanji = kanji)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -106,6 +123,10 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     suspend fun getKanjiList(): List<Kanji> {
         return kanjiDao.getKanjiList()
+    }
+
+    suspend fun getKnownKanjiList(): List<Kanji> {
+        return kanjiDao.getKnownKanjiList()
     }
 
     suspend fun getUnlockedKanjiList(): List<Kanji> {
