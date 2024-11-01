@@ -135,7 +135,6 @@ fun FlashcardScreen(
                                     onClick = {
                                         onFlashcardEvent(FlashcardEvent.WrongCard)
                                         onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
                                     },
                                     modifier = Modifier
                                         .size(125.dp,50.dp),
@@ -147,9 +146,8 @@ fun FlashcardScreen(
                                 }
                                 Button(
                                     onClick = {
-                                        onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
                                         onFlashcardEvent(FlashcardEvent.CorrectCard)
+                                        onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                     },
                                     modifier = Modifier
                                         .size(125.dp,50.dp),
@@ -161,9 +159,8 @@ fun FlashcardScreen(
                                 }
                                 Button(
                                     onClick = {
-                                        onFlashcardEvent(FlashcardEvent.FlipFlashcard)
-                                        onFlashcardEvent(FlashcardEvent.GetRandomFlashcard)
                                         onFlashcardEvent(FlashcardEvent.EasyCard)
+                                        onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                     },
                                     modifier = Modifier
                                         .size(125.dp,50.dp),
