@@ -1,6 +1,7 @@
 package com.example.kanjimemorized.ui.screens.statistics
 
 import android.util.Log
+import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,13 +60,13 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                     Log.i("StatisticsViewModel.kt", "Forecast Map: $dayForecastsMap")
 
 
-
                     _state.update {
                         it.copy(
                             unlocked = kanjiRepository.getUnlockedKanjiList().size,
                             known = known,
                             mastered = mastered,
                             unknown = unknown,
+                            kanjiCountMap = mapOf("Unknown" to unknown, "Known" to known, "Mastered" to mastered),
                             dayForecastsMap = dayForecastsMap
                         )
                     }

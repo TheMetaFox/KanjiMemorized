@@ -31,6 +31,8 @@ fun BarGraph(
     width: Float = 300f,
     height: Float = 300f,
     barColor: Color = MaterialTheme.colorScheme.primary,
+    axisColor: Color = MaterialTheme.colorScheme.onBackground,
+    labelColor: Color = MaterialTheme.colorScheme.onBackground,
     barGraphSpan: BarGraphSpan = BarGraphSpan.WEEK1,
     inputMap: Map<Int, Int>,
     titleText: String = ""
@@ -42,6 +44,7 @@ fun BarGraph(
         BarGraphSpan.YEAR1 -> { 365 }
         BarGraphSpan.ALL -> { inputMap.maxOf { entry -> entry.key } }
     }
+    val maxValue: Int = inputMap.maxOf { entry -> entry.value }
     Box(
         modifier = modifier
             .size(width = width.dp, height = height.dp)
@@ -54,8 +57,8 @@ fun BarGraph(
             modifier = Modifier
         ) {
             drawBars(valueMap = inputMap, barCount = barCount, barColor = barColor, width = width, height = height)
-            drawAxis(width = width, height = height, strokeWidth = 5f)
-            drawLabels(width = width, height = height, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = inputMap.maxOf { entry -> entry.value })
+            drawAxis(width = width, height = height, strokeWidth = 5f, axisColor = axisColor)
+            drawLabels(width = width, height = height, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = maxValue, labelColor = labelColor)
         }
     }
 }
@@ -81,16 +84,17 @@ fun DrawScope.drawBars(
 fun DrawScope.drawAxis(
     width: Float,
     height: Float,
-    strokeWidth: Float
-) {
+    strokeWidth: Float,
+    axisColor: Color,
+    ) {
     drawLine(
-        color = Color.Gray,
+        color = axisColor,
         start = Offset(x = -width -strokeWidth/2, y = -height),
         end = Offset(x = -width -strokeWidth/2, y = height + strokeWidth/2),
         strokeWidth = strokeWidth
     )
     drawLine(
-        color = Color.Gray,
+        color = axisColor,
         start = Offset(x = -width - strokeWidth/2, y = height),
         end = Offset(x = width, y = height),
         strokeWidth = strokeWidth
@@ -102,13 +106,14 @@ fun DrawScope.drawLabels(
     height: Float,
     textMeasurer: TextMeasurer,
     horizontalMax: Int,
-    verticalMax: Int
-) {
+    verticalMax: Int,
+    labelColor: Color,
+    ) {
     for (i in 1..horizontalMax step horizontalMax/6+1) {
         val textResult = textMeasurer.measure(text = "$i")
         drawText(
             textLayoutResult = textResult,
-            color = Color.LightGray,
+            color = labelColor,
             topLeft = Offset(x = -width - (textResult.size.width/2) + (width/horizontalMax) + (width/horizontalMax*(i-1)*2), y = height)
         )
     }
@@ -116,13 +121,13 @@ fun DrawScope.drawLabels(
         val textResult = textMeasurer.measure(text = "$i")
         drawText(
             textLayoutResult = textResult,
-            color = Color.LightGray,
+            color = labelColor,
             topLeft = Offset(x = -width - textResult.size.width-10, y = height - textResult.size.height/2 - (height/verticalMax*(i)*2))
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun BarGraphPreview() {
     BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3))
