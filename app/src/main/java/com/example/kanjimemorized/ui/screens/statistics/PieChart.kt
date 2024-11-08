@@ -79,5 +79,4 @@ fun DrawScope.drawArcs(
 fun PieChartPreview() { PieChart(
     inputMap = mapOf("Unknown" to 1612, "Known" to 412, "Mastered" to 112),
     colorMap = mapOf("Unknown" to MaterialTheme.colorScheme.tertiary, "Known" to MaterialTheme.colorScheme.secondary, "Mastered" to MaterialTheme.colorScheme.primary)
-)
-}
+) }
