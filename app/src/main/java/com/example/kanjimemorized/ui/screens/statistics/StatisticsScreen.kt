@@ -60,7 +60,7 @@ fun StatisticsScreen(
             Box(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Screen.Home.route)
+                        navController.navigateUp()
                     }
             ) {
                 Text(

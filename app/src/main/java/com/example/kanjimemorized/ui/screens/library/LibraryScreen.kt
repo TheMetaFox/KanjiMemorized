@@ -68,7 +68,8 @@ fun LibraryScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(top = spacing.small),
         bottomBar = {
             bottomNavBar()
         }
