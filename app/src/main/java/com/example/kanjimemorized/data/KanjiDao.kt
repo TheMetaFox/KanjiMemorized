@@ -3,15 +3,11 @@ package com.example.kanjimemorized.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import androidx.room.Upsert
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.Settings
-import com.example.kanjimemorized.data.entities.relations.KanjiComponentCrossRef
-import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 import kotlinx.coroutines.flow.Flow
-import java.util.PriorityQueue
 
 @Dao
 interface KanjiDao {
@@ -100,7 +96,7 @@ interface KanjiDao {
     suspend fun getDurabilityFromKanji(kanji: Char): Float
 
     @Query("SELECT datetime FROM review WHERE unicode = :kanji AND rating > 1 ORDER BY datetime DESC LIMIT 1")
-    suspend fun getLatestDateFromKanji(kanji: Char): String
+    suspend fun getLatestDateFromKanji(kanji: Char): String?
 
     @Query("SELECT count(unicode) FROM (" +
             "SELECT MIN(datetime) as datetime, unicode, rating " +

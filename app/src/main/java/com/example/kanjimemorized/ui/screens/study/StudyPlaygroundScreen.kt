@@ -62,7 +62,7 @@ fun StudyPlaygroundScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(MaterialTheme.spacing.small),
+            .padding(spacing.small),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState

@@ -42,7 +42,7 @@ fun KanjiReviewDataDialog(
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
-                    .padding(MaterialTheme.spacing.small)
+                    .padding(spacing.small)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

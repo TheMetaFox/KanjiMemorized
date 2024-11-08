@@ -42,7 +42,7 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(top = MaterialTheme.spacing.small),
+            .padding(top = spacing.small),
         bottomBar = {
             bottomNavBar()
         }

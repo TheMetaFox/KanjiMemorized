@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
+
 @Composable
 fun FlashcardScreen(
     modifier: Modifier,
@@ -42,7 +43,7 @@ fun FlashcardScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(MaterialTheme.spacing.small),
+            .padding(spacing.small),
     ) { contentPadding ->
         Column(
             modifier = modifier
@@ -107,7 +108,7 @@ fun FlashcardScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(150.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
+                            horizontalAlignment = CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Button(
@@ -190,11 +191,13 @@ fun FlashcardScreen(
             } else {
                 Box(
                     modifier = Modifier
-                        .size(300.dp,100.dp)
+                        .size(width = 300.dp, height = 100.dp)
                 ) {
                     Text(
                         text = "No New Kanji Available",
-                        modifier = modifier.align(Alignment.Center),
+                        modifier = modifier.align(
+                            alignment = Center
+                        ),
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center
                     )

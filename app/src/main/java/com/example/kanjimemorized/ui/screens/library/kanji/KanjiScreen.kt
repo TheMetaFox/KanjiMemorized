@@ -1,16 +1,10 @@
 package com.example.kanjimemorized.ui.screens.library.kanji
 
 import android.util.Log
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,23 +24,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
 import com.example.kanjimemorized.ui.theme.spacing
@@ -61,7 +43,6 @@ fun KanjiScreen(
     modifier: Modifier,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    animatedContentScope: AnimatedContentScope,
     navController: NavController,
     kanjiState: KanjiState,
     onKanjiEvent: (KanjiEvent) -> Unit
@@ -78,9 +59,9 @@ fun KanjiScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(
-                start = MaterialTheme.spacing.medium,
-                top = MaterialTheme.spacing.medium,
-                end = MaterialTheme.spacing.medium
+                start = spacing.medium,
+                top = spacing.medium,
+                end = spacing.medium
             )
     ) { contentPadding ->
         Column(
@@ -189,7 +170,8 @@ fun KanjiScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format(Locale.ENGLISH,"%.0f",kanjiState.kanji?.durability),
+                                text = String.format(Locale.ENGLISH,"%.0f", kanjiState.kanji.durability
+                                ),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -245,7 +227,7 @@ fun KanjiScreen(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = kanjiState.kanji?.strokes.toString(),
+                            text = kanjiState.kanji.strokes.toString(),
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 26.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -356,56 +338,56 @@ fun KanjiScreen(
     }
 }
 
-@Composable
-fun HorizontalProgressBar(
-    percentage: Float,
-    width: Dp,
-    height: Dp,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
-    strokeWidth: Dp = 8.dp,
-    animationDuration: Int = 1000,
-    animationDelay: Int = 0,
-    ) {
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val currentPercentage = animateFloatAsState(
-        targetValue = if(animationPlayed) percentage else 0f,
-        animationSpec = tween(
-            durationMillis = animationDuration,
-            delayMillis = animationDelay
-        ),
-        label = "horizontalProgressBar"
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(
-                width = width,
-                height = height
-            )
-    ) {
-        Canvas(
-            modifier = modifier
-                .size(
-                    width = width,
-                    height = height
-                )
-        ) {
-            drawLine(
-                color = color,
-                start = Offset(0f, height.toPx()/2),
-                end = Offset(width.toPx()*currentPercentage.value, height.toPx()/2),
-                strokeWidth = strokeWidth.toPx(),
-                cap = StrokeCap.Round
-            )
-        }
-    }
-}
+//@Composable
+//fun HorizontalProgressBar(
+//    percentage: Float,
+//    width: Dp,
+//    height: Dp,
+//    modifier: Modifier = Modifier,
+//    color: Color = MaterialTheme.colorScheme.primary,
+//    strokeWidth: Dp = 8.dp,
+//    animationDuration: Int = 1000,
+//    animationDelay: Int = 0,
+//    ) {
+//    var animationPlayed by remember {
+//        mutableStateOf(false)
+//    }
+//    val currentPercentage = animateFloatAsState(
+//        targetValue = if(animationPlayed) percentage else 0f,
+//        animationSpec = tween(
+//            durationMillis = animationDuration,
+//            delayMillis = animationDelay
+//        ),
+//        label = "horizontalProgressBar"
+//    )
+//    LaunchedEffect(key1 = true) {
+//        animationPlayed = true
+//    }
+//    Box(
+//        contentAlignment = Alignment.Center,
+//        modifier = modifier
+//            .size(
+//                width = width,
+//                height = height
+//            )
+//    ) {
+//        Canvas(
+//            modifier = modifier
+//                .size(
+//                    width = width,
+//                    height = height
+//                )
+//        ) {
+//            drawLine(
+//                color = color,
+//                start = Offset(0f, height.toPx()/2),
+//                end = Offset(width.toPx()*currentPercentage.value, height.toPx()/2),
+//                strokeWidth = strokeWidth.toPx(),
+//                cap = StrokeCap.Round
+//            )
+//        }
+//    }
+//}
 
 
 //@OptIn(ExperimentalSharedTransitionApi::class)

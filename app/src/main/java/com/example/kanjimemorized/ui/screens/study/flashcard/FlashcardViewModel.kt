@@ -3,19 +3,16 @@ package com.example.kanjimemorized.ui.screens.study.flashcard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.KanjiRepository
+import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
-import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.PriorityQueue
-import kotlin.math.exp
 
 class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
 

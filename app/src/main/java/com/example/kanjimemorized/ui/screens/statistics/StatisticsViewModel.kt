@@ -1,19 +1,15 @@
 package com.example.kanjimemorized.ui.screens.statistics
 
 import android.util.Log
-import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Kanji
-import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
 

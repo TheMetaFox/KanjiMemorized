@@ -82,7 +82,7 @@ fun HomeScreen(
             }
             Column(
                 modifier = modifier
-                    .padding(MaterialTheme.spacing.small)
+                    .padding(spacing.small)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
@@ -172,17 +172,17 @@ fun ImageCard(
                             fontSize = 35.sp
                         )
                     ) {
-                        append("K")
+                        append(text = "K")
                     }
-                    append("anji ")
+                    append(text = "anji ")
                     withStyle(
                         style = SpanStyle(
                             fontSize = 35.sp
                         )
                     ) {
-                        append("M")
+                        append(text = "M")
                     }
-                    append("emorised")
+                    append(text = "emorised")
                 },
                 modifier = Modifier
                     .align(Alignment.BottomStart)

@@ -10,11 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.screens.home.HomeEvent
-import com.example.kanjimemorized.ui.screens.library.LibraryEvent
-import com.example.kanjimemorized.ui.screens.library.LibraryState
 import com.example.kanjimemorized.ui.screens.home.HomeScreen
 import com.example.kanjimemorized.ui.screens.home.HomeState
+import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryScreen
+import com.example.kanjimemorized.ui.screens.library.LibraryState
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiScreen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiState
@@ -29,13 +29,6 @@ import com.example.kanjimemorized.ui.screens.study.StudyScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardState
-import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
-import com.example.kanjimemorized.ui.screens.study.learn.LearnScreen
-import com.example.kanjimemorized.ui.screens.study.learn.LearnState
-import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
-import com.example.kanjimemorized.ui.screens.study.review.ReviewScreen
-import com.example.kanjimemorized.ui.screens.study.review.ReviewState
-
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -47,16 +40,12 @@ fun SetupNavGraph(
     homeState: HomeState,
     libraryState: LibraryState,
     kanjiState: KanjiState,
-    learnState: LearnState,
-    reviewState: ReviewState,
     flashcardState: FlashcardState,
     statisticsState: StatisticsState,
     settingsState: SettingsState,
     onHomeEvent: (HomeEvent) -> Unit,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit,
-    onLearnEvent: (LearnEvent) -> Unit,
-    onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit,
     onStatisticsEvent: (StatisticsEvent) -> Unit,
     onSettingsEvent: (SettingsEvent) -> Unit,
@@ -88,8 +77,6 @@ fun SetupNavGraph(
                     modifier = modifier,
                     navController = navController,
                     bottomNavBar = bottomNavBar,
-                    onLearnEvent = onLearnEvent,
-                    onReviewEvent = onReviewEvent,
                     onFlashcardEvent = onFlashcardEvent)
             }
             composable(
@@ -100,28 +87,6 @@ fun SetupNavGraph(
                     navController = navController,
                     snackbarHostState = snackbarHostState,
                     coroutineScope = coroutineScope
-                )
-            }
-            composable(
-                route = Screen.Learn.route
-            ) {
-                LearnScreen(
-                    modifier = modifier,
-                    navController = navController,
-                    learnState = learnState,
-                    onLearnEvent = onLearnEvent,
-                    onKanjiEvent = onKanjiEvent
-                )
-            }
-            composable(
-                route = Screen.Review.route
-            ) {
-                ReviewScreen(
-                    modifier = modifier,
-                    navController = navController,
-                    reviewState = reviewState,
-                    onReviewEvent = onReviewEvent,
-                    onKanjiEvent = onKanjiEvent
                 )
             }
             composable(
@@ -156,7 +121,6 @@ fun SetupNavGraph(
                     modifier = modifier,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@composable,
-                    animatedContentScope = this@composable,
                     navController = navController,
                     kanjiState = kanjiState,
                     onKanjiEvent = onKanjiEvent

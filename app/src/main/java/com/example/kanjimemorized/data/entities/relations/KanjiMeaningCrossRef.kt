@@ -9,8 +9,4 @@ data class KanjiMeaningCrossRef(
     val id: Int,
     val unicode: Char,
     val meaning: String
-) {
-    constructor(unicode: Char, meaning: String) : this(
-        id = 0, unicode = unicode, meaning = meaning
-    )
-}
+)

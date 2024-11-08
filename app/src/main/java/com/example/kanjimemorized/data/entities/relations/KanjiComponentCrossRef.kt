@@ -9,8 +9,4 @@ data class KanjiComponentCrossRef(
     val id: Int,
     val kanjiUnicode: Char,
     val componentUnicode: Char
-) {
-    constructor(kanjiUnicode: Char, componentUnicode: Char) : this(
-         id = 0, kanjiUnicode = kanjiUnicode, componentUnicode = componentUnicode
-    )
-}
+)

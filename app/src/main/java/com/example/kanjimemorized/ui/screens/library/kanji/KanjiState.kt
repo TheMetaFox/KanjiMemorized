@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class KanjiState(
     val kanji: Kanji = Kanji(19968.toChar(), 1),
-    val meaning: List<String>? = listOf(),
+    val meaning: List<String> = listOf(),
     val retention: Float = 0f,
     val components: List<Kanji> = listOf(),
     val componentMeaning: List<List<String>> = listOf(listOf()),

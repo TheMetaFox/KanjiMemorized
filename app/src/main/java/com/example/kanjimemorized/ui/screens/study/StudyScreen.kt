@@ -23,25 +23,20 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.study.flashcard.StudyType
-import com.example.kanjimemorized.ui.screens.study.learn.LearnEvent
-import com.example.kanjimemorized.ui.screens.study.review.ReviewEvent
 import com.example.kanjimemorized.ui.theme.spacing
-import java.lang.Thread.sleep
 
 @Composable
 fun StudyScreen(
     modifier: Modifier,
     navController: NavHostController,
     bottomNavBar: @Composable () -> Unit,
-    onLearnEvent: (LearnEvent) -> Unit,
-    onReviewEvent: (ReviewEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit
 ) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(top = MaterialTheme.spacing.small),
+            .padding(top = spacing.small),
         bottomBar = {
             bottomNavBar()
         }
@@ -143,5 +138,5 @@ fun StudyScreen(
 @Preview(showBackground = true)
 @Composable
 fun StudyScreenPreview() {
-    StudyScreen(Modifier, rememberNavController(), { }, onLearnEvent = { }, onReviewEvent = { }, onFlashcardEvent = { })
+    StudyScreen(Modifier, rememberNavController(), { }, onFlashcardEvent = { })
 }

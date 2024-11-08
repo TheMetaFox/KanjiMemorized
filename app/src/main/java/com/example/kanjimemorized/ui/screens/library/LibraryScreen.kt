@@ -1,7 +1,6 @@
 package com.example.kanjimemorized.ui.screens.library
 
 import android.util.Log
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -40,13 +39,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
@@ -80,9 +77,9 @@ fun LibraryScreen(
             modifier = modifier
                 .padding(contentPadding)
                 .padding(
-                    start = MaterialTheme.spacing.small,
-                    top = MaterialTheme.spacing.small,
-                    end = MaterialTheme.spacing.small
+                    start = spacing.small,
+                    top = spacing.small,
+                    end = spacing.small
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

@@ -10,8 +10,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
 import java.time.format.DateTimeFormatter
-import java.util.Dictionary
-import java.util.PriorityQueue
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
@@ -113,12 +111,11 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return forecast
     }
 
-    suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime? {
-        var date: String = kanjiDao.getLatestDateFromKanji(kanji = kanji)
+    private suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime? {
+        val date: String? = kanjiDao.getLatestDateFromKanji(kanji = kanji)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        if (date.isNullOrEmpty()) date = ""
-        //Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
-        return if (date.isNullOrEmpty()) null else parse(date, formatter)
+        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
+        return if (date == null) null else parse(date, formatter)
     }
 
     suspend fun getKanjiList(): List<Kanji> {
@@ -131,7 +128,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     suspend fun getUnlockedKanjiList(): List<Kanji> {
         var unlockedKanjiList: List<Kanji> = listOf()
-        var calculatedRetentions: MutableMap<Kanji, Float> = mutableMapOf()
+        val calculatedRetentions: MutableMap<Kanji, Float> = mutableMapOf()
         kanjiDao.getKanjiList().forEach { kanji ->
             var isLocked = false
             getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
@@ -153,9 +150,9 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return kanjiDao.getEarliestDateCountFromToday(today = LocalDate.now().toString())
     }
 
-    suspend fun getRandomKanji(): Kanji {
-        return kanjiDao.getKanjiList().random()
-    }
+//    suspend fun getRandomKanji(): Kanji {
+//        return kanjiDao.getKanjiList().random()
+//    }
 
     fun getKanjiOrderedByUnicode(): Flow<List<Kanji>> {
         return kanjiDao.getKanjiOrderedByUnicode()
