@@ -58,8 +58,15 @@ fun KanjiMemorizedTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = when {
+                Build.VERSION.SDK_INT <= 34 -> colorScheme.primary.toArgb()
+                Build.VERSION.SDK_INT == 35 -> colorScheme.primary.toArgb()
+                else -> colorScheme.primary.toArgb()
+            }
+            //WindowCompat.setDecorFitsSystemWindows(window, false)
+
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
         }
     }
 
