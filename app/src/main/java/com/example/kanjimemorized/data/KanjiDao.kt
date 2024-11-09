@@ -87,7 +87,7 @@ interface KanjiDao {
     @Query("SELECT * FROM review WHERE unicode = :kanji")
     suspend fun getReviewsFromKanji(kanji: Char): List<Review>
 
-    @Query("SELECT B.unicode AS unicode, B.strokes AS strokes, B.durability AS durability " +
+    @Query("SELECT B.unicode AS unicode, B.strokes AS strokes, B.durability AS durability, B.ease as ease " +
             "FROM Kanji A, Kanji B, KanjiComponentCrossRef C " +
             "WHERE A.unicode = C.kanjiUnicode AND B.unicode = C.componentUnicode AND A.unicode = :kanji")
     suspend fun getKanjiComponentsFromKanji(kanji: Char): List<Kanji>

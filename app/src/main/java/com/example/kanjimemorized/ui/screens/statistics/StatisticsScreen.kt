@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -274,12 +275,21 @@ fun StatisticsScreen(
                                     .size(width = 300.dp, height = 300.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                BarGraph(
-                                    inputMap = statisticsState.dayForecastsMap,
-                                    width = 300.dp.value,
-                                    height = 300.dp.value,
-                                    barGraphSpan = statisticsState.barGraphSpan
-                                )
+                                if (statisticsState.dayForecastsMap.isEmpty()) {
+                                    Text(
+                                        text = "No Data",
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        fontSize = 14.sp,
+                                        fontStyle = FontStyle.Italic
+                                    )
+                                } else {
+                                    BarGraph(
+                                        inputMap = statisticsState.dayForecastsMap,
+                                        width = 300.dp.value,
+                                        height = 300.dp.value,
+                                        barGraphSpan = statisticsState.barGraphSpan
+                                    )
+                                }
                             }
                         }
                     }

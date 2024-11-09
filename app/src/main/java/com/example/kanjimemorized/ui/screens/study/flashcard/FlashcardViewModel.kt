@@ -267,6 +267,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         unicode = state.value.kanji!!.unicode,
                         strokes = state.value.kanji!!.strokes,
                         durability = durability,
+                        ease = state.value.kanji!!.ease
                     )
 
                     val review = Review(
@@ -299,6 +300,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         unicode = state.value.kanji!!.unicode,
                         strokes = state.value.kanji!!.strokes,
                         durability = durability,
+                        ease = state.value.kanji!!.ease
                     )
 
                     val review = Review(
@@ -329,6 +331,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         unicode = state.value.kanji!!.unicode,
                         strokes = state.value.kanji!!.strokes,
                         durability = durability,
+                        ease = state.value.kanji!!.ease
                     )
 
                     val review = Review(

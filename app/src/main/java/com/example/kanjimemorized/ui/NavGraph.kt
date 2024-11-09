@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.SnackbarHostState
@@ -58,6 +59,7 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Home.route
         ) {
+            Log.i("NavHost.kt", "Started NavHost()...")
             composable(
                 route = Screen.Home.route
             ) {

@@ -31,6 +31,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
 
             is StatisticsEvent.LoadStatisticsData -> {
                 viewModelScope.launch {
+                    Log.i("StatisticsViewModel.kt", "Started loading initial data...")
                     var unknown = 0
                     var known = 0
                     var mastered = 0
@@ -54,8 +55,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                         dayForecastsMap[key] = (dayForecastsMap.getOrDefault(key = key, defaultValue = 0))+1
                     }
                     Log.i("StatisticsViewModel.kt", "Forecast Map: $dayForecastsMap")
-
-
+                    
                     _state.update {
                         it.copy(
                             unlocked = kanjiRepository.getUnlockedKanjiList().size,
@@ -67,6 +67,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                         )
                     }
                     _isLoading.value = false
+                    Log.i("StatisticsViewModel.kt", "Finished loading initial data...")
                 }
             }
             is StatisticsEvent.SetBarGraphSpan -> {

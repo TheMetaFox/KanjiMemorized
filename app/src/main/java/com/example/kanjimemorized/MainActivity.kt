@@ -1,6 +1,7 @@
 package com.example.kanjimemorized
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -42,6 +43,7 @@ import kotlinx.coroutines.CoroutineScope
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("MainActivity.kt", "Started onCreate()...")
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
@@ -104,6 +106,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KanjiMemorizedTheme {
+                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 

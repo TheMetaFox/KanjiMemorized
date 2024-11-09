@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -51,8 +52,8 @@ fun SettingsScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
@@ -67,8 +68,17 @@ fun SettingsScreen(
                     fontSize = 50.sp
                 )
             }
-            Column {
-                Row {
+            Column(
+                modifier = Modifier
+                    .width(350.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Column {
                         Box {
                             Text(
@@ -83,7 +93,6 @@ fun SettingsScreen(
                                 color = MaterialTheme.colorScheme.secondary,
                                 fontSize = 12.sp,
                                 fontStyle = FontStyle.Italic
-
                             )
                         }
                     }
@@ -93,10 +102,44 @@ fun SettingsScreen(
                             onSettingsEvent(SettingsEvent.UpdateTextField(field = "dailyNewKanji", text = it))
                         },
                         modifier = Modifier
-                            .width(100.dp)
-                            .padding(start = 16.dp),
+                            .width(80.dp),
                         //label = { Text(text = "Current: ${settingsState.dailyNewKanji}")},
                         placeholder = { Text(text = settingsState.dailyNewKanji) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Box {
+                            Text(
+                                text = "Initial Ease",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 24.sp,
+                            )
+                        }
+                        Box {
+                            Text(
+                                text = "Factor new kanji's durability increases by",
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                    TextField(
+                        value = settingsState.initialEaseField,
+                        onValueChange = {
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "initialEase", text = it))
+                        },
+                        modifier = Modifier
+                            .width(80.dp),
+                        //label = { Text(text = "Current: ${settingsState.initialEase}")},
+                        placeholder = { Text(text = settingsState.initialEase) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
                     )

@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
@@ -25,25 +26,40 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
     fun onEvent(
         settingsEvent: SettingsEvent
     ) {
-        when(settingsEvent) {
+        when (settingsEvent) {
             is SettingsEvent.UpdateTextField -> {
-                if (settingsEvent.field == "dailyNewKanji")
-                _state.update {
-                    it.copy(
-                        dailyNewKanjiField = settingsEvent.text
-                    )
+                when (settingsEvent.field) {
+                    "dailyNewKanji" -> {
+                        _state.update {
+                            it.copy(
+                                dailyNewKanjiField = settingsEvent.text
+                            )
+                        }
+                    }
+                    "initialEase" -> {
+                        _state.update {
+                            it.copy(
+                                initialEaseField = settingsEvent.text
+                            )
+                        }
+                    }
                 }
             }
+
             SettingsEvent.LoadSettingsData -> {
+                Log.i("SettingsViewModel.kt", "Started loading initial data...")
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
+                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue
                         )
                     }
                     _isLoading.value = false
+                    Log.i("SettingsViewModel.kt", "Finished loading initial data...")
                 }
             }
+
             SettingsEvent.ApplySettings -> {
                 viewModelScope.launch {
                     kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = state.value.dailyNewKanjiField)
@@ -52,9 +68,9 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue
                         )
                     }
-
                 }
             }
+
             SettingsEvent.ApplyDefaultSettings -> {
                 viewModelScope.launch {
                     kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = "5")
@@ -63,10 +79,8 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue
                         )
                     }
-
                 }
             }
-
         }
     }
 }

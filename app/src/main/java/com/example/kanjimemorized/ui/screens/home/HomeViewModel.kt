@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
@@ -27,7 +28,9 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
         when(homeEvent) {
             is HomeEvent.LoadHomeData -> {
                 viewModelScope.launch {
+                    Log.i("HomeViewModel.kt", "Started loading initial data...")
                     var currentReviewCount = 0
+                    Log.i("HomeViewModel.kt", "1...")
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0) {
                             if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < 0.80f) {
@@ -35,14 +38,17 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                             }
                         }
                     }
-
+                    Log.i("HomeViewModel.kt", "2...")
                     _state.update {
+                        Log.i("HomeViewModel.kt", "3...")
                         it.copy(
                             currentReviewCount = currentReviewCount,
                             currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                         )
                     }
+                    Log.i("HomeViewModel.kt", "4...")
                     _isLoading.value = false
+                    Log.i("HomeViewModel.kt", "Finished loading initial data...")
                 }
             }
         }
