@@ -1,6 +1,7 @@
 package com.example.kanjimemorized.ui.screens.settings
 
 import android.util.Log
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
@@ -62,10 +63,20 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
 
             SettingsEvent.ApplySettings -> {
                 viewModelScope.launch {
-                    kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = state.value.dailyNewKanjiField)
+                    val dailyNewKanjiField: String = state.value.dailyNewKanjiField
+                    if (dailyNewKanjiField.isNotBlank() && dailyNewKanjiField.isDigitsOnly()) {
+                        kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = dailyNewKanjiField)
+                    }
+
+                    val initialEaseField: String = state.value.initialEaseField
+                    if (initialEaseField.isNotBlank() && initialEaseField.count { it != '.' && !it.isDigit() } == 0 && initialEaseField.count { it.isDigit() } >= 1 && initialEaseField.count { it == '.' } <= 1) {
+                        kanjiRepository.updateSettings(code = "initial_ease", setValue = "%.2f".format(initialEaseField.toFloat()))
+                    }
+
                     _state.update {
                         it.copy(
-                            dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue
+                            dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
+                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue
                         )
                     }
                 }
@@ -73,10 +84,15 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
 
             SettingsEvent.ApplyDefaultSettings -> {
                 viewModelScope.launch {
-                    kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = "5")
+                    val dailyNewKanjiDefault: String = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").defaultValue
+                    val initialEaseDefault: String = kanjiRepository.getSettingsFromCode(code = "initial_ease").defaultValue
+
+                    kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = dailyNewKanjiDefault)
+                    kanjiRepository.updateSettings(code = "initial_ease", setValue = initialEaseDefault)
                     _state.update {
                         it.copy(
-                            dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue
+                            dailyNewKanji = dailyNewKanjiDefault,
+                            initialEase = initialEaseDefault
                         )
                     }
                 }

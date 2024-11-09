@@ -139,7 +139,7 @@ fun SettingsScreen(
                         modifier = Modifier
                             .width(80.dp),
                         //label = { Text(text = "Current: ${settingsState.initialEase}")},
-                        placeholder = { Text(text = settingsState.initialEase) },
+                        placeholder = { Text(text = settingsState.initialEase.trimEnd { it == '0' }.trimEnd { it == '.'}) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
                     )
