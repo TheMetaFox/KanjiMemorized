@@ -257,17 +257,15 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             is FlashcardEvent.WrongCard -> {
                 viewModelScope.launch {
                     var durability: Float = state.value.kanji!!.durability
-                    if (durability <= 1) {
-                        durability = 0f
-                    } else {
-                        durability -= 1
-                    }
+                    val ease: Float = if (state.value.kanji!!.ease - 0.8f <= 1.3f) state.value.kanji!!.ease - 0.8f else 1.3f
+                    durability *= ease * 0.5f
+
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,
                         strokes = state.value.kanji!!.strokes,
                         durability = durability,
-                        ease = state.value.kanji!!.ease
+                        ease = ease
                     )
 
                     val review = Review(
@@ -293,8 +291,10 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.CorrectCard -> {
                 viewModelScope.launch {
-                    var durability: Float = state.value.kanji!!.durability
-                    durability += 1
+                    var durability: Float = state.value.kanji!!.durability + 1
+                    val ease: Float = state.value.kanji!!.ease
+                    durability *= ease * 1.2f
+
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,
@@ -324,14 +324,15 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.EasyCard -> {
                 viewModelScope.launch {
-                    var durability: Float = state.value.kanji!!.durability
-                    durability += 2
+                    var durability: Float = state.value.kanji!!.durability + 1
+                    val ease: Float = state.value.kanji!!.ease + 0.1f
+                    durability *= ease * 1.2f
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,
                         strokes = state.value.kanji!!.strokes,
                         durability = durability,
-                        ease = state.value.kanji!!.ease
+                        ease = ease
                     )
 
                     val review = Review(

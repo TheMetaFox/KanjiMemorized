@@ -310,7 +310,7 @@ fun KanjiScreen(
                                     kanjiState.componentsLatestDates[it],
                                     LocalDateTime.now()
                                 ).toMinutes()).toDouble()/1440) / kanjiState.components[it].durability)).toFloat()),
-                                number = kanjiState.components[it].durability.toInt(),
+                                number = kanjiState.components[it].durability,
                                 fontSize = 16.sp,
                                 radius = 26.dp,
                                 strokeWidth = 4.dp,

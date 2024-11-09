@@ -120,24 +120,24 @@ fun LibraryScreen(
                         }
                     }
                 }
-                Log.i("LibraryScreen.kt", "Items")
-                if (libraryState.kanji.isEmpty()) {
-                    Log.i("LibraryScreen.kt", "libraryState.kanji is an empty list")
-                } else {
-                    Log.i("LibraryScreen.kt", libraryState.kanji.toString())
-                }
-                if (libraryState.meaning.isEmpty()) {
-                    Log.i("LibraryScreen.kt", "libraryState.meaning is an empty list")
-                } else {
-                    Log.i("LibraryScreen.kt", libraryState.meaning.toString())
-                }
-                if (libraryState.date.isEmpty()) {
-                    Log.i("LibraryScreen.kt", "libraryState.date is an empty list")
-                } else {
-                    Log.i("LibraryScreen.kt", libraryState.date.toString())
-                }
+//                Log.i("LibraryScreen.kt", "Items")
+//                if (libraryState.kanji.isEmpty()) {
+//                    Log.i("LibraryScreen.kt", "libraryState.kanji is an empty list")
+//                } else {
+//                    Log.i("LibraryScreen.kt", libraryState.kanji.toString())
+//                }
+//                if (libraryState.meaning.isEmpty()) {
+//                    Log.i("LibraryScreen.kt", "libraryState.meaning is an empty list")
+//                } else {
+//                    Log.i("LibraryScreen.kt", libraryState.meaning.toString())
+//                }
+//                if (libraryState.date.isEmpty()) {
+//                    Log.i("LibraryScreen.kt", "libraryState.date is an empty list")
+//                } else {
+//                    Log.i("LibraryScreen.kt", libraryState.date.toString())
+//                }
                 items(libraryState.kanji.size) {
-                    Log.i("LibraryScreen.kt", libraryState.meaning[it])
+//                    Log.i("LibraryScreen.kt", libraryState.meaning[it])
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
@@ -179,7 +179,7 @@ fun LibraryScreen(
                                 parse(libraryState.date[it], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                                 LocalDateTime.now()
                             ).toMinutes()).toDouble()/1440) / libraryState.kanji[it].durability)).toFloat()),//(1/i++).toFloat(),//retention,
-                            number = libraryState.kanji[it].durability.toInt(),
+                            number = libraryState.kanji[it].durability,
                             fontSize = 16.sp,
                             radius = 26.dp,
                             strokeWidth = 4.dp,
@@ -237,7 +237,7 @@ fun SortOption(
 @Composable
 fun CircularProgressBar(
     percentage: Float,
-    number: Int,
+    number: Float,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 28.sp,
     radius: Dp = 50.dp,
@@ -282,7 +282,7 @@ fun CircularProgressBar(
             )
         }
         Text(
-            text = number.toString(),
+            text = "%.1f".format(number),
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold

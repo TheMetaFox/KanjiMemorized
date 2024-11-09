@@ -59,7 +59,6 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Home.route
         ) {
-            Log.i("NavHost.kt", "Started NavHost()...")
             composable(
                 route = Screen.Home.route
             ) {
