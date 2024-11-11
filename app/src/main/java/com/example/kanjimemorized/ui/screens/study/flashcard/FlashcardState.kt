@@ -9,5 +9,6 @@ data class FlashcardState(
     val meanings: List<String> = listOf(),
     val isAnswerShowing: Boolean = false,
     val isReviewAvailable: Boolean = false,
-    val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+    val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first }),
+    val isLoading : Boolean = true
 )
