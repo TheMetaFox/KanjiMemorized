@@ -3,6 +3,7 @@ package com.example.kanjimemorized.ui.screens.library.kanji
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
+import com.example.kanjimemorized.data.entities.Kanji
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -72,6 +73,19 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                         )
                     }
                 )
+            }
+            is KanjiEvent.RestartKanjiProgress -> {
+                viewModelScope.launch {
+                    kanjiRepository.upsertKanji(
+                        kanji = Kanji(
+                            unicode = state.value.kanji.unicode,
+                            strokes = state.value.kanji.strokes,
+                            durability = 0f,
+                            ease = 2.5f
+                        )
+                    )
+                    kanjiRepository.deleteReviewsFromKanji(kanji = state.value.kanji.unicode)
+                }
             }
         }
     }

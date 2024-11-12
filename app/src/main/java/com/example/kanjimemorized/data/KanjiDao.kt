@@ -105,8 +105,11 @@ interface KanjiDao {
     suspend fun getEarliestDateCountFromToday(today: String): Int
 
     @Query("UPDATE kanji SET durability = 0.0")
-    suspend fun resetKanjiData()
+    suspend fun resetKanjiData(): Void
 
     @Query("DELETE FROM review")
-    suspend fun deleteAllReviews()
+    suspend fun deleteAllReviews(): Void
+
+    @Query("DELETE FROM review WHERE unicode = :kanji")
+    suspend fun deleteReviewsFromKanji(kanji: Char): Void
 }

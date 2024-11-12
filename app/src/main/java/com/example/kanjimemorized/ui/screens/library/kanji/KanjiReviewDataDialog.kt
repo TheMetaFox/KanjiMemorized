@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,69 +40,91 @@ fun KanjiReviewDataDialog(
     ) {
         Surface(
             modifier = Modifier
-                .size(300.dp, 500.dp)
+                .size(360.dp, 600.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
-                    .padding(spacing.small)
+                    .padding(spacing.small),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
-                        modifier = Modifier
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     ) {
-                        Text(
-                            text = "Date & Time",
-                            modifier = Modifier.align(Alignment.Center),
-                            fontSize = 28.sp,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                    ) {
-                        Text(
-                            text = "Rating",
-                            modifier = Modifier.align(Alignment.Center),
-                            fontSize = 28.sp,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-                LazyColumn(
-                    modifier = Modifier
-                ) {
-                    items(kanjiState.reviews) { review ->
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Box(
+                            modifier = Modifier
                         ) {
-                            Box(
-                                modifier = Modifier
+                            Text(
+                                text = "Date & Time",
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 28.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                        ) {
+                            Text(
+                                text = "Rating",
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 28.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                    ) {
+                        items(kanjiState.reviews) { review ->
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = review.datetime,
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontSize = 18.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                            Box(
-                                modifier = Modifier
-                            ) {
-                                Text(
-                                    text = review.rating.toString(),
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontSize = 24.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
+                                Box(
+                                    modifier = Modifier
+                                ) {
+                                    Text(
+                                        text = review.datetime,
+                                        modifier = Modifier.align(Alignment.Center),
+                                        fontSize = 18.sp,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                ) {
+                                    Text(
+                                        text = review.rating.toString(),
+                                        modifier = Modifier.align(Alignment.Center),
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
                             }
                         }
                     }
+
+                }
+                Button(
+                    onClick = {
+                        onKanjiEvent(KanjiEvent.RestartKanjiProgress)
+                    },
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondary
+                    )
+                ) {
+                    Text(
+                        text = "Restart Kanji Progress"
+                    )
                 }
             }
         }

@@ -6,4 +6,5 @@ sealed interface KanjiEvent {
     data class DisplayKanjiInfo(val kanji: Kanji): KanjiEvent
     data object ShowKanjiReviewData: KanjiEvent
     data object HideKanjiReviewData: KanjiEvent
+    data object RestartKanjiProgress: KanjiEvent
 }

@@ -20,6 +20,10 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         kanjiDao.deleteAllReviews()
     }
 
+    suspend fun deleteReviewsFromKanji(kanji: Char) {
+        kanjiDao.deleteReviewsFromKanji(kanji = kanji)
+    }
+
     suspend fun upsertKanji(kanji: Kanji) {
         kanjiDao.upsertKanji(
             kanji = kanji
