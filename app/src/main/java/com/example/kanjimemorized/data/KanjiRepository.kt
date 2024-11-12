@@ -83,15 +83,15 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     }
 
     suspend fun getRetentionFromKanji(kanji: Char): Float {
-        val durability: Int = kanjiDao.getDurabilityFromKanji(kanji = kanji).toInt()
-        if (durability == 0) {
+        val durability: Float = kanjiDao.getDurabilityFromKanji(kanji = kanji)
+        if (durability == 0f) {
             return 0f
         }
-        val minutes: Double = (Duration.between(
+        val minutes: Float = (Duration.between(
             getLatestDateFromKanji(kanji = kanji),
             LocalDateTime.now()
-        ).toMinutes()).toDouble()
-        val retention = exp(-((minutes / 1440) / durability).toFloat())
+        ).toMinutes()).toFloat()
+        val retention = exp(-((minutes / 1440) / durability))
         //Log.i("KanjiRepository.kt", "Calculating retention with $minutes minutes and $durability durability: $retention")
         return retention
     }

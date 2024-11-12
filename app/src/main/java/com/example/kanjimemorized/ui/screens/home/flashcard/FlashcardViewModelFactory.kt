@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.study.flashcard
+package com.example.kanjimemorized.ui.screens.home.flashcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

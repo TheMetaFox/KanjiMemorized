@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.study.flashcard
+package com.example.kanjimemorized.ui.screens.home.flashcard
 
 import com.example.kanjimemorized.data.entities.Kanji
 import java.util.PriorityQueue

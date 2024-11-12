@@ -1,4 +1,4 @@
-package com.example.kanjimemorized.ui.screens.study.flashcard
+package com.example.kanjimemorized.ui.screens.home.flashcard
 
 sealed interface FlashcardEvent {
     data class SetStudyType(val studyType: StudyType): FlashcardEvent

@@ -38,21 +38,6 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate(Screen.Study.route)
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Study Icon"
-                )
-            },
-            label = {
-                Text(text = "Study")
-            }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {
                 navController.navigate(Screen.Library.route)
             },
             icon = {

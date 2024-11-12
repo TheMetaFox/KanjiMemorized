@@ -1,9 +1,8 @@
-package com.example.kanjimemorized.ui.screens.study.flashcard
+package com.example.kanjimemorized.ui.screens.home.flashcard
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
@@ -261,10 +260,8 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.WrongCard -> {
                 viewModelScope.launch {
-                    var durability: Float = state.value.kanji!!.durability
-                    val ease: Float = if (state.value.kanji!!.ease - 0.32f <= 1.3f) state.value.kanji!!.ease - 0.32f else 1.3f
-                    durability *= ease * 0.5f
-
+                    val ease: Float = if (state.value.kanji!!.ease - 0.32f <= 1.3f) 1.3f else state.value.kanji!!.ease - 0.32f
+                    val durability: Float = if (state.value.kanji!!.durability * ease * 0.5f <= 0.1f) 0.1f else state.value.kanji!!.durability * ease * 0.5f
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,
@@ -296,15 +293,8 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.CorrectCard -> {
                 viewModelScope.launch {
-                    var ease: Float
-                    var durability: Float
-                    if (state.value.kanji!!.durability == 0f) {
-                        ease = kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat()
-                        durability = 1f
-                    } else {
-                        ease = state.value.kanji!!.ease
-                        durability = state.value.kanji!!.durability * ease
-                    }
+                    val ease: Float = if (state.value.kanji!!.durability == 0f) kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat() else state.value.kanji!!.ease
+                    val durability: Float = if (state.value.kanji!!.durability == 0f) 1f else state.value.kanji!!.durability * ease
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,
@@ -334,16 +324,8 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.EasyCard -> {
                 viewModelScope.launch {
-                    var ease: Float
-                    var durability: Float
-                    if (state.value.kanji!!.durability == 0f) {
-                        ease = kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat()
-                        durability = 3f
-                    } else {
-                        ease = state.value.kanji!!.ease
-                        durability = state.value.kanji!!.durability * ease * 1.2f
-                        ease += 0.1f
-                    }
+                    val ease: Float = if (state.value.kanji!!.durability == 0f) kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat() else state.value.kanji!!.ease + 0.1f
+                    val durability: Float = if (state.value.kanji!!.durability == 0f) 3f else state.value.kanji!!.durability * ease * 1.2f
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,

@@ -3,6 +3,7 @@ package com.example.kanjimemorized.ui.screens.library.kanji
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -26,9 +27,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
 import com.example.kanjimemorized.ui.theme.spacing
@@ -88,13 +93,14 @@ fun KanjiScreen(
 
             Row(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(bottom = 5.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(180.dp)
-                        .weight(1f),
+                        .size(200.dp)
                 ) {
                     with(sharedTransitionScope) {
 //                        Log.i("KanjiScreen.kt", "Shared Kanji Key: " + kanjiState.kanji.unicode.toString())
@@ -110,17 +116,8 @@ fun KanjiScreen(
                                         tween(durationMillis = 1000)
                                     },
                                     zIndexInOverlay = 1f
-                                )
-//                                .sharedBounds(
-//                                    rememberSharedContentState(key = selected.intValue),
-//                                    animatedVisibilityScope = animatedVisibilityScope,
-//                                    boundsTransform = { _, _ ->
-//                                        tween(durationMillis = 1000)
-//                                    },
-//                                    zIndexInOverlay = 1f
-//                                )
-                                ,
-                            fontSize = 100.sp,
+                                ),
+                            fontSize = 130.sp,
                             lineHeight = 50.sp,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -128,7 +125,6 @@ fun KanjiScreen(
                 }
                 Column(
                     modifier = Modifier
-                        .weight(1f)
                         .align(Alignment.CenterVertically),
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
@@ -170,7 +166,30 @@ fun KanjiScreen(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = String.format(Locale.ENGLISH,"%.0f", kanjiState.kanji.durability
+                                text = String.format(Locale.ENGLISH,"%.1f", kanjiState.kanji.durability
+                                ),
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 34.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+                    Column {
+                        Box(
+                            modifier = Modifier
+                        ) {
+                            Text(
+                                text = "Ease:",
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 24.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                        ) {
+                            Text(
+                                text = String.format(Locale.ENGLISH,"%.1f", kanjiState.kanji.ease
                                 ),
                                 modifier = Modifier.align(Alignment.Center),
                                 fontSize = 34.sp,
@@ -390,11 +409,18 @@ fun KanjiScreen(
 //}
 
 
-//@OptIn(ExperimentalSharedTransitionApi::class)
-//@Preview(showBackground = true)
-//@Composable
-//fun KanjiScreenPreview() {
-//    AnimatedContent { targetState ->
-//        KanjiScreen(modifier = Modifier, this , navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
-//    }
-//}
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(showBackground = true)
+@Composable
+fun KanjiScreenPreview() {
+    SharedTransitionLayout {
+        NavHost(
+            navController = rememberNavController(),
+            "moo"
+        ) {
+            composable("moo") {
+                KanjiScreen(modifier = Modifier, sharedTransitionScope = this@SharedTransitionLayout, animatedVisibilityScope = this@composable, navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
+            }
+        }
+    }
+}

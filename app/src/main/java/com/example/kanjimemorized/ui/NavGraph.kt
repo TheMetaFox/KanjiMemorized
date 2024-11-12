@@ -1,6 +1,5 @@
 package com.example.kanjimemorized.ui
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.SnackbarHostState
@@ -26,10 +25,9 @@ import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsScreen
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsState
 import com.example.kanjimemorized.ui.screens.study.StudyPlaygroundScreen
-import com.example.kanjimemorized.ui.screens.study.StudyScreen
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardScreen
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardState
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardScreen
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardState
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -70,15 +68,6 @@ fun SetupNavGraph(
                     onHomeEvent = onHomeEvent,
                     onFlashcardEvent = onFlashcardEvent
                 )
-            }
-            composable(
-                route = Screen.Study.route
-            ) {
-                StudyScreen(
-                    modifier = modifier,
-                    navController = navController,
-                    bottomNavBar = bottomNavBar,
-                    onFlashcardEvent = onFlashcardEvent)
             }
             composable(
                 route = Screen.StudyPlayground.route

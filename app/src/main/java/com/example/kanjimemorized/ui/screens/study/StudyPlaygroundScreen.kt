@@ -79,7 +79,7 @@ fun StudyPlaygroundScreen(
             Box(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Screen.Study.route)
+                        navController.navigateUp()
                     }
             ) {
                 Text(

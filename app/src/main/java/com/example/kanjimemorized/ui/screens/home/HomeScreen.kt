@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,8 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.R
 import com.example.kanjimemorized.ui.Screen
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
-import com.example.kanjimemorized.ui.screens.study.flashcard.StudyType
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.home.flashcard.StudyType
 import com.example.kanjimemorized.ui.theme.spacing
 
 @Composable
@@ -70,16 +71,6 @@ fun HomeScreen(
                 painter = painterResource(R.drawable.study_anime),
                 contentDescription = "An adolescent human female studying in their room.",
             )
-            Box(
-                modifier = Modifier,
-            ) {
-                Text(
-                    text = "Home",
-                    modifier = Modifier
-                        .align(alignment = Center),
-                    fontSize = 50.sp,
-                )
-            }
             Column(
                 modifier = modifier
                     .padding(spacing.small)
@@ -87,6 +78,16 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
+                Box(
+                    modifier = Modifier,
+                ) {
+                    Text(
+                        text = "Home",
+                        modifier = Modifier
+                            .align(alignment = Center),
+                        fontSize = 50.sp,
+                    )
+                }
                 Box(
                     modifier = Modifier,
                 ) {
@@ -107,22 +108,58 @@ fun HomeScreen(
                         fontSize = 36.sp,
                     )
                 }
-                Button(
-                    onClick = {
-                        onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Mixed))
-                        onFlashcardEvent(FlashcardEvent.InitializeQueue)
-                        navController.navigate(route = Screen.Flashcard.route)
-                    }
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
+                    Button(
+                        onClick = {
+                            onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Mixed))
+                            onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                            navController.navigate(route = Screen.Flashcard.route)
+                        },
                         modifier = Modifier
+                            .padding(spacing.small)
                     ) {
                         Text(
                             text = "Guided Review",
-                            modifier = Modifier
-                                .align(alignment = Center),
-                        fontSize = 36.sp,
+                            fontSize = 36.sp,
                         )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(spacing.small),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = {
+                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.New))
+                                onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                                navController.navigate(route = Screen.Flashcard.route)
+                            },
+                            modifier = Modifier
+                                .padding(spacing.small)
+                        ) {
+                            Text(
+                                text = "Learn",
+                                fontSize = 35.sp
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Review))
+                                onFlashcardEvent(FlashcardEvent.InitializeQueue)
+                                navController.navigate(route = Screen.Flashcard.route)
+                            },
+                            modifier = Modifier
+                                .padding(spacing.small)
+                        ) {
+                            Text(
+                                text = "Review",
+                                fontSize = 35.sp
+                            )
+                        }
                     }
                 }
             }

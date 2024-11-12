@@ -34,9 +34,9 @@ import com.example.kanjimemorized.ui.screens.settings.SettingsViewModelFactory
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModel
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFactory
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardEvent
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModel
-import com.example.kanjimemorized.ui.screens.study.flashcard.FlashcardViewModelFactory
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModel
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import kotlinx.coroutines.CoroutineScope
 
