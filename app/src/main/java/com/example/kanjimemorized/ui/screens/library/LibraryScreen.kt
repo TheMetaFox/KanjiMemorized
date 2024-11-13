@@ -137,7 +137,7 @@ fun LibraryScreen(
 //                    Log.i("LibraryScreen.kt", libraryState.date.toString())
 //                }
                 items(libraryState.kanji.size) {
-//                    Log.i("LibraryScreen.kt", libraryState.meaning[it])
+                    Log.i("LibraryScreen.kt", libraryState.meaning[it])
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
@@ -178,7 +178,7 @@ fun LibraryScreen(
                             percentage = if (libraryState.kanji[it].durability == 0f || libraryState.date[it] == null) 0f else (exp(-(((Duration.between(
                                 parse(libraryState.date[it], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                                 LocalDateTime.now()
-                            ).toMinutes()).toDouble()/1440) / libraryState.kanji[it].durability)).toFloat()),//(1/i++).toFloat(),//retention,
+                            ).toMinutes()).toDouble()/1440) / libraryState.kanji[it].durability)).toFloat()),
                             number = libraryState.kanji[it].durability,
                             fontSize = 16.sp,
                             radius = 26.dp,

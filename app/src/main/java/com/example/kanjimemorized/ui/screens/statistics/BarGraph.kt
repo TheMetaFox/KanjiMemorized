@@ -66,7 +66,7 @@ fun DrawScope.drawBars(
             color = barColor,
             start = Offset(x = -width + (width/barCount) + (width/barCount*(i-1)*2), y = height -(value/max)*height*2),
             end = Offset(x = -width + (width/barCount) + (width/barCount*(i-1)*2), y = height),
-            strokeWidth = width/barCount*2 - (2 * barCount)
+            strokeWidth = (width*2f)/barCount - (2f / barCount)
         )
     }
 }
@@ -75,8 +75,8 @@ fun DrawScope.drawAxis(
     width: Float,
     height: Float,
     strokeWidth: Float,
-    axisColor: Color,
-    ) {
+    axisColor: Color
+) {
     drawLine(
         color = axisColor,
         start = Offset(x = -width -strokeWidth/2, y = -height),
@@ -119,6 +119,11 @@ fun DrawScope.drawLabels(
 
 @Preview(showBackground = true)
 @Composable
-fun BarGraphPreview() {
-    BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3))
+fun BarGraphPreview1() {
+    BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.WEEK1)
+}
+@Preview(showBackground = true)
+@Composable
+fun BarGraphPreview2() {
+    BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.MONTH1)
 }

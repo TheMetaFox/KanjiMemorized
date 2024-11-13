@@ -1,7 +1,6 @@
 package com.example.kanjimemorized.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.InsertChart

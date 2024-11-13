@@ -43,7 +43,7 @@ import kotlinx.coroutines.CoroutineScope
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        Log.i("MainActivity.kt", "Started onCreate()...")
+        Log.i("MainActivity.kt", "Started onCreate()...")
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
