@@ -28,6 +28,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
             is HomeEvent.LoadHomeData -> {
                 viewModelScope.launch {
                     var currentReviewCount = 0
+                    var currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0) {
                             if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < 0.80f) {
@@ -38,7 +39,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                     _state.update {
                         it.copy(
                             currentReviewCount = currentReviewCount,
-                            currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                            currentNewCount = if (currentNewCount >= 0) currentNewCount else 0
                         )
                     }
                     _isLoading.value = false

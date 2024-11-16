@@ -38,7 +38,8 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 _state.update(
                     function = {
                         it.copy(
-                            isLoading = true
+                            isLoading = true,
+                            isAnswerShowing = false
                         )
                     }
                 )
@@ -261,7 +262,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             is FlashcardEvent.WrongCard -> {
                 viewModelScope.launch {
                     val ease: Float = if (state.value.kanji!!.ease - 0.32f <= 1.3f) 1.3f else state.value.kanji!!.ease - 0.32f
-                    val durability: Float = if (state.value.kanji!!.durability * ease * 0.5f <= 0.1f) 0.1f else state.value.kanji!!.durability * ease * 0.5f
+                    val durability: Float = if (state.value.kanji!!.durability * ease * 0.5f <= 0.1f) 0f else state.value.kanji!!.durability * ease * 0.5f
 
                     val kanji = Kanji(
                         unicode = state.value.kanji!!.unicode,

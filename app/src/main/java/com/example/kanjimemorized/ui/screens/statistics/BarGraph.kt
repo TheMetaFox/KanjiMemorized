@@ -2,6 +2,7 @@ package com.example.kanjimemorized.ui.screens.statistics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -19,9 +20,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BarGraph(
-    modifier: Modifier = Modifier,
-    width: Float = 300f,
-    height: Float = 300f,
+    modifier: Modifier = Modifier.size(size = 300.dp),
     barColor: Color = MaterialTheme.colorScheme.primary,
     axisColor: Color = MaterialTheme.colorScheme.onBackground,
     labelColor: Color = MaterialTheme.colorScheme.onBackground,
@@ -37,18 +36,20 @@ fun BarGraph(
     }
     val maxValue: Int = inputMap.maxOf { entry -> entry.value }
     Box(
-        modifier = modifier
-            .size(width = width.dp, height = height.dp)
-            .padding(20.dp),
+        modifier = modifier.padding(top = 5.dp),
         contentAlignment = Alignment.Center
     ) {
         val textMeasurer = rememberTextMeasurer()
         Canvas(
-            modifier = Modifier
+            modifier = Modifier.fillMaxSize()
         ) {
-            drawBars(valueMap = inputMap, barCount = barCount, barColor = barColor, width = width, height = height)
-            drawAxis(width = width, height = height, strokeWidth = 5f, axisColor = axisColor)
-            drawLabels(width = width, height = height, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = maxValue, labelColor = labelColor)
+            val width: Float = size.width
+            val height: Float = size.height
+            val graphWidth: Float = width-(width/17f)
+            val graphHeight: Float = height-(height/15f)
+            drawBars(valueMap = inputMap, barCount = barCount, barColor = barColor, width = width, graphWidth = graphWidth, graphHeight = graphHeight)
+            drawAxis(width = width, graphWidth = graphWidth, graphHeight = graphHeight, strokeWidth = 5f, axisColor = axisColor)
+            drawLabels(width = width, height = height, graphWidth = graphWidth, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = maxValue, labelColor = labelColor)
         }
     }
 }
@@ -57,36 +58,38 @@ fun DrawScope.drawBars(
     barCount: Int,
     barColor: Color,
     width: Float,
-    height: Float
+    graphWidth: Float,
+    graphHeight: Float
 ) {
     val max: Float = valueMap.maxOf { entry -> entry.value }.toFloat()
     for (i in 1..barCount) {
         val value = valueMap.getOrDefault(key = i, defaultValue = 0)
         drawLine(
             color = barColor,
-            start = Offset(x = -width + (width/barCount) + (width/barCount*(i-1)*2), y = height -(value/max)*height*2),
-            end = Offset(x = -width + (width/barCount) + (width/barCount*(i-1)*2), y = height),
-            strokeWidth = (width*2f)/barCount - (2f / barCount)
+            start = Offset(x = (width-graphWidth) + graphWidth/barCount/2f + graphWidth/barCount*(i-1), y = graphHeight),
+            end = Offset(x = (width-graphWidth) + graphWidth/barCount/2f+graphWidth/barCount*(i-1), y = graphHeight-(value/max)*graphHeight),
+            strokeWidth = graphWidth/barCount - (2f / barCount)
         )
     }
 }
 
 fun DrawScope.drawAxis(
     width: Float,
-    height: Float,
+    graphWidth: Float,
+    graphHeight: Float,
     strokeWidth: Float,
-    axisColor: Color
+    axisColor: Color,
 ) {
     drawLine(
         color = axisColor,
-        start = Offset(x = -width -strokeWidth/2, y = -height),
-        end = Offset(x = -width -strokeWidth/2, y = height + strokeWidth/2),
+        start = Offset(x = width-graphWidth - strokeWidth/2f, y = 0f),
+        end = Offset(x = width-graphWidth - strokeWidth/2f, y = graphHeight + strokeWidth),
         strokeWidth = strokeWidth
     )
     drawLine(
         color = axisColor,
-        start = Offset(x = -width - strokeWidth/2, y = height),
-        end = Offset(x = width, y = height),
+        start = Offset(x = width-graphWidth - strokeWidth, y = graphHeight + strokeWidth/2),
+        end = Offset(x = width, y = graphHeight + strokeWidth/2),
         strokeWidth = strokeWidth
     )
 }
@@ -94,17 +97,18 @@ fun DrawScope.drawAxis(
 fun DrawScope.drawLabels(
     width: Float,
     height: Float,
+    graphWidth: Float,
     textMeasurer: TextMeasurer,
     horizontalMax: Int,
     verticalMax: Int,
-    labelColor: Color,
+    labelColor: Color
     ) {
     for (i in 1..horizontalMax step horizontalMax/6+1) {
         val textResult = textMeasurer.measure(text = "$i")
         drawText(
             textLayoutResult = textResult,
             color = labelColor,
-            topLeft = Offset(x = -width - (textResult.size.width/2) + (width/horizontalMax) + (width/horizontalMax*(i-1)*2), y = height)
+            topLeft = Offset(x = (width-graphWidth) + (graphWidth/horizontalMax/2f) - (textResult.size.width/2) + (graphWidth/horizontalMax*(i-1)), y = height - textResult.size.height)
         )
     }
     for (i in 1..verticalMax step verticalMax/5+1) {
@@ -112,7 +116,7 @@ fun DrawScope.drawLabels(
         drawText(
             textLayoutResult = textResult,
             color = labelColor,
-            topLeft = Offset(x = -width - textResult.size.width-10, y = height - textResult.size.height/2 - (height/verticalMax*(i)*2))
+            topLeft = Offset(x = ((width-graphWidth)/2)-textResult.size.width.toFloat(), y = height - textResult.size.height/2 - (height/verticalMax*(i)))
         )
     }
 }

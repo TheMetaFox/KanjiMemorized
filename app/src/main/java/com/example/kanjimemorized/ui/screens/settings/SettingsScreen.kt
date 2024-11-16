@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -20,11 +21,14 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.Screen
@@ -150,6 +154,22 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val localUriHandler: UriHandler = LocalUriHandler.current
+                Button(
+                    onClick = { localUriHandler.openUri("https://www.google.com/")},
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(alignment = Alignment.End)
+                ) {
+                    Box(modifier = Modifier) {
+                        Text(
+                            text = "Feedback",
+                            modifier = Modifier
+                                .align(alignment = Alignment.Center),
+                            fontSize = 18.sp,
+                        )
+                    }
+                }
                 Button(
                     onClick = { onSettingsEvent(SettingsEvent.ApplySettings) },
                     modifier = Modifier.size(width = 350.dp, height = 60.dp)

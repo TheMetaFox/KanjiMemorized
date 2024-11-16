@@ -27,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,9 +100,13 @@ fun KanjiScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val localUriHandler: UriHandler = LocalUriHandler.current
                 Box(
                     modifier = Modifier
                         .size(200.dp)
+                        .clickable {
+                            localUriHandler.openUri("https://jisho.org/search/${kanjiState.kanji.unicode}%20%23kanji")
+                        }
                 ) {
                     with(sharedTransitionScope) {
 //                        Log.i("KanjiScreen.kt", "Shared Kanji Key: " + kanjiState.kanji.unicode.toString())

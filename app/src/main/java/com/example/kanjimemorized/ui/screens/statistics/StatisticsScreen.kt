@@ -28,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,19 +78,53 @@ fun StatisticsScreen(
                     .fillMaxSize()
                     .padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
                 item {
-                    Box(
+                    Card(
                         modifier = Modifier
+                            .width(width = 350.dp)
+                            .padding(2.dp),
                     ) {
-                        Text(
-                            text = "Unlocked Kanji: " + statisticsState.unlocked,
+                        Column(
                             modifier = Modifier
-                                .align(alignment = Alignment.Center),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 28.sp
-                        )
+                                .align(Alignment.CenterHorizontally)
+                                .padding(all = 10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(all = 10.dp)
+                            ) {
+                                Text(
+                                    text = "Unlocked Kanji",
+                                    fontSize = 30.sp
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .padding(all = 10.dp)
+                            ) {
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            style = SpanStyle(
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                fontSize = 35.sp
+                                            )
+                                        ) {
+                                            append(text = "${statisticsState.unlocked}")
+                                        }
+                                        append(text = " / 2136 ")
+                                    },
+                                    modifier = Modifier
+                                        .align(alignment = Alignment.Center),
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontSize = 28.sp
+                                )
+                            }
+
+                        }
                     }
 //                    Box(
 //                        modifier = Modifier
@@ -126,38 +163,44 @@ fun StatisticsScreen(
                 item {
                     Card(
                         modifier = Modifier
-                            .size(width = 350.dp, height = 400.dp)
+                            .width(width = 350.dp)
                             .padding(2.dp),
                     ) {
                         Column(
                             modifier = Modifier
-                                .align(Alignment.CenterHorizontally),
+                                .align(Alignment.CenterHorizontally)
+                                .padding(all = 10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceBetween
+                            verticalArrangement = Arrangement.spacedBy(15.dp)
                         ) {
+                            Text(
+                                text = "Kanji Count",
+                                fontSize = 30.sp
+                            )
                             PieChart(
                                 modifier = Modifier
-                                    .size(300.dp),
+                                    .size(250.dp),
                                 inputMap = statisticsState.kanjiCountMap,
                                 colorMap = mapOf("Unknown" to MaterialTheme.colorScheme.tertiary, "Known" to MaterialTheme.colorScheme.secondary, "Mastered" to MaterialTheme.colorScheme.primary)
                             )
-                            val brush = Brush.horizontalGradient(
-                                colorStops = arrayOf(0.2f to MaterialTheme.colorScheme.tertiary, 0.3f to MaterialTheme.colorScheme.secondary, 0.7f to MaterialTheme.colorScheme.secondary, 0.8f to MaterialTheme.colorScheme.primary),
-                                startX = with(LocalDensity.current) { 50.dp.toPx() },
-                                endX = with(LocalDensity.current) { 250.dp.toPx() }
-                                )
                             Box(
                                 Modifier
                                     .width(width = 300.dp)
                             ) {
+                                val brush = Brush.horizontalGradient(
+                                    colorStops = arrayOf(0.2f to MaterialTheme.colorScheme.tertiary, 0.3f to MaterialTheme.colorScheme.secondary, 0.7f to MaterialTheme.colorScheme.secondary, 0.8f to MaterialTheme.colorScheme.primary),
+                                    startX = with(LocalDensity.current) { 50.dp.toPx() },
+                                    endX = with(LocalDensity.current) { 250.dp.toPx() }
+                                )
                                 Canvas(
                                     modifier = Modifier
-                                        .size(width = 300.dp, height = 20.dp),
+                                        .size(width = 300.dp, height = 15.dp)
+                                    ,
                                     onDraw = {
                                         drawLine(
                                             brush = brush,
-                                            start = Offset(x = 0f, y = 20f),
-                                            end = Offset(x = 300.dp.toPx(), y = 20f),
+                                            start = Offset(x = 0f, y = 15f),
+                                            end = Offset(x = 300.dp.toPx(), y = 15f),
                                             strokeWidth = 30f
                                         )
                                     }
@@ -165,7 +208,7 @@ fun StatisticsScreen(
                             }
                             Row(
                                 modifier = Modifier
-                                    .size(width = 300.dp, height = 75.dp),
+                                    .width(width = 300.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -238,7 +281,6 @@ fun StatisticsScreen(
                                     Text(
                                         text = "${statisticsState.kanjiCountMap["Mastered"]}"
                                     )
-
                                 }
                             }
                         }
@@ -247,18 +289,23 @@ fun StatisticsScreen(
                 item {
                     Card(
                         modifier = Modifier
-                            .size(width = 350.dp, height = 400.dp)
+                            .width(width = 350.dp)
                             .padding(2.dp),
                     ) {
                         Column(
                             modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
                                 .padding(all = 10.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(15.dp)
                         ) {
+                            Text(
+                                text = "Review Forecast",
+                                fontSize = 30.sp
+                            )
                             Row(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
+                                    .fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
@@ -284,9 +331,8 @@ fun StatisticsScreen(
                                     )
                                 } else {
                                     BarGraph(
+                                        modifier = Modifier.size(250.dp),
                                         inputMap = statisticsState.dayForecastsMap,
-                                        width = 300.dp.value,
-                                        height = 300.dp.value,
                                         barGraphSpan = statisticsState.barGraphSpan
                                     )
                                 }

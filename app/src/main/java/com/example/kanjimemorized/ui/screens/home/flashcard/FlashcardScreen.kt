@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.LoadingAnimation
+import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
@@ -89,12 +90,12 @@ fun FlashcardScreen(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(150.dp, 100.dp)
+                                    .size(150.dp, 150.dp)
                             ) {
                                 Text(
                                     text = flashcardState.kanji?.unicode.toString(),
                                     modifier = modifier.align(Center),
-                                    fontSize = 50.sp,
+                                    fontSize = 100.sp,
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -187,11 +188,12 @@ fun FlashcardScreen(
                             Button(
                                 onClick = { onFlashcardEvent(FlashcardEvent.FlipFlashcard) },
                                 modifier = Modifier
-                                    .size(225.dp, 100.dp),
+                                    .size(250.dp, 100.dp),
                             ) {
                                 Text(
                                     text = "Show Answer",
-                                    fontSize = 30.sp
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
@@ -215,10 +217,51 @@ fun FlashcardScreen(
                 }
             }
         }
-    }}
+    }
+}
 
 @Preview
 @Composable
-fun FlashcardScreenPreview() {
-    FlashcardScreen(modifier = Modifier, navController = rememberNavController(),flashcardState = FlashcardState(), onFlashcardEvent = { }, onKanjiEvent = { })
+fun ReviewUnavailablePreview() {
+    FlashcardScreen(
+        modifier = Modifier,
+        navController = rememberNavController(),
+        flashcardState = FlashcardState(isLoading = false),
+        onFlashcardEvent = { },
+        onKanjiEvent = { }
+    )
+}
+
+@Preview
+@Composable
+fun FlashcardKanjiPreview() {
+    FlashcardScreen(
+        modifier = Modifier,
+        navController = rememberNavController(),
+        flashcardState = FlashcardState(
+            kanji = Kanji(unicode = Char(30000), strokes = 3),
+            isReviewAvailable = true,
+            isLoading = false
+        ),
+        onFlashcardEvent = { },
+        onKanjiEvent = { }
+    )
+}
+
+@Preview
+@Composable
+fun FlashcardAnswerPreview() {
+    FlashcardScreen(
+        modifier = Modifier,
+        navController = rememberNavController(),
+        flashcardState = FlashcardState(
+            kanji = Kanji(unicode = Char(30000), strokes = 3),
+            meanings = listOf("rice field"),
+            isAnswerShowing = true,
+            isReviewAvailable = true,
+            isLoading = false
+        ),
+        onFlashcardEvent = { },
+        onKanjiEvent = { }
+    )
 }
