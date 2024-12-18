@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.LoadingAnimation
+import com.example.kanjimemorized.LoadingAnimation2
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
@@ -82,37 +84,51 @@ fun FlashcardScreen(
                         horizontalAlignment = CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
-                        Column(
+                        Box(
                             modifier = Modifier
-                                .fillMaxHeight(0.5f),
-                            horizontalAlignment = CenterHorizontally,
-                            verticalArrangement = Arrangement.Top
+                                .size(350.dp),
+                            contentAlignment = Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(150.dp, 150.dp)
+                             Column(
+                                horizontalAlignment = CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Text(
-                                    text = flashcardState.kanji?.unicode.toString(),
-                                    modifier = modifier.align(Center),
-                                    fontSize = 100.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                            if (flashcardState.isAnswerShowing) {
                                 Box(
                                     modifier = Modifier
-                                        .size(400.dp, 100.dp)
+                                        .size(150.dp, 150.dp)
                                 ) {
                                     Text(
-                                        text = flashcardState.meanings.toString().replace("[", "")
-                                            .replace("]", ""),
+                                        text = flashcardState.kanji?.unicode.toString(),
                                         modifier = modifier.align(Center),
-                                        fontSize = 40.sp,
+                                        fontSize = 100.sp,
                                         textAlign = TextAlign.Center
                                     )
                                 }
+                                if (flashcardState.isAnswerShowing) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(400.dp, 100.dp)
+                                    ) {
+                                        Text(
+                                            text = flashcardState.meanings.toString()
+                                                .replace("[", "")
+                                                .replace("]", ""),
+                                            modifier = modifier.align(Center),
+                                            fontSize = 40.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
                             }
+                            LoadingAnimation2(
+                                color = when (flashcardState.lastRating) {
+                                    1 -> MaterialTheme.colorScheme.tertiary
+                                    2 -> MaterialTheme.colorScheme.secondary
+                                    3 -> MaterialTheme.colorScheme.primary
+                                    else -> Color.DarkGray
+                                },
+                                isAnimationPlaying = flashcardState.isAnimationPlaying
+                            )
                         }
                         if (flashcardState.isAnswerShowing) {
                             Column(
@@ -145,11 +161,15 @@ fun FlashcardScreen(
                                 ) {
                                     Button(
                                         onClick = {
+                                            onFlashcardEvent(FlashcardEvent.PlayAnimation)
                                             onFlashcardEvent(FlashcardEvent.WrongCard)
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
                                             .size(125.dp, 50.dp),
+                                        colors = ButtonDefaults.buttonColors().copy(
+                                            containerColor = MaterialTheme.colorScheme.tertiary
+                                        )
                                     ) {
                                         Text(
                                             text = "Wrong",
@@ -158,11 +178,15 @@ fun FlashcardScreen(
                                     }
                                     Button(
                                         onClick = {
+                                            onFlashcardEvent(FlashcardEvent.PlayAnimation)
                                             onFlashcardEvent(FlashcardEvent.CorrectCard)
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
                                             .size(125.dp, 50.dp),
+                                        colors = ButtonDefaults.buttonColors().copy(
+                                            containerColor = MaterialTheme.colorScheme.secondary
+                                        )
                                     ) {
                                         Text(
                                             text = "Correct",
@@ -171,6 +195,7 @@ fun FlashcardScreen(
                                     }
                                     Button(
                                         onClick = {
+                                            onFlashcardEvent(FlashcardEvent.PlayAnimation)
                                             onFlashcardEvent(FlashcardEvent.EasyCard)
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },

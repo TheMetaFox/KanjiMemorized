@@ -3,7 +3,6 @@ package com.example.kanjimemorized.ui.screens.statistics
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -258,7 +256,6 @@ fun StatisticsScreen(
                                     Text(
                                         text = "${statisticsState.kanjiCountMap["Known"]}"
                                     )
-
                                 }
                                 Column(
                                     modifier = Modifier,
@@ -377,5 +374,5 @@ fun BarGraphSpanOption(
 @Preview(showBackground = true)
 @Composable
 fun StatisticsScreenPreview() {
-    StatisticsScreen(navController = rememberNavController(), bottomNavBar = {}, statisticsState = StatisticsState(kanjiCountMap = mapOf("Unknown" to 1612, "Known" to 412, "Mastered" to 112), dayForecastsMap = mutableMapOf(1 to 4, 2 to 5, 3 to 2, 5 to 1)), onStatisticsEvent = {})
+    StatisticsScreen(navController = rememberNavController(), bottomNavBar = {}, statisticsState = StatisticsState(unlocked = 824, kanjiCountMap = mapOf("Unknown" to 1612, "Known" to 412, "Mastered" to 112), dayForecastsMap = mutableMapOf(1 to 4, 2 to 5, 3 to 2, 5 to 1)), onStatisticsEvent = {})
 }

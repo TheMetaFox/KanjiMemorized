@@ -39,7 +39,6 @@ fun LoadingAnimation(
                 ),
                 label = ""
             )
-
             val animatedStartAngle: State<Float> = infiniteTransition.animateFloat(
                 initialValue = 0f,
                 targetValue = 360f,
@@ -49,7 +48,6 @@ fun LoadingAnimation(
                 ),
                 label = ""
             )
-
             val animatedSweepAngle: State<Float> = infiniteTransition.animateFloat(
                 initialValue = 0f,
                 targetValue = 360f,
@@ -73,13 +71,12 @@ fun LoadingAnimation(
                         cap = StrokeCap.Round
                     )
                 )
-
             }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LoadingAnimationPreview() {
     LoadingAnimation()

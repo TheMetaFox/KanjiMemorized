@@ -13,6 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+//import com.google.firebase.analytics.FirebaseAnalytics
+//import com.google.firebase.analytics.ktx.analytics
+//import com.google.firebase.analytics.logEvent
+//import com.google.firebase.ktx.Firebase
 
 @Composable
 fun BottomNavBar(
@@ -22,6 +26,9 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
+//                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+//                    param("screen", "Home")
+//                }
                 navController.navigate(Screen.Home.route)
             },
             icon = {
@@ -37,6 +44,9 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
+//                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+//                    param("screen", "Library")
+//                }
                 navController.navigate(Screen.Library.route)
             },
             icon = {
@@ -52,6 +62,9 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
+//                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+//                    param("screen", "Statistics")
+//                }
                 navController.navigate(Screen.Statistics.route)
             },
             icon = {
@@ -67,6 +80,9 @@ fun BottomNavBar(
         NavigationBarItem(
             selected = false,
             onClick = {
+//                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+//                    param("screen", "Settings")
+//                }
                 navController.navigate(Screen.Settings.route)
             },
             icon = {

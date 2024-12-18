@@ -38,12 +38,18 @@ import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModel
 import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
+//import com.google.firebase.analytics.FirebaseAnalytics
+//import com.google.firebase.analytics.ktx.analytics
+//import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity.kt", "Started onCreate()...")
+//        val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+//        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
+
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
@@ -106,7 +112,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KanjiMemorizedTheme {
-//                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
+                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 

@@ -81,10 +81,24 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                             unicode = state.value.kanji.unicode,
                             strokes = state.value.kanji.strokes,
                             durability = 0f,
-                            ease = 2.5f
+                            ease = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue.toFloat()
                         )
                     )
                     kanjiRepository.deleteReviewsFromKanji(kanji = state.value.kanji.unicode)
+                    _state.update(
+                        function = {
+                            it.copy(
+                                kanji = Kanji(
+                                    unicode = state.value.kanji.unicode,
+                                    strokes = state.value.kanji.strokes,
+                                    durability = 0f,
+                                    ease = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue.toFloat()
+                                ),
+                                retention = 0f,
+                                reviews = listOf()
+                            )
+                        }
+                    )
                 }
             }
         }

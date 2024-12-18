@@ -9,4 +9,5 @@ sealed interface FlashcardEvent {
     data object WrongCard: FlashcardEvent
     data object CorrectCard: FlashcardEvent
     data object EasyCard: FlashcardEvent
+    data object PlayAnimation: FlashcardEvent
 }

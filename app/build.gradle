@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.android'
+//    id 'com.google.gms.google-services'
 }
-
-apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.example.kanjimemorized'
@@ -68,6 +68,8 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended:1.7.5'
     implementation 'androidx.compose.material3:material3'
     implementation 'com.google.android.datatransport:transport-runtime:4.0.0'
+//    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+//    implementation 'com.google.firebase:firebase-analytics'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
@@ -82,5 +84,4 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation 'com.google.dagger:dagger:2.28.3'
     ksp 'com.google.dagger:dagger-compiler:2.28.3'
-
 }

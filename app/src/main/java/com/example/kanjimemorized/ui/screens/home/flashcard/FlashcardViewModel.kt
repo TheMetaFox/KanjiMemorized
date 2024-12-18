@@ -208,26 +208,30 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 }
                             }
                         }
+                        Log.i("FlashcardViewModel.kt", "isAnimationPlaying = false...")
                         if (queue.isEmpty()) {
                             Log.i("FlashcardViewModel.kt", "Empty queue...")
                             _state.update(
                                 function = {
                                     it.copy(
-                                        isReviewAvailable = false
+                                        isReviewAvailable = false,
+                                        isAnimationPlaying = false
                                     )
                                 }
                             )
                         } else {
-                            Log.i("FlashcardViewModel.kt", "Queue Refreshed: \n${queue.joinToString("\n")}")
+//                            Log.i("FlashcardViewModel.kt", "Queue Refreshed: \n${queue.joinToString("\n")}")
                             _state.update(
                                 function = {
                                     it.copy(
                                         isReviewAvailable = true,
-                                        queue = queue
+                                        queue = queue,
+                                        isAnimationPlaying = false
                                     )
                                 }
                             )
                         }
+                        onEvent(FlashcardEvent.GetRandomFlashcard)
                     }
                 )
             }
@@ -239,6 +243,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         )
                     }
                 )
+                Log.i("FlashcardViewModel.kt", "Is Answer Showing: \n${state.value.isAnswerShowing}")
             }
             is FlashcardEvent.GetRandomFlashcard -> {
                 viewModelScope.launch(
@@ -287,9 +292,14 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     Log.i("FlashcardViewModel.kt", "Changing ${kanji.unicode} priority ${state.value.queue.peek()!!.first} to ${state.value.queue.peek()!!.first*2}...")
                     state.value.queue.add(Pair((state.value.queue.peek()!!.first)*2, kanji))
                     state.value.queue.remove()
-                    onEvent(FlashcardEvent.GetRandomFlashcard)
                     onEvent(FlashcardEvent.RefreshQueue)
 
+                    Log.i("FlashcardViewModel.kt", "isAnimationPlaying = true...")
+                    _state.update(
+                        function = {
+                            it.copy(lastRating = 1)
+                        }
+                    )
                 }
             }
             is FlashcardEvent.CorrectCard -> {
@@ -316,11 +326,16 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     kanjiRepository.insertReview(
                         review = review
                     )
-
                     Log.i("FlashcardViewModel.kt", "Removing ${kanji}...")
                     state.value.queue.remove()
-                    onEvent(FlashcardEvent.GetRandomFlashcard)
                     onEvent(FlashcardEvent.RefreshQueue)
+
+                    Log.i("FlashcardViewModel.kt", "isAnimationPlaying = true...")
+                    _state.update(
+                        function = {
+                            it.copy(lastRating = 2)
+                        }
+                    )
                 }
             }
             is FlashcardEvent.EasyCard -> {
@@ -350,10 +365,23 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
 
                     Log.i("FlashcardViewModel.kt", "Removing ${state.value.queue.peek()}...")
                     state.value.queue.remove()
-                    onEvent(FlashcardEvent.GetRandomFlashcard)
-
                     onEvent(FlashcardEvent.RefreshQueue)
+
+                    Log.i("FlashcardViewModel.kt", "isAnimationPlaying = true...")
+                    _state.update(
+                        function = {
+                            it.copy(lastRating = 3)
+                        }
+                    )
                 }
+            }
+            is FlashcardEvent.PlayAnimation -> {
+                    _state.update(
+                        function = {
+                            it.copy(isAnimationPlaying = true)
+                        }
+                    )
+
             }
         }
     }
