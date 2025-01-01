@@ -6,8 +6,6 @@ sealed interface FlashcardEvent {
     data object RefreshQueue: FlashcardEvent
     data object FlipFlashcard: FlashcardEvent
     data object GetRandomFlashcard: FlashcardEvent
-    data object WrongCard: FlashcardEvent
-    data object CorrectCard: FlashcardEvent
-    data object EasyCard: FlashcardEvent
+    data class ProcessCard(val rating: Rating): FlashcardEvent
     data object PlayAnimation: FlashcardEvent
 }

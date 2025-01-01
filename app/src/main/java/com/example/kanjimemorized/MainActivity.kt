@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
 
         val onHomeEvent: (HomeEvent) -> Unit = homeViewModel::onEvent
         val onLibraryEvent: (LibraryEvent) -> Unit = libraryViewModel::onEvent
-        val onKanjiEvent:(KanjiEvent) -> Unit = kanjiViewModel::onEvent
+        val onKanjiEvent: (KanjiEvent) -> Unit = kanjiViewModel::onEvent
         val onFlashcardEvent: (FlashcardEvent) -> Unit = flashcardViewModel::onEvent
         val onStatisticsEvent: (StatisticsEvent) -> Unit = statisticsViewModel::onEvent
         val onSettingsEvent: (SettingsEvent) -> Unit = settingsViewModel::onEvent
@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KanjiMemorizedTheme {
-                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
+//                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background),
-                    snackbarHostState =  snackbarHostState,
+                    snackbarHostState = snackbarHostState,
                     coroutineScope = coroutineScope,
                     homeState = homeState,
                     libraryState = libraryState,

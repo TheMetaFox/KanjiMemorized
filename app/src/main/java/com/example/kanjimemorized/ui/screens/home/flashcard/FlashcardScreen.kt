@@ -6,16 +6,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -33,8 +43,8 @@ import com.example.kanjimemorized.LoadingAnimation2
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
-import com.example.kanjimemorized.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashcardScreen(
     modifier: Modifier,
@@ -45,9 +55,28 @@ fun FlashcardScreen(
 ) {
     Scaffold(
         modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(spacing.small),
+            .background(color = MaterialTheme.colorScheme.primary)
+            .windowInsetsPadding(insets = WindowInsets.statusBars)
+            .background(color = MaterialTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                title = { Text("Flashcard") },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "info"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                )
+            )
+        },
     ) { contentPadding ->
         if (flashcardState.isLoading) {
             Box(
@@ -162,12 +191,12 @@ fun FlashcardScreen(
                                     Button(
                                         onClick = {
                                             onFlashcardEvent(FlashcardEvent.PlayAnimation)
-                                            onFlashcardEvent(FlashcardEvent.WrongCard)
+                                            onFlashcardEvent(FlashcardEvent.ProcessCard(rating = Rating.WRONG))
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
                                             .size(125.dp, 50.dp),
-                                        colors = ButtonDefaults.buttonColors().copy(
+                                        colors = ButtonDefaults.buttonColors(
                                             containerColor = MaterialTheme.colorScheme.tertiary
                                         )
                                     ) {
@@ -179,12 +208,12 @@ fun FlashcardScreen(
                                     Button(
                                         onClick = {
                                             onFlashcardEvent(FlashcardEvent.PlayAnimation)
-                                            onFlashcardEvent(FlashcardEvent.CorrectCard)
+                                            onFlashcardEvent(FlashcardEvent.ProcessCard(rating = Rating.CORRECT))
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
                                             .size(125.dp, 50.dp),
-                                        colors = ButtonDefaults.buttonColors().copy(
+                                        colors = ButtonDefaults.buttonColors(
                                             containerColor = MaterialTheme.colorScheme.secondary
                                         )
                                     ) {
@@ -196,11 +225,14 @@ fun FlashcardScreen(
                                     Button(
                                         onClick = {
                                             onFlashcardEvent(FlashcardEvent.PlayAnimation)
-                                            onFlashcardEvent(FlashcardEvent.EasyCard)
+                                            onFlashcardEvent(FlashcardEvent.ProcessCard(rating = Rating.EASY))
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
                                             .size(125.dp, 50.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        )
                                     ) {
                                         Text(
                                             text = "Easy",

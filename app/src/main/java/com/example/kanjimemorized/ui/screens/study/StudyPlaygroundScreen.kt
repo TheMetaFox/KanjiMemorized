@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.study
 
+import android.view.Window
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.InfiniteTransition
@@ -13,13 +14,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -27,6 +36,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -35,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,11 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.ui.theme.spacing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyPlaygroundScreen(
     modifier: Modifier,
@@ -59,9 +69,28 @@ fun StudyPlaygroundScreen(
 ) {
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(spacing.small),
+            .background(color = MaterialTheme.colorScheme.primary)
+            .windowInsetsPadding(insets = WindowInsets.statusBars)
+            .background(color = MaterialTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                title = { Text("Playground") },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "info"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                )
+            )
+        },
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState
@@ -75,19 +104,19 @@ fun StudyPlaygroundScreen(
                 .padding(5.dp),
             horizontalAlignment = CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        navController.navigateUp()
-                    }
-            ) {
-                Text(
-                    text = "Playground",
-                    modifier = Modifier
-                        .align(alignment = Center),
-                    fontSize = 50.sp
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .clickable {
+//                        navController.navigateUp()
+//                    }
+//            ) {
+//                Text(
+//                    text = "Playground",
+//                    modifier = Modifier
+//                        .align(alignment = Center),
+//                    fontSize = 50.sp
+//                )
+//            }
             StudyContent(
                 snackbarHostState = snackbarHostState,
                 coroutineScope = coroutineScope

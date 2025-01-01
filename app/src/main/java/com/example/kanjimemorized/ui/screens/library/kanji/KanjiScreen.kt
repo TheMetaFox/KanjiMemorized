@@ -12,18 +12,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +54,7 @@ import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.math.exp
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun KanjiScreen(
     modifier: Modifier,
@@ -63,35 +73,54 @@ fun KanjiScreen(
 //    }
     Scaffold (
         modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(
-                start = spacing.medium,
-                top = spacing.medium,
-                end = spacing.medium
+            .background(color = MaterialTheme.colorScheme.primary)
+            .windowInsetsPadding(insets = WindowInsets.statusBars)
+            .background(color = MaterialTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                title = { Text("Kanji") },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "info"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                )
             )
+        }
     ) { contentPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+                .padding(paddingValues = contentPadding)
+                .padding(
+                    start = spacing.medium,
+                    top = spacing.medium,
+                    end = spacing.medium
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        navController.popBackStack(Screen.Library.route, false)
-                    }
-                    .padding(bottom = 5.dp),
-            ) {
-                Text(
-                    text = "Kanji",
-                    modifier = Modifier
-                        .align(alignment = Alignment.Center),
-                    fontSize = 50.sp
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .clickable {
+//                        navController.popBackStack(Screen.Library.route, false)
+//                    }
+//                    .padding(bottom = 5.dp),
+//            ) {
+//                Text(
+//                    text = "Kanji",
+//                    modifier = Modifier
+//                        .align(alignment = Alignment.Center),
+//                    fontSize = 50.sp
+//                )
+//            }
 
             Row(
                 modifier = Modifier

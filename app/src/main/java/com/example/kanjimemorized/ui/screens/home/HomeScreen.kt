@@ -6,16 +6,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -40,6 +50,7 @@ import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.home.flashcard.StudyType
 import com.example.kanjimemorized.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -52,15 +63,35 @@ fun HomeScreen(
     onHomeEvent(HomeEvent.LoadHomeData)
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.primary)
+            .windowInsetsPadding(insets = WindowInsets.statusBars)
+            .background(color = MaterialTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Home") },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "info"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                )
+            )
+        },
         bottomBar = {
             bottomNavBar()
         }
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .padding(contentPadding)
+                .padding(paddingValues = contentPadding)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
@@ -78,16 +109,16 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Box(
-                    modifier = Modifier,
-                ) {
-                    Text(
-                        text = "Home",
-                        modifier = Modifier
-                            .align(alignment = Center),
-                        fontSize = 50.sp,
-                    )
-                }
+//                Box(
+//                    modifier = Modifier,
+//                ) {
+//                    Text(
+//                        text = "Home",
+//                        modifier = Modifier
+//                            .align(alignment = Center),
+//                        fontSize = 50.sp,
+//                    )
+//                }
                 Box(
                     modifier = Modifier,
                 ) {
@@ -114,7 +145,7 @@ fun HomeScreen(
                 ) {
                     Button(
                         onClick = {
-                            onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Mixed))
+                            onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.MIXED))
                             onFlashcardEvent(FlashcardEvent.InitializeQueue)
                             navController.navigate(route = Screen.Flashcard.route)
                         },
@@ -122,7 +153,7 @@ fun HomeScreen(
                             .padding(spacing.small)
                     ) {
                         Text(
-                            text = "Guided Review",
+                            text = "Guided Study",
                             fontSize = 36.sp,
                         )
                     }
@@ -134,7 +165,7 @@ fun HomeScreen(
                     ) {
                         Button(
                             onClick = {
-                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.New))
+                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.NEW))
                                 onFlashcardEvent(FlashcardEvent.InitializeQueue)
                                 navController.navigate(route = Screen.Flashcard.route)
                             },
@@ -148,7 +179,7 @@ fun HomeScreen(
                         }
                         Button(
                             onClick = {
-                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.Review))
+                                onFlashcardEvent(FlashcardEvent.SetStudyType(StudyType.REVIEW))
                                 onFlashcardEvent(FlashcardEvent.InitializeQueue)
                                 navController.navigate(route = Screen.Flashcard.route)
                             },

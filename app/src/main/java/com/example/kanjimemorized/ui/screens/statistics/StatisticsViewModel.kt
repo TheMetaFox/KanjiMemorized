@@ -38,7 +38,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                     kanjiRepository.getKanjiList().forEach { kanji: Kanji ->
                         if (kanji.durability == 0f) {
                             unknown++
-                        } else if (kanji.durability < 5f) {
+                        } else if (kanji.durability < 100f) {
                             known++
                         } else {
                             mastered++
@@ -78,7 +78,6 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                         )
                     }
                     Log.i("StatisticsViewModel.kt", "Bar graph span set to ${_state.value.barGraphSpan}...")
-
                 }
             }
         }

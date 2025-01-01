@@ -110,7 +110,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             LocalDateTime.now()
         ).toMinutes()).toDouble()
         val forecast = (1440*ln(0.8.pow(-durability)) - minutes).toFloat()
-        Log.i("KanjiRepository.kt", "Minutes: $minutes with Forecast: $forecast")
+//        Log.i("KanjiRepository.kt", "Minutes: $minutes with Forecast: $forecast")
 
         return forecast
     }
@@ -118,7 +118,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     private suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime? {
         val date: String? = kanjiDao.getLatestDateFromKanji(kanji = kanji)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
+//        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
         return if (date == null) null else parse(date, formatter)
     }
 

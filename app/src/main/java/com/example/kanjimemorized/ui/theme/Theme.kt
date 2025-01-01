@@ -11,7 +11,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -58,12 +57,13 @@ fun KanjiMemorizedTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = when {
-                Build.VERSION.SDK_INT <= 34 -> colorScheme.primary.toArgb()
-                Build.VERSION.SDK_INT == 35 -> colorScheme.primary.toArgb()
-                else -> colorScheme.primary.toArgb()
-            }
-            //WindowCompat.setDecorFitsSystemWindows(window, false)
+
+//            window.statusBarColor = when {
+//                Build.VERSION.SDK_INT <= 34 -> colorScheme.primary.toArgb()
+//                Build.VERSION.SDK_INT == 35 -> colorScheme.primary.toArgb()
+//                else -> colorScheme.primary.toArgb()
+//            }
+            WindowCompat.setDecorFitsSystemWindows(window, false)
 
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
             WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme

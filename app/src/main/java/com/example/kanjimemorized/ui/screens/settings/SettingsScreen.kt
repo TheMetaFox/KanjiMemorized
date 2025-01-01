@@ -1,23 +1,32 @@
 package com.example.kanjimemorized.ui.screens.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.ui.Screen
-import com.example.kanjimemorized.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier,
@@ -44,9 +52,28 @@ fun SettingsScreen(
     onSettingsEvent(SettingsEvent.LoadSettingsData)
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(top = spacing.small),
+            .background(color = MaterialTheme.colorScheme.primary)
+            .windowInsetsPadding(insets = WindowInsets.statusBars)
+            .background(color = MaterialTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                title = { Text("Settings") },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "info"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                )
+            )
+        },
         bottomBar = {
             bottomNavBar()
         }
@@ -58,19 +85,19 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        navController.navigate(Screen.Home.route)
-                    }
-            ) {
-                Text(
-                    text = "Settings",
-                    modifier = Modifier
-                        .align(alignment = Alignment.Center),
-                    fontSize = 50.sp
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .clickable {
+//                        navController.navigate(Screen.Home.route)
+//                    }
+//            ) {
+//                Text(
+//                    text = "Settings",
+//                    modifier = Modifier
+//                        .align(alignment = Alignment.Center),
+//                    fontSize = 50.sp
+//                )
+//            }
             Column(
                 modifier = Modifier
                     .width(350.dp),

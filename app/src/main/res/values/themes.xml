@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.KanjiMemorized" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.KanjiMemorized" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
 
     <style name="Theme.KanjiMemorized.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#202020</item>
@@ -10,5 +14,7 @@
 
         <item name="postSplashScreenTheme">@style/Theme.KanjiMemorized</item>
     </style>
+
+
 
 </resources>
