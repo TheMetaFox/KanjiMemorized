@@ -85,7 +85,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                     //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
                                     return@forEach
                                 }
-                                else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()) {
                                     //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 }
@@ -134,7 +134,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 }
                             }
                             knownKanjiList.forEach { kanji ->
-                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > .80f) {
+                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()) {
 //                                        Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 } else {
