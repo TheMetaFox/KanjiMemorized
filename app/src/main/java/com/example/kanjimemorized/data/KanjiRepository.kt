@@ -41,6 +41,39 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     }
 
     suspend fun getSettingsFromCode(code: String): Settings {
+        if (kanjiDao.getSettingsFromCode(code = code) == null) {
+            Log.i("KanjiRepository.kt", "Setting code not found...")
+            val setting: Settings? = when (code) {
+                "daily_new_kanji" -> {
+                    Settings(
+                        code = code,
+                        setValue = "3",
+                        defaultValue = "3"
+                    )
+                }
+                "initial_ease" -> {
+                    Settings(
+                        code = code,
+                        setValue = "2.5",
+                        defaultValue = "2.5"
+                    )
+                }
+                "retention_threshold" -> {
+                    Settings(
+                        code = code,
+                        setValue = "80",
+                        defaultValue = "80"
+                    )
+                }
+                else -> {null}
+            }
+            if (setting == null) {
+                Log.i("KanjiRepository.kt", "Invalid setting code...")
+            } else {
+                Log.i("KanjiRepository.kt", "Setting code '${setting.code}' initialized...")
+                kanjiDao.insertSetting(setting = setting)
+            }
+        }
         return kanjiDao.getSettingsFromCode(code = code)
     }
 
@@ -109,7 +142,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             getLatestDateFromKanji(kanji = kanji),
             LocalDateTime.now()
         ).toMinutes()).toDouble()
-        val forecast = (1440*ln(0.8.pow(-durability)) - minutes).toFloat()
+        val forecast = (1440*ln((getSettingsFromCode("retention_threshold").setValue.toFloat()/100f).pow(-durability)) - minutes).toFloat()
 //        Log.i("KanjiRepository.kt", "Minutes: $minutes with Forecast: $forecast")
 
         return forecast
@@ -139,7 +172,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
                 if (!calculatedRetentions.contains(component)) {
                     calculatedRetentions[component] = getRetentionFromKanji(component.unicode)
                 }
-                if (calculatedRetentions[component]!! <= .80f) {
+                if (calculatedRetentions[component]!! <= getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
                     isLocked = true
                 }
             }

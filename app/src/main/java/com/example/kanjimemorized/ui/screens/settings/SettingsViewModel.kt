@@ -44,6 +44,13 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                             )
                         }
                     }
+                    "retentionThreshold" -> {
+                        _state.update {
+                            it.copy(
+                                retentionThresholdField = settingsEvent.text
+                            )
+                        }
+                    }
                 }
             }
 
@@ -53,18 +60,20 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                     _state.update {
                         it.copy(
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
-                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue
+                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue,
+                            retentionThreshold = kanjiRepository.getSettingsFromCode(code = "retention_threshold").setValue
                         )
                     }
                     _isLoading.value = false
                     Log.i("SettingsViewModel.kt", "Finished loading initial data...")
+
                 }
             }
 
             SettingsEvent.ApplySettings -> {
                 viewModelScope.launch {
                     val dailyNewKanjiField: String = state.value.dailyNewKanjiField
-                    if (dailyNewKanjiField.isNotBlank() && dailyNewKanjiField.isDigitsOnly()) {
+                    if (dailyNewKanjiField.isNotBlank() && dailyNewKanjiField.isDigitsOnly() && dailyNewKanjiField.toInt() > 0) {
                         kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = dailyNewKanjiField)
                     }
 
@@ -73,10 +82,20 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                         kanjiRepository.updateSettings(code = "initial_ease", setValue = "%.2f".format(initialEaseField.toFloat()))
                     }
 
+                    val retentionThresholdField: String = state.value.retentionThresholdField
+                    if (retentionThresholdField.isNotBlank() && retentionThresholdField.isDigitsOnly() && retentionThresholdField.toInt() <= 99 && retentionThresholdField.toInt() >= 1) {
+                        kanjiRepository.updateSettings(code = "retention_threshold", setValue = retentionThresholdField)
+                    }
+
                     _state.update {
                         it.copy(
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
-                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue
+                            initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue,
+                            retentionThreshold = kanjiRepository.getSettingsFromCode(code = "retention_threshold").setValue,
+                            dailyNewKanjiField = "",
+                            initialEaseField = "",
+                            retentionThresholdField = ""
+
                         )
                     }
                 }
@@ -86,13 +105,20 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                 viewModelScope.launch {
                     val dailyNewKanjiDefault: String = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").defaultValue
                     val initialEaseDefault: String = kanjiRepository.getSettingsFromCode(code = "initial_ease").defaultValue
+                    val retentionThresholdDefault: String = kanjiRepository.getSettingsFromCode(code = "retention_threshold").defaultValue
 
                     kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = dailyNewKanjiDefault)
                     kanjiRepository.updateSettings(code = "initial_ease", setValue = initialEaseDefault)
+                    kanjiRepository.updateSettings(code = "retention_threshold", setValue = retentionThresholdDefault)
+
                     _state.update {
                         it.copy(
                             dailyNewKanji = dailyNewKanjiDefault,
-                            initialEase = initialEaseDefault
+                            initialEase = initialEaseDefault,
+                            retentionThreshold = retentionThresholdDefault,
+                            dailyNewKanjiField = "",
+                            initialEaseField = "",
+                            retentionThresholdField = ""
                         )
                     }
                 }

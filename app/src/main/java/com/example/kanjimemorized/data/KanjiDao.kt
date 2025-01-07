@@ -18,6 +18,9 @@ interface KanjiDao {
     @Insert
     suspend fun insertReview(review: Review): Void
 
+    @Insert
+    suspend fun insertSetting(setting: Settings): Void
+
     @Query("UPDATE settings SET setValue = :setValue WHERE code = :code")
     suspend fun updateSettings(code: String, setValue: String): Void
 

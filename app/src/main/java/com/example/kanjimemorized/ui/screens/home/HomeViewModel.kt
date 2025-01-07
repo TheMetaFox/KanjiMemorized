@@ -31,7 +31,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                     var currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0) {
-                            if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < 0.80f) {
+                            if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100) {
                                 currentReviewCount++
                             }
                         }

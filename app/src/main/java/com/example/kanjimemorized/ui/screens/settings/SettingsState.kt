@@ -4,5 +4,7 @@ data class SettingsState(
     val dailyNewKanjiField: String = "",
     val dailyNewKanji: String = "",
     val initialEaseField: String = "",
-    val initialEase: String = ""
+    val initialEase: String = "",
+    val retentionThresholdField: String = "",
+    val retentionThreshold: String = ""
 )

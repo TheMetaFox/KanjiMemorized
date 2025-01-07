@@ -174,6 +174,41 @@ fun SettingsScreen(
                         singleLine = true
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Box {
+                            Text(
+                                text = "Retention Threshold",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 24.sp,
+                            )
+                        }
+                        Box {
+                            Text(
+                                text = "Maximum retention set for kanji review",
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                    TextField(
+                        value = settingsState.retentionThresholdField,
+                        onValueChange = {
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "retentionThreshold", text = it))
+                        },
+                        modifier = Modifier
+                            .width(80.dp),
+                        //label = { Text(text = "Current: ${settingsState.retentionThreshold}")},
+                        placeholder = { Text(text = "${settingsState.retentionThreshold}%") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                }
             }
             Column(
                 modifier = Modifier.size(width = 350.dp, height = 200.dp),
