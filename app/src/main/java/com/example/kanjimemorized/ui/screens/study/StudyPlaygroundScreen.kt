@@ -1,6 +1,5 @@
 package com.example.kanjimemorized.ui.screens.study
 
-import android.view.Window
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.InfiniteTransition
@@ -53,8 +52,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -63,7 +60,6 @@ import kotlin.random.Random
 @Composable
 fun StudyPlaygroundScreen(
     modifier: Modifier,
-    navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope
 ) {
@@ -296,5 +292,5 @@ fun AnswerChoice(
 @Preview(showBackground = true)
 @Composable
 fun StudyPlaygroundScreenPreview() {
-    StudyPlaygroundScreen(Modifier, rememberNavController(), SnackbarHostState(), rememberCoroutineScope())
+    StudyPlaygroundScreen(Modifier, SnackbarHostState(), rememberCoroutineScope())
 }

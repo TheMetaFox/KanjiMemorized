@@ -67,7 +67,6 @@ fun KanjiScreen(
     modifier: Modifier,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    navController: NavController,
     kanjiState: KanjiState,
     onKanjiEvent: (KanjiEvent) -> Unit
 ) {
@@ -484,7 +483,7 @@ fun KanjiScreenPreview() {
             "moo"
         ) {
             composable("moo") {
-                KanjiScreen(modifier = Modifier, sharedTransitionScope = this@SharedTransitionLayout, animatedVisibilityScope = this@composable, navController = rememberNavController(), kanjiState = KanjiState(), onKanjiEvent = {})
+                KanjiScreen(modifier = Modifier, sharedTransitionScope = this@SharedTransitionLayout, animatedVisibilityScope = this@composable, kanjiState = KanjiState(), onKanjiEvent = {})
             }
         }
     }
