@@ -74,7 +74,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
                 kanjiDao.insertSetting(setting = setting)
             }
         }
-        return kanjiDao.getSettingsFromCode(code = code)
+        return kanjiDao.getSettingsFromCode(code = code)!!
     }
 
     suspend fun getKanjiComponentsFromKanji(kanji: Char): List<Kanji> {
@@ -181,6 +181,16 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             }
         }
         return unlockedKanjiList
+    }
+
+    suspend fun isKanjiAvailable(kanji: Kanji): Boolean {
+        var isAvailable = true
+        getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
+            if (getRetentionFromKanji(component.unicode) <= getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                isAvailable = false
+            }
+        }
+        return isAvailable
     }
 
     suspend fun getEarliestDateCountFromToday(): Int {

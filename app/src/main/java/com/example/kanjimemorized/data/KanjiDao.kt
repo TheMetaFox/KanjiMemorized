@@ -25,9 +25,9 @@ interface KanjiDao {
     suspend fun updateSettings(code: String, setValue: String): Void
 
     @Query("SELECT * FROM settings WHERE code = :code")
-    suspend fun getSettingsFromCode(code: String): Settings
+    suspend fun getSettingsFromCode(code: String): Settings?
 
-    @Query("SELECT * FROM kanji")
+    @Query("SELECT * FROM kanji ORDER BY strokes ASC, unicode ASC")
     suspend fun getKanjiList(): List<Kanji>
 
     @Query("SELECT * FROM kanji WHERE durability > 0")

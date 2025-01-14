@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
@@ -28,10 +29,11 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
             is HomeEvent.LoadHomeData -> {
                 viewModelScope.launch {
                     var currentReviewCount = 0
-                    var currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                    val currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                     kanjiRepository.getKanjiList().forEach { kanji ->
-                        if (kanji.durability > 0) {
-                            if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100) {
+                        if (kanji.durability > 0f) {
+                            if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                                Log.i("HomeViewModel.kt", "${kanji.unicode} is ready to review...")
                                 currentReviewCount++
                             }
                         }

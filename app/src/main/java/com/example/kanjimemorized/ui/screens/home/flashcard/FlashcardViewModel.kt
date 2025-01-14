@@ -80,17 +80,18 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         }
                         StudyType.REVIEW -> {
                             val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
-                            kanjiRepository.getUnlockedKanjiList().forEach { kanji ->
-                                if (kanji.durability == 0f) {
-                                    //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has no durability.")
-                                    return@forEach
-                                }
-                                else if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()) {
+                            kanjiRepository.getKnownKanjiList().forEach { kanji ->
+                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
                                     //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 }
-                                queue.add(Pair(kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
-                                Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${kanjiRepository.getRetentionFromKanji(kanji.unicode)}...")
+                                if (kanjiRepository.isKanjiAvailable(kanji = kanji)) {
+                                    queue.add(Pair(kanjiRepository.getRetentionFromKanji(kanji.unicode), kanji))
+                                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${kanjiRepository.getRetentionFromKanji(kanji.unicode)}...")
+                                } else {
+                                    queue.add(Pair(Float.POSITIVE_INFINITY, kanji))
+                                    Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to review queue with priority ${Float.POSITIVE_INFINITY}...")
+                                }
                             }
                             Log.i("FlashcardViewModel.kt", "Queue size: ${queue.size}")
                             if (queue.isEmpty()) {
@@ -134,7 +135,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 }
                             }
                             knownKanjiList.forEach { kanji ->
-                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()) {
+                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
 //                                        Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 } else {
@@ -185,25 +186,22 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                 viewModelScope.launch(
                     block = {
                         val queue: PriorityQueue<Pair<Float, Kanji>> = state.value.queue
-                        val unlockedKanjiList: List<Kanji> = kanjiRepository.getUnlockedKanjiList()
 
                         PriorityQueue(queue).forEach { card ->
                             if (card.first != Float.POSITIVE_INFINITY) return@forEach
                             if (card.second.durability == 0f) {
-                                if (queue.peek()!!.first == Float.POSITIVE_INFINITY) {
-                                    Log.i("FlashcardViewModel.kt", "Changing ${card.second.unicode} priority ${Float.POSITIVE_INFINITY} to ${card.second.durability}...")
-                                    queue.add(Pair(card.second.durability, card.second))
-                                    queue.remove(card)
-                                }
+                                Log.i("FlashcardViewModel.kt", "Changing ${card.second.unicode} priority ${Float.POSITIVE_INFINITY} to ${card.second.durability}...")
+                                queue.add(Pair(card.second.durability, card.second))
+                                queue.remove(card)
                             } else {
-                                if (unlockedKanjiList.contains(card.second)) {
+                                if (kanjiRepository.isKanjiAvailable(kanji = card.second)) {
                                     Log.i("FlashcardViewModel.kt", "Changing ${card.second.unicode} priority ${Float.POSITIVE_INFINITY} to ${kanjiRepository.getRetentionFromKanji(card.second.unicode)}...")
                                     queue.add(Pair(kanjiRepository.getRetentionFromKanji(card.second.unicode), card.second))
                                     queue.remove(card)
                                 }
                             }
                         }
-                        Log.i("FlashcardViewModel.kt", "Kanji animation ending...")
+//                        Log.i("FlashcardViewModel.kt", "Kanji animation ending...")
                         if (queue.isEmpty()) {
                             Log.i("FlashcardViewModel.kt", "Empty queue...")
                             _state.update(
@@ -215,7 +213,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 }
                             )
                         } else {
-//                            Log.i("FlashcardViewModel.kt", "Queue Refreshed: \n${queue.joinToString("\n")}")
+                            Log.i("FlashcardViewModel.kt", "Queue Refreshed: \n${queue.joinToString("\n")}")
                             _state.update(
                                 function = {
                                     it.copy(

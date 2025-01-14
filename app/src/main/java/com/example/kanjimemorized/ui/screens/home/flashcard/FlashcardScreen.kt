@@ -126,19 +126,6 @@ fun FlashcardScreen(
                 horizontalAlignment = CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Box(
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigateUp()
-                        }
-                ) {
-                    Text(
-                        text = "Flashcard",
-                        modifier = Modifier
-                            .align(alignment = Center),
-                        fontSize = 50.sp
-                    )
-                }
                 if (flashcardState.isReviewAvailable) {
                     Column(
                         modifier = Modifier
@@ -296,7 +283,11 @@ fun FlashcardScreen(
                             .size(width = 300.dp, height = 100.dp)
                     ) {
                         Text(
-                            text = "No New Kanji Available",
+                            text = when(flashcardState.studyType) {
+                                StudyType.NEW -> {"No New Kanji Available"}
+                                StudyType.REVIEW -> {"No Kanji Reviews Available"}
+                                StudyType.MIXED -> {"Finished Guided Study"}
+                            },
                             modifier = modifier.align(
                                 alignment = Center
                             ),
