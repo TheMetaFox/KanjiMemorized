@@ -17,8 +17,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,12 +34,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -45,14 +54,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.ui.theme.spacing
+import com.example.kanjimemorized.ui.BottomNavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    bottomNavBar: @Composable () -> Unit,
     statisticsState: StatisticsState,
     onStatisticsEvent: (StatisticsEvent) -> Unit
 ) {
@@ -66,12 +74,35 @@ fun StatisticsScreen(
             TopAppBar(
                 title = { Text("Statistics") },
                 actions = {
+                    var showDropDownMenu by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { }
+                        onClick = { showDropDownMenu = true }
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = "info"
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "more vertical"
+                        )
+                    }
+                    val localUriHandler: UriHandler = LocalUriHandler.current
+                    DropdownMenu(
+                        expanded = showDropDownMenu,
+                        onDismissRequest = { showDropDownMenu = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("App Guide") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Feedback") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
                         )
                     }
                 },
@@ -82,7 +113,7 @@ fun StatisticsScreen(
             )
         },
         bottomBar = {
-            bottomNavBar()
+            BottomNavBar(selected = "Statistics", navController = navController)
         }
     ) { contentPadding ->
         Column(
@@ -405,5 +436,5 @@ fun BarGraphSpanOption(
 @Preview(showBackground = true)
 @Composable
 fun StatisticsScreenPreview() {
-    StatisticsScreen(navController = rememberNavController(), bottomNavBar = {}, statisticsState = StatisticsState(unlocked = 824, kanjiCountMap = mapOf("Unknown" to 1612, "Known" to 412, "Mastered" to 112), dayForecastsMap = mutableMapOf(1 to 4, 2 to 5, 3 to 2, 5 to 1)), onStatisticsEvent = {})
+    StatisticsScreen(navController = rememberNavController(), statisticsState = StatisticsState(unlocked = 824, kanjiCountMap = mapOf("Unknown" to 1612, "Known" to 412, "Mastered" to 112), dayForecastsMap = mutableMapOf(1 to 4, 2 to 5, 3 to 2, 5 to 1)), onStatisticsEvent = {})
 }

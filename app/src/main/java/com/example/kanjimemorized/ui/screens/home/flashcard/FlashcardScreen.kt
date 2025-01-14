@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,11 +31,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,12 +72,35 @@ fun FlashcardScreen(
             TopAppBar(
                 title = { Text("Flashcard") },
                 actions = {
+                    var showDropDownMenu by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { }
+                        onClick = { showDropDownMenu = true }
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = "info"
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "more vertical"
+                        )
+                    }
+                    val localUriHandler: UriHandler = LocalUriHandler.current
+                    DropdownMenu(
+                        expanded = showDropDownMenu,
+                        onDismissRequest = { showDropDownMenu = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("App Guide") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Feedback") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
                         )
                     }
                 },

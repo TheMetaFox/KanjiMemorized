@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +31,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -34,6 +42,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -45,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.R
+import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.home.flashcard.StudyType
@@ -55,7 +66,6 @@ import com.example.kanjimemorized.ui.theme.spacing
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    bottomNavBar: @Composable () -> Unit,
     homeState: HomeState,
     onHomeEvent: (HomeEvent) -> Unit,
     onFlashcardEvent: (FlashcardEvent) -> Unit
@@ -70,12 +80,35 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(text = "Home") },
                 actions = {
+                    var showDropDownMenu by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { }
+                        onClick = { showDropDownMenu = true }
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = "info"
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "more vertical"
+                        )
+                    }
+                    val localUriHandler: UriHandler = LocalUriHandler.current
+                    DropdownMenu(
+                        expanded = showDropDownMenu,
+                        onDismissRequest = { showDropDownMenu = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("App Guide") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Feedback") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
                         )
                     }
                 },
@@ -86,7 +119,7 @@ fun HomeScreen(
             )
         },
         bottomBar = {
-            bottomNavBar()
+            BottomNavBar(selected = "Home", navController = navController)
         }
     ) { contentPadding ->
         Column(
@@ -268,5 +301,5 @@ fun ImageCard(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), bottomNavBar = {}, homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
+    HomeScreen(navController = rememberNavController(), homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
 }

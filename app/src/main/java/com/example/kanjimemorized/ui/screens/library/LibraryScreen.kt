@@ -24,9 +24,13 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,12 +52,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.theme.spacing
@@ -70,7 +77,6 @@ fun LibraryScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navController: NavHostController,
-    bottomNavBar: @Composable () -> Unit,
     libraryState: LibraryState,
     onLibraryEvent: (LibraryEvent) -> Unit,
     onKanjiEvent: (KanjiEvent) -> Unit
@@ -84,12 +90,35 @@ fun LibraryScreen(
             TopAppBar(
                 title = { Text("Library") },
                 actions = {
+                    var showDropDownMenu by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { }
+                        onClick = { showDropDownMenu = true }
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = "info"
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "more vertical"
+                        )
+                    }
+                    val localUriHandler: UriHandler = LocalUriHandler.current
+                    DropdownMenu(
+                        expanded = showDropDownMenu,
+                        onDismissRequest = { showDropDownMenu = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("App Guide") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Feedback") },
+                            onClick = {
+                                showDropDownMenu = false
+                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
                         )
                     }
                 },
@@ -100,7 +129,7 @@ fun LibraryScreen(
             )
         },
         bottomBar = {
-            bottomNavBar()
+            BottomNavBar(selected = "Library", navController = navController)
         }
     ) { contentPadding ->
         Column(
@@ -323,5 +352,5 @@ fun CircularProgressBar(
 //@Composable
 //fun LibraryScreenPreview() {
 //    Animate
-//    LibraryScreen(Modifier, AnimatedContentScope, rememberNavController(), { }, LibraryState(), { }, { })
+//    LibraryScreen(Modifier, AnimatedContentScope, rememberNavController(), LibraryState(), { }, { })
 //}

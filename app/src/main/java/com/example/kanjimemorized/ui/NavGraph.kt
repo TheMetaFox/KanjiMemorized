@@ -51,7 +51,6 @@ fun SetupNavGraph(
 ) {
     SharedTransitionLayout {
         val navController: NavHostController = rememberNavController()
-        val bottomNavBar: @Composable () -> Unit = { BottomNavBar(navController = navController) }
 
         NavHost(
         navController = navController,
@@ -63,7 +62,6 @@ fun SetupNavGraph(
                 HomeScreen(
                     modifier = modifier,
                     navController = navController,
-                    bottomNavBar = bottomNavBar,
                     homeState = homeState,
                     onHomeEvent = onHomeEvent,
                     onFlashcardEvent = onFlashcardEvent
@@ -98,7 +96,6 @@ fun SetupNavGraph(
                     navController = navController,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@composable,
-                    bottomNavBar = bottomNavBar,
                     libraryState = libraryState,
                     onLibraryEvent = onLibraryEvent,
                     onKanjiEvent = onKanjiEvent,
@@ -121,7 +118,6 @@ fun SetupNavGraph(
             ) {
                 StatisticsScreen(
                     navController = navController,
-                    bottomNavBar = bottomNavBar,
                     statisticsState = statisticsState,
                     onStatisticsEvent = onStatisticsEvent
                 )
@@ -132,7 +128,6 @@ fun SetupNavGraph(
                 SettingsScreen(
                     modifier = modifier,
                     navController = navController,
-                    bottomNavBar = bottomNavBar,
                     settingsState = settingsState,
                     onSettingsEvent = onSettingsEvent
                 )

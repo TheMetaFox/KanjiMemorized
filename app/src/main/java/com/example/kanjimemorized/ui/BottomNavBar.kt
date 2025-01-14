@@ -1,8 +1,8 @@
 package com.example.kanjimemorized.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.InsertChart
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
@@ -20,11 +20,12 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun BottomNavBar(
+    selected: String,
     navController: NavHostController
     ) {
     NavigationBar {
         NavigationBarItem(
-            selected = false,
+            selected = (selected == "Home"),
             onClick = {
 //                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
 //                    param("screen", "Home")
@@ -39,10 +40,11 @@ fun BottomNavBar(
             },
             label = {
                 Text(text = "Home")
-            }
+            },
+            alwaysShowLabel = false
         )
         NavigationBarItem(
-            selected = false,
+            selected = selected == "Library",
             onClick = {
 //                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
 //                    param("screen", "Library")
@@ -57,10 +59,11 @@ fun BottomNavBar(
             },
             label = {
                 Text(text = "Library")
-            }
+            },
+            alwaysShowLabel = false
         )
         NavigationBarItem(
-            selected = false,
+            selected = selected == "Statistics",
             onClick = {
 //                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
 //                    param("screen", "Statistics")
@@ -75,10 +78,11 @@ fun BottomNavBar(
             },
             label = {
                 Text(text = "Statistics")
-            }
+            },
+            alwaysShowLabel = false
         )
         NavigationBarItem(
-            selected = false,
+            selected = selected == "Settings",
             onClick = {
 //                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
 //                    param("screen", "Settings")
@@ -93,7 +97,8 @@ fun BottomNavBar(
             },
             label = {
                 Text(text = "Settings")
-            }
+            },
+            alwaysShowLabel = false
         )
     }
 }
@@ -101,5 +106,5 @@ fun BottomNavBar(
 @Preview(showBackground = true)
 @Composable
 fun BottomNavBarPreview() {
-    BottomNavBar(navController = rememberNavController())
+    BottomNavBar(selected = "Home", navController = rememberNavController())
 }
