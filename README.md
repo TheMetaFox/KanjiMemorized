@@ -1,5 +1,5 @@
 # KanjiMemorized
-An app designed to aid Japanese learners in the memorization of essential kanji.
+One of Japanese's three scripts, Kanji, is often a highly contested subject for beginner to advanced learner's of japanese leaving people many people frustrated or intimidated at it's difficulty or abandoning the effort to study kanji or even Japanese as a whole. KanjiMemorized is a mobile application that uses cognitive psychology and evidence-based learning principles to accelerate Japanese learners' acquisition of essential kanji meanings, while simplifing the process, decreasing mental fatigue, and saving time.
 
 Kanji as an logographic script are symbols with attached meaning that are often used in Japanese vocabulary, nouns, verbs, and adjectives. Oftentimes, Kanji will be composed of smaller parts that also heppen to be their own distinct kanji. This app is design to use that nature of Japanese kanji to it's fullest, as a bases for all studying of kanji. As users learn, they start of learning the more symbolically simple kanji; then, as familiarity grows, that begin to study Kanji have components that the learner is already familiar with. This method of studying encourges the brain to encode the meaning of kanji at a higher level, meaning it stays in memory for longer.
 
