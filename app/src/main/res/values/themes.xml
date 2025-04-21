@@ -8,8 +8,8 @@
 
 
     <style name="Theme.KanjiMemorized.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#202020</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenBackground">#2A2A2A</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="windowSplashScreenIconBackgroundColor">#696969</item>
 
         <item name="postSplashScreenTheme">@style/Theme.KanjiMemorized</item>
