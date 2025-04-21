@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Feedback
@@ -246,22 +245,6 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val localUriHandler: UriHandler = LocalUriHandler.current
-                Button(
-                    onClick = { localUriHandler.openUri("https://www.google.com/")},
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .align(alignment = Alignment.End)
-                ) {
-                    Box(modifier = Modifier) {
-                        Text(
-                            text = "Feedback",
-                            modifier = Modifier
-                                .align(alignment = Alignment.Center),
-                            fontSize = 18.sp,
-                        )
-                    }
-                }
                 Button(
                     onClick = { onSettingsEvent(SettingsEvent.ApplySettings) },
                     modifier = Modifier.size(width = 350.dp, height = 60.dp)

@@ -259,42 +259,13 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             }
             is FlashcardEvent.ProcessCard -> {
                 viewModelScope.launch {
-                    Log.i("FlashcardViewModel.kt", "Processing ${state.value.kanji} with ${flashcardEvent.rating} rating...")
-                    var ease: Float = if (state.value.kanji!!.durability == 0f) kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat() else state.value.kanji!!.ease
-                    if (flashcardEvent.rating == Rating.EASY) {
-                        ease += 0.1f
-                    }
-                    if (flashcardEvent.rating == Rating.WRONG) {
-                        ease -= 0.32f
-                        ease = if (ease <= 1.3f) 1.3f else ease
-                    }
-                    var durability: Float = if (state.value.kanji!!.durability == 0f) 1f else state.value.kanji!!.durability
-                    if (flashcardEvent.rating == Rating.EASY) {
-                        durability *= 1.2f
-                    }
-                    if (flashcardEvent.rating == Rating.WRONG) {
-                        durability *= 0.5f
-                        durability = if (durability <= 0.1f) 0f else durability
-                    } else {
-                        durability *= ease
-                    }
-
-                    val kanji = Kanji(
-                        unicode = state.value.kanji!!.unicode,
-                        strokes = state.value.kanji!!.strokes,
-                        durability = durability,
-                        ease = ease
-                    )
+                    var kanji: Kanji = state.value.kanji!!
+                    Log.i("FlashcardViewModel.kt", "Processing ${kanji} with ${flashcardEvent.rating} rating...")
 
                     val review = Review(
                         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                        unicode = state.value.kanji!!.unicode,
+                        unicode = kanji.unicode,
                         rating = when (flashcardEvent.rating) { Rating.WRONG -> 1; Rating.CORRECT -> 2; Rating.EASY -> 3 }
-                    )
-
-                    Log.i("FlashcardViewModel.kt", "Updating ${kanji.unicode} in database...")
-                    kanjiRepository.upsertKanji(
-                        kanji = kanji
                     )
                     Log.i("FlashcardViewModel.kt", "Inserting review (${review.unicode}, ${review.datetime}, ${review.rating}) in database...")
                     kanjiRepository.insertReview(
@@ -302,12 +273,37 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     )
 
                     if (flashcardEvent.rating == Rating.WRONG) {
-                        state.value.queue.add(Pair((state.value.queue.peek()!!.first)*2, kanji))
+                        if (kanji.durability >= 0.1f) {
+                            kanji = kanji.copy(
+                                durability = kanji.durability/(2f*kanji.ease),
+                                ease = kanji.ease-0.32f
+                            )
+                        }
                         Log.i("FlashcardViewModel.kt", "Changing ${kanji.unicode} priority ${state.value.queue.peek()!!.first} to ${state.value.queue.peek()!!.first*2}...")
-
+                        state.value.queue.add(Pair((state.value.queue.peek()!!.first)*2, kanji))
+                    } else {
+                        if (kanji.durability < 0.1f) {
+                            Log.i("FlashcardViewModel.kt", "Updating ${state.value.kanji!!.unicode} in database...")
+                            kanji = kanji.copy(
+                                durability = 1f,
+                                ease = kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat()
+                            )
+                        }
+                        if (flashcardEvent.rating == Rating.EASY) {
+                            kanji = kanji.copy(
+                                ease = kanji.ease + 0.1f
+                            )
+                        }
+                        kanji = kanji.copy(
+                            durability = kanji.durability * kanji.ease
+                        )
                     }
+                    Log.i("FlashcardViewModel.kt", "Updating ${kanji.unicode} in database...")
+                    kanjiRepository.upsertKanji(kanji = kanji)
+
                     Log.i("FlashcardViewModel.kt", "Processed ${state.value.queue.peek()!!.second}...")
                     state.value.queue.remove()
+
                     onEvent(FlashcardEvent.RefreshQueue)
 
                     _state.update(

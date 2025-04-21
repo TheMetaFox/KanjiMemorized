@@ -23,11 +23,11 @@ private lateinit var kanjiDatabase: KanjiDatabase
                 klass = KanjiDatabase::class.java,
                 name = "Kanji.db"
             )
-            .fallbackToDestructiveMigration()
             .createFromAsset("Kanji.db")
             .build()
         return kanjiDatabase
     }
+
     @Singleton
     @Provides
     fun provideDao(

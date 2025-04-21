@@ -97,7 +97,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             kanji = kanji
         ).forEach {
             Log.i("KanjiRepository.kt", "Getting kanji component latest date:$it")
-            list = list.plus(getLatestDateFromKanji(it.unicode))
+            list = list.plus(getLatestSuccessfulReviewDateFromKanji(it.unicode))
         }
         Log.i("KanjiRepository.kt", "Kanji components' latest date list:$list")
         return list
@@ -125,7 +125,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             return 0f
         }
         val minutes: Float = (Duration.between(
-            getLatestDateFromKanji(kanji = kanji),
+            getLatestSuccessfulReviewDateFromKanji(kanji = kanji),
             LocalDateTime.now()
         ).toMinutes()).toFloat()
         val retention = exp(-((minutes / 1440) / durability))
@@ -139,7 +139,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             return 0f
         }
         val minutes: Double = (Duration.between(
-            getLatestDateFromKanji(kanji = kanji),
+            getLatestSuccessfulReviewDateFromKanji(kanji = kanji),
             LocalDateTime.now()
         ).toMinutes()).toDouble()
         val forecast = (1440*ln((getSettingsFromCode("retention_threshold").setValue.toFloat()/100f).pow(-durability)) - minutes).toFloat()
@@ -148,10 +148,10 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return forecast
     }
 
-    private suspend fun getLatestDateFromKanji(kanji: Char): LocalDateTime? {
-        val date: String? = kanjiDao.getLatestDateFromKanji(kanji = kanji)
+    private suspend fun getLatestSuccessfulReviewDateFromKanji(kanji: Char): LocalDateTime? {
+        val date: String? = kanjiDao.getLatestSuccessfulReviewDateFromKanji(kanji = kanji)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-//        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
+        Log.i("KanjiRepository.kt", "Latest review date of $kanji is $date")
         return if (date == null) null else parse(date, formatter)
     }
 
@@ -225,15 +225,15 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         return kanjiDao.getMeaningOrderedByDurability()
     }
 
-    fun getLatestDateOrderedByUnicode(): Flow<List<String>> {
+    fun getLatestDateOrderedByUnicode(): Flow<List<String?>> {
         return kanjiDao.getLatestDateOrderedByUnicode()
     }
 
-    fun getLatestDateOrderedByStrokes(): Flow<List<String>> {
+    fun getLatestDateOrderedByStrokes(): Flow<List<String?>> {
         return kanjiDao.getLatestDateOrderedByStrokes()
     }
 
-    fun getLatestDateOrderedByDurability(): Flow<List<String>> {
+    fun getLatestDateOrderedByDurability(): Flow<List<String?>> {
         return kanjiDao.getLatestDateOrderedByDurability()
     }
 }

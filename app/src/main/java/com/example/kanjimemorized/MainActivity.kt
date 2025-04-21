@@ -1,9 +1,11 @@
 package com.example.kanjimemorized
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +24,9 @@ import com.example.kanjimemorized.ui.SetupNavGraph
 import com.example.kanjimemorized.ui.screens.home.HomeEvent
 import com.example.kanjimemorized.ui.screens.home.HomeViewModel
 import com.example.kanjimemorized.ui.screens.home.HomeViewModelFactory
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModel
+import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.LibraryEvent
 import com.example.kanjimemorized.ui.screens.library.LibraryViewModel
 import com.example.kanjimemorized.ui.screens.library.LibraryViewModelFactory
@@ -34,21 +39,19 @@ import com.example.kanjimemorized.ui.screens.settings.SettingsViewModelFactory
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsEvent
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModel
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFactory
-import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
-import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModel
-import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
-//import com.google.firebase.analytics.FirebaseAnalytics
-//import com.google.firebase.analytics.ktx.analytics
-//import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity.kt", "Started onCreate()...")
-//        val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
-//        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
+        FirebaseModule.firebaseAnalytics = Firebase.analytics
+        FirebaseModule.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
 
         super.onCreate(savedInstanceState)
 

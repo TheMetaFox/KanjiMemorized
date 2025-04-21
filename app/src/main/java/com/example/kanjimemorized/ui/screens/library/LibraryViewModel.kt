@@ -58,7 +58,7 @@ class LibraryViewModel(private val kanjiRepository: KanjiRepository): ViewModel(
             initialValue = emptyList()
         )
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _date: StateFlow<List<String>> = _sortType
+    private val _date: StateFlow<List<String?>> = _sortType
         .flatMapLatest(
             transform = { sortType ->
                 when(sortType) {

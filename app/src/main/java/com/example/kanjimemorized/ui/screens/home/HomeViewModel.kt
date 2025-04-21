@@ -31,7 +31,8 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                     var currentReviewCount = 0
                     val currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                     kanjiRepository.getKanjiList().forEach { kanji ->
-                        if (kanji.durability > 0f) {
+                        if (kanji.durability > 0.1f) {
+                            Log.i("HomeViewModel.kt", "Kanji: ${kanji.unicode}\nDurability: ${kanji.durability}")
                             if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
                                 Log.i("HomeViewModel.kt", "${kanji.unicode} is ready to review...")
                                 currentReviewCount++

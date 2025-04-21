@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.Flow
 interface KanjiDao {
 
     @Upsert
-    suspend fun upsertKanji(kanji: Kanji): Void
+    suspend fun upsertKanji(kanji: Kanji)
 
     @Insert
-    suspend fun insertReview(review: Review): Void
+    suspend fun insertReview(review: Review)
 
     @Insert
-    suspend fun insertSetting(setting: Settings): Void
+    suspend fun insertSetting(setting: Settings)
 
     @Query("UPDATE settings SET setValue = :setValue WHERE code = :code")
-    suspend fun updateSettings(code: String, setValue: String): Void
+    suspend fun updateSettings(code: String, setValue: String)
 
     @Query("SELECT * FROM settings WHERE code = :code")
     suspend fun getSettingsFromCode(code: String): Settings?
@@ -64,7 +64,7 @@ interface KanjiDao {
             "SELECT kanji.unicode, strokes, durability, datetime = null, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE review.unicode IS NULL OR rating = 1) " +
             "GROUP BY unicode ORDER BY unicode ASC")
-    fun getLatestDateOrderedByUnicode(): Flow<List<String>>
+    fun getLatestDateOrderedByUnicode(): Flow<List<String?>>
 
     @Query("SELECT MAX(datetime) as datetime FROM (" +
             "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
@@ -73,7 +73,7 @@ interface KanjiDao {
             "SELECT kanji.unicode, strokes, durability, datetime = null, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE review.unicode IS NULL OR rating = 1) " +
             "GROUP BY unicode ORDER BY strokes ASC, unicode ASC")
-    fun getLatestDateOrderedByStrokes(): Flow<List<String>>
+    fun getLatestDateOrderedByStrokes(): Flow<List<String?>>
 
     @Query("SELECT MAX(datetime) as datetime FROM (" +
             "SELECT kanji.unicode, strokes, durability, datetime, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
@@ -82,7 +82,7 @@ interface KanjiDao {
             "SELECT kanji.unicode, strokes, durability, datetime = null, rating FROM kanji LEFT JOIN review ON review.unicode = kanji.unicode " +
             "WHERE review.unicode IS NULL OR rating = 1) " +
             "GROUP BY unicode ORDER BY durability DESC, unicode ASC")
-    fun getLatestDateOrderedByDurability(): Flow<List<String>>
+    fun getLatestDateOrderedByDurability(): Flow<List<String?>>
 
     @Query("SELECT meaning FROM kanjimeaningcrossref WHERE unicode = :kanji")
     suspend fun getMeaningsFromKanji(kanji: Char): List<String>
@@ -99,7 +99,7 @@ interface KanjiDao {
     suspend fun getDurabilityFromKanji(kanji: Char): Float
 
     @Query("SELECT datetime FROM review WHERE unicode = :kanji AND rating > 1 ORDER BY datetime DESC LIMIT 1")
-    suspend fun getLatestDateFromKanji(kanji: Char): String?
+    suspend fun getLatestSuccessfulReviewDateFromKanji(kanji: Char): String?
 
     @Query("SELECT count(unicode) FROM (" +
             "SELECT MIN(datetime) as datetime, unicode, rating " +
@@ -108,11 +108,11 @@ interface KanjiDao {
     suspend fun getEarliestDateCountFromToday(today: String): Int
 
     @Query("UPDATE kanji SET durability = 0.0")
-    suspend fun resetKanjiData(): Void
+    suspend fun resetKanjiData()
 
     @Query("DELETE FROM review")
-    suspend fun deleteAllReviews(): Void
+    suspend fun deleteAllReviews()
 
     @Query("DELETE FROM review WHERE unicode = :kanji")
-    suspend fun deleteReviewsFromKanji(kanji: Char): Void
+    suspend fun deleteReviewsFromKanji(kanji: Char)
 }

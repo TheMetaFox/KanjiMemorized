@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.kanjimemorized" />
-                  <option name="mobileSdkAppId" value="1:147156385213:android:e9a878265a355f555826d4" />
-                  <option name="projectId" value="kanji-memorized-property" />
-                  <option name="projectNumber" value="147156385213" />
+                  <option name="mobileSdkAppId" value="1:742082674616:android:de525fd733dfd5dd95594d" />
+                  <option name="projectId" value="kanji-memorized-d8f62" />
+                  <option name="projectNumber" value="742082674616" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
