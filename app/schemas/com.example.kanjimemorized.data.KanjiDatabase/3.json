@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "87c569b97235387777f41017efe99c63",
+    "version": 3,
+    "identityHash": "244274bc666e7c6e1e39f664e54ba1c3",
     "entities": [
       {
         "tableName": "Kanji",
@@ -138,7 +138,7 @@
       },
       {
         "tableName": "Settings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `code` TEXT NOT NULL, `setValue` TEXT NOT NULL, `defaultValue` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT NOT NULL, `setValue` TEXT NOT NULL, `defaultValue` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -166,7 +166,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -175,7 +175,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '87c569b97235387777f41017efe99c63')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '244274bc666e7c6e1e39f664e54ba1c3')"
     ]
   }
 }

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Settings(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val code: String,
     val setValue: String,

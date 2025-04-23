@@ -65,6 +65,20 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
                         defaultValue = "80"
                     )
                 }
+                "analytics_enabled" -> {
+                    Settings(
+                        code = code,
+                        setValue = "false",
+                        defaultValue = "false"
+                    )
+                }
+                "crashlytics_enabled" -> {
+                    Settings(
+                        code = code,
+                        setValue = "false",
+                        defaultValue = "false"
+                    )
+                }
                 else -> {null}
             }
             if (setting == null) {

@@ -33,25 +33,44 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                     "dailyNewKanji" -> {
                         _state.update {
                             it.copy(
-                                dailyNewKanjiField = settingsEvent.text
+                                dailyNewKanjiField = settingsEvent.value
                             )
                         }
                     }
                     "initialEase" -> {
                         _state.update {
                             it.copy(
-                                initialEaseField = settingsEvent.text
+                                initialEaseField = settingsEvent.value
                             )
                         }
                     }
                     "retentionThreshold" -> {
                         _state.update {
                             it.copy(
-                                retentionThresholdField = settingsEvent.text
+                                retentionThresholdField = settingsEvent.value
                             )
                         }
                     }
                 }
+            }
+
+            is SettingsEvent.UpdateSwitch -> {
+               when (settingsEvent.switch) {
+                   "analyticsEnabled" -> {
+                       _state.update {
+                           it.copy(
+                               analyticsEnabledSwitch = settingsEvent.checked
+                           )
+                       }
+                   }
+                   "crashlyticsEnabled" -> {
+                       _state.update {
+                           it.copy(
+                               crashlyticsEnabledSwitch = settingsEvent.checked
+                           )
+                       }
+                   }
+               }
             }
 
             SettingsEvent.LoadSettingsData -> {
@@ -61,12 +80,13 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                         it.copy(
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
                             initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue,
-                            retentionThreshold = kanjiRepository.getSettingsFromCode(code = "retention_threshold").setValue
+                            retentionThreshold = kanjiRepository.getSettingsFromCode(code = "retention_threshold").setValue,
+                            analyticsEnabled = kanjiRepository.getSettingsFromCode(code = "analytics_enabled").setValue.toBooleanStrict(),
+                            crashlyticsEnabled = kanjiRepository.getSettingsFromCode(code = "crashlytics_enabled").setValue.toBooleanStrict()
                         )
                     }
                     _isLoading.value = false
                     Log.i("SettingsViewModel.kt", "Finished loading initial data...")
-
                 }
             }
 
@@ -87,15 +107,22 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                         kanjiRepository.updateSettings(code = "retention_threshold", setValue = retentionThresholdField)
                     }
 
+                    val analyticsEnabled: Boolean = state.value.analyticsEnabledSwitch
+                    kanjiRepository.updateSettings(code = "analytics_enabled", setValue = analyticsEnabled.toString())
+
+                    val crashlyticsEnabled: Boolean = state.value.crashlyticsEnabledSwitch
+                    kanjiRepository.updateSettings(code = "crashlytics_enabled", setValue = crashlyticsEnabled.toString())
+
                     _state.update {
                         it.copy(
                             dailyNewKanji = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue,
                             initialEase = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue,
                             retentionThreshold = kanjiRepository.getSettingsFromCode(code = "retention_threshold").setValue,
+                            analyticsEnabled = kanjiRepository.getSettingsFromCode(code = "analytics_enabled").setValue.toBooleanStrict(),
+                            crashlyticsEnabled = kanjiRepository.getSettingsFromCode(code = "crashlytics_enabled").setValue.toBooleanStrict(),
                             dailyNewKanjiField = "",
                             initialEaseField = "",
-                            retentionThresholdField = ""
-
+                            retentionThresholdField = "",
                         )
                     }
                 }
@@ -106,19 +133,27 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                     val dailyNewKanjiDefault: String = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").defaultValue
                     val initialEaseDefault: String = kanjiRepository.getSettingsFromCode(code = "initial_ease").defaultValue
                     val retentionThresholdDefault: String = kanjiRepository.getSettingsFromCode(code = "retention_threshold").defaultValue
+                    val analyticsEnabledDefault: String = kanjiRepository.getSettingsFromCode(code = "analytics_enabled").defaultValue
+                    val crashlyticsEnabledDefault: String = kanjiRepository.getSettingsFromCode(code = "crashlytics_enabled").defaultValue
 
                     kanjiRepository.updateSettings(code = "daily_new_kanji", setValue = dailyNewKanjiDefault)
                     kanjiRepository.updateSettings(code = "initial_ease", setValue = initialEaseDefault)
                     kanjiRepository.updateSettings(code = "retention_threshold", setValue = retentionThresholdDefault)
+                    kanjiRepository.updateSettings(code = "analytics_enabled", setValue = analyticsEnabledDefault)
+                    kanjiRepository.updateSettings(code = "crashlytics_enabled", setValue = crashlyticsEnabledDefault)
 
                     _state.update {
                         it.copy(
                             dailyNewKanji = dailyNewKanjiDefault,
                             initialEase = initialEaseDefault,
                             retentionThreshold = retentionThresholdDefault,
+                            analyticsEnabled = analyticsEnabledDefault.toBooleanStrict(),
+                            crashlyticsEnabled = crashlyticsEnabledDefault.toBooleanStrict(),
                             dailyNewKanjiField = "",
                             initialEaseField = "",
-                            retentionThresholdField = ""
+                            retentionThresholdField = "",
+                            analyticsEnabledSwitch = analyticsEnabledDefault.toBooleanStrict(),
+                            crashlyticsEnabledSwitch = crashlyticsEnabledDefault.toBooleanStrict()
                         )
                     }
                 }

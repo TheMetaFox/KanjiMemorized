@@ -24,6 +24,7 @@ private lateinit var kanjiDatabase: KanjiDatabase
                 name = "Kanji.db"
             )
             .createFromAsset("Kanji.db")
+            .addMigrations(KanjiDatabase.migration1to2, KanjiDatabase.migration2to3)
             .build()
         return kanjiDatabase
     }

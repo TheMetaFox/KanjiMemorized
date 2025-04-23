@@ -42,6 +42,7 @@ import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFacto
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
         Log.i("MainActivity.kt", "Started onCreate()...")
         FirebaseModule.firebaseAnalytics = Firebase.analytics
         FirebaseModule.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
-
+        Log.i("MainActivity.kt", "FB Crashlytics: ${Firebase.crashlytics.isCrashlyticsCollectionEnabled}")
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))

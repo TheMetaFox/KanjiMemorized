@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -115,19 +116,6 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Box(
-//                modifier = Modifier
-//                    .clickable {
-//                        navController.navigate(Screen.Home.route)
-//                    }
-//            ) {
-//                Text(
-//                    text = "Settings",
-//                    modifier = Modifier
-//                        .align(alignment = Alignment.Center),
-//                    fontSize = 50.sp
-//                )
-//            }
             Column(
                 modifier = Modifier
                     .width(350.dp),
@@ -159,11 +147,10 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.dailyNewKanjiField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "dailyNewKanji", text = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "dailyNewKanji", value = it))
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        //label = { Text(text = "Current: ${settingsState.dailyNewKanji}")},
                         placeholder = { Text(text = settingsState.dailyNewKanji) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -194,11 +181,10 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.initialEaseField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "initialEase", text = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "initialEase", value = it))
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        //label = { Text(text = "Current: ${settingsState.initialEase}")},
                         placeholder = { Text(text = settingsState.initialEase.trimEnd { it == '0' }.trimEnd { it == '.'}) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -229,14 +215,71 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.retentionThresholdField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "retentionThreshold", text = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "retentionThreshold", value = it))
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        //label = { Text(text = "Current: ${settingsState.retentionThreshold}")},
                         placeholder = { Text(text = "${settingsState.retentionThreshold}%") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Box {
+                            Text(
+                                text = "Analytics Enabled",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 24.sp,
+                            )
+                        }
+                        Box {
+                            Text(
+                                text = "Collects demographic, device info, & app usage data",
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                    Switch(
+                        checked = settingsState.analyticsEnabledSwitch,
+                        onCheckedChange = {
+                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "analyticsEnabled", checked = it))
+                        }
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Box {
+                            Text(
+                                text = "Crashlytics Enabled",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 24.sp,
+                            )
+                        }
+                        Box {
+                            Text(
+                                text = "Collects device info & crash logs",
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                    Switch(
+                        checked = settingsState.crashlyticsEnabledSwitch,
+                        onCheckedChange = {
+                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "crashlyticsEnabled", checked = it))
+                        }
                     )
                 }
             }
