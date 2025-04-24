@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.settings
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +58,6 @@ fun SettingsScreen(
     settingsState: SettingsState,
     onSettingsEvent: (SettingsEvent) -> Unit,
 ) {
-    onSettingsEvent(SettingsEvent.LoadSettingsData)
     Scaffold(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.primary)
@@ -249,6 +249,7 @@ fun SettingsScreen(
                     Switch(
                         checked = settingsState.analyticsEnabledSwitch,
                         onCheckedChange = {
+                            Log.i("SettingsScreen.kt", "Checked changed...")
                             onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "analyticsEnabled", checked = it))
                         }
                     )
@@ -278,6 +279,7 @@ fun SettingsScreen(
                     Switch(
                         checked = settingsState.crashlyticsEnabledSwitch,
                         onCheckedChange = {
+                            Log.i("SettingsScreen.kt", "Checked changed...")
                             onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "crashlyticsEnabled", checked = it))
                         }
                     )

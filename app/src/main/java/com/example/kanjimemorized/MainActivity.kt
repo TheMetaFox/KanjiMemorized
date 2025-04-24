@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -41,7 +42,6 @@ import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModel
 import com.example.kanjimemorized.ui.screens.statistics.StatisticsViewModelFactory
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -51,9 +51,6 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity.kt", "Started onCreate()...")
-        FirebaseModule.firebaseAnalytics = Firebase.analytics
-        FirebaseModule.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
-        Log.i("MainActivity.kt", "FB Crashlytics: ${Firebase.crashlytics.isCrashlyticsCollectionEnabled}")
         super.onCreate(savedInstanceState)
 
         val kanjiRepository = provideRepository(provideDao(provideDatabase(applicationContext)))
@@ -116,7 +113,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KanjiMemorizedTheme {
-//                Log.i("MainActivity.kt", "Started KanjiMemorizedTheme()...")
                 val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
@@ -126,6 +122,13 @@ class MainActivity : ComponentActivity() {
                 val flashcardState by flashcardViewModel.state.collectAsState()
                 val statisticsState by statisticsViewModel.state.collectAsState()
                 val settingsState by settingsViewModel.state.collectAsState()
+
+                LaunchedEffect(null) {
+                    Firebase.crashlytics.isCrashlyticsCollectionEnabled = kanjiRepository.getSettingsFromCode(code = "crashlytics_enabled").setValue.toBooleanStrict()
+                    FirebaseModule.firebaseAnalytics.setAnalyticsCollectionEnabled(kanjiRepository.getSettingsFromCode(code = "analytics_enabled").setValue.toBooleanStrict())
+                    Log.i("MainActivity.kt", "FB Crashlytics: ${Firebase.crashlytics.isCrashlyticsCollectionEnabled}")
+                }
+                FirebaseModule.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
 
                 SetupNavGraph(
                     modifier = Modifier
