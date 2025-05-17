@@ -47,13 +47,14 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                     when(state.value.studyType) {
                         StudyType.NEW -> {
                             Log.i("FlashcardViewModel.kt", "Initializing queue with study type New...")
-                            val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                            val queue: PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
+                            var i = 0
                             kanjiRepository.getUnlockedKanjiList().forEach { kanji ->
                                 if (kanji.durability > 0f) {
                                     //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has durability greater than 0.")
                                     return@forEach
                                 }
-                                queue.add(Pair(kanji.strokes.toFloat(), kanji))
+                                queue.add(Pair(kanji.strokes.toFloat()+i++, kanji))
                                 Log.i("FlashcardViewModel.kt", "Adding ${kanji.unicode} to learn queue with priority ${kanji.strokes}...")
                             }
                             Log.i("FlashcardViewModel.kt", "Queue size: ${queue.size}")
