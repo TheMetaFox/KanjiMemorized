@@ -34,6 +34,7 @@ import com.example.kanjimemorized.ui.screens.library.LibraryViewModelFactory
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModel
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiViewModelFactory
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import com.example.kanjimemorized.ui.screens.settings.SettingsEvent
 import com.example.kanjimemorized.ui.screens.settings.SettingsViewModel
 import com.example.kanjimemorized.ui.screens.settings.SettingsViewModelFactory
@@ -124,8 +125,8 @@ class MainActivity : ComponentActivity() {
                 val settingsState by settingsViewModel.state.collectAsState()
 
                 LaunchedEffect(null) {
-                    Firebase.crashlytics.isCrashlyticsCollectionEnabled = kanjiRepository.getSettingsFromCode(code = "crashlytics_enabled").setValue.toBooleanStrict()
-                    FirebaseModule.firebaseAnalytics.setAnalyticsCollectionEnabled(kanjiRepository.getSettingsFromCode(code = "analytics_enabled").setValue.toBooleanStrict())
+                    Firebase.crashlytics.isCrashlyticsCollectionEnabled = kanjiRepository.getSettingsFromCode(settingType = SettingType.CRASHLYTICS_ENABLED).setValue.toBooleanStrict()
+                    FirebaseModule.firebaseAnalytics.setAnalyticsCollectionEnabled(kanjiRepository.getSettingsFromCode(settingType = SettingType.ANALYTICS_ENABLED).setValue.toBooleanStrict())
                     Log.i("MainActivity.kt", "FB Crashlytics: ${Firebase.crashlytics.isCrashlyticsCollectionEnabled}")
                 }
                 FirebaseModule.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)

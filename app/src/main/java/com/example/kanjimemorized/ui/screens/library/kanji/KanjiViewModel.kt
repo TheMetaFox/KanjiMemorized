@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Kanji
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -81,7 +82,7 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                             unicode = state.value.kanji.unicode,
                             strokes = state.value.kanji.strokes,
                             durability = 0f,
-                            ease = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue.toFloat()
+                            ease = kanjiRepository.getSettingsFromCode(settingType = SettingType.INITIAL_EASE).setValue.toFloat()
                         )
                     )
                     kanjiRepository.deleteReviewsFromKanji(kanji = state.value.kanji.unicode)
@@ -92,7 +93,7 @@ class KanjiViewModel(private val kanjiRepository: KanjiRepository): ViewModel() 
                                     unicode = state.value.kanji.unicode,
                                     strokes = state.value.kanji.strokes,
                                     durability = 0f,
-                                    ease = kanjiRepository.getSettingsFromCode(code = "initial_ease").setValue.toFloat()
+                                    ease = kanjiRepository.getSettingsFromCode(settingType = SettingType.INITIAL_EASE).setValue.toFloat()
                                 ),
                                 retention = 0f,
                                 reviews = listOf()

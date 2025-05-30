@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,11 +30,11 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
             is HomeEvent.LoadHomeData -> {
                 viewModelScope.launch {
                     var currentReviewCount = 0
-                    val currentNewCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                    val currentNewCount = kanjiRepository.getSettingsFromCode(settingType = SettingType.DAILY_NEW_KANJI).setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0.1f) {
                             Log.i("HomeViewModel.kt", "Kanji: ${kanji.unicode}\nDurability: ${kanji.durability}")
-                            if (kanjiRepository.getRetentionFromKanji(kanji.unicode) < kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                            if (kanjiRepository.getRetentionFromKanji(kanji = kanji.unicode) < kanjiRepository.getSettingsFromCode(settingType = SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
                                 Log.i("HomeViewModel.kt", "${kanji.unicode} is ready to review...")
                                 currentReviewCount++
                             }

@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.Settings
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,11 +22,11 @@ interface KanjiDao {
     @Insert
     suspend fun insertSetting(setting: Settings)
 
-    @Query("UPDATE settings SET setValue = :setValue WHERE code = :code")
-    suspend fun updateSettings(code: String, setValue: String)
+    @Query("UPDATE settings SET setValue = :setValue WHERE code = :settingType")
+    suspend fun updateSettings(settingType: SettingType, setValue: String)
 
-    @Query("SELECT * FROM settings WHERE code = :code")
-    suspend fun getSettingsFromCode(code: String): Settings?
+    @Query("SELECT * FROM settings WHERE code = :settingType")
+    suspend fun getSettingsFromCode(settingType: SettingType): Settings?
 
     @Query("SELECT * FROM kanji ORDER BY strokes ASC, unicode ASC")
     suspend fun getKanjiList(): List<Kanji>
@@ -83,6 +84,9 @@ interface KanjiDao {
             "WHERE review.unicode IS NULL OR rating = 1) " +
             "GROUP BY unicode ORDER BY durability DESC, unicode ASC")
     fun getLatestDateOrderedByDurability(): Flow<List<String?>>
+
+    @Query("SELECT * FROM settings")
+    suspend fun getSettings(): List<Settings>
 
     @Query("SELECT meaning FROM kanjimeaningcrossref WHERE unicode = :kanji")
     suspend fun getMeaningsFromKanji(kanji: Char): List<String>

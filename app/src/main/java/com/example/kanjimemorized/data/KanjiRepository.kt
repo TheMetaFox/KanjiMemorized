@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
 import com.example.kanjimemorized.data.entities.Settings
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import kotlinx.coroutines.flow.Flow
 import java.time.Duration
 import java.time.LocalDate
@@ -36,59 +37,54 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
         )
     }
 
-    suspend fun updateSettings(code: String, setValue: String) {
-        kanjiDao.updateSettings(code = code, setValue = setValue)
+    suspend fun updateSettings(settingType: SettingType, setValue: String) {
+        kanjiDao.updateSettings(settingType = settingType, setValue = setValue)
     }
 
-    suspend fun getSettingsFromCode(code: String): Settings {
-        if (kanjiDao.getSettingsFromCode(code = code) == null) {
+    suspend fun getSettingsFromCode(settingType: SettingType): Settings {
+        if (kanjiDao.getSettingsFromCode(settingType = settingType) == null) {
             Log.i("KanjiRepository.kt", "Setting code not found...")
-            val setting: Settings? = when (code) {
-                "daily_new_kanji" -> {
+            val setting: Settings = when (settingType) {
+                SettingType.DAILY_NEW_KANJI -> {
                     Settings(
-                        code = code,
+                        code = SettingType.DAILY_NEW_KANJI,
                         setValue = "3",
                         defaultValue = "3"
                     )
                 }
-                "initial_ease" -> {
+                SettingType.INITIAL_EASE -> {
                     Settings(
-                        code = code,
+                        code = SettingType.INITIAL_EASE,
                         setValue = "2.5",
                         defaultValue = "2.5"
                     )
                 }
-                "retention_threshold" -> {
+                SettingType.RETENTION_THRESHOLD -> {
                     Settings(
-                        code = code,
+                        code = SettingType.RETENTION_THRESHOLD,
                         setValue = "80",
                         defaultValue = "80"
                     )
                 }
-                "analytics_enabled" -> {
+                SettingType.ANALYTICS_ENABLED -> {
                     Settings(
-                        code = code,
+                        code = SettingType.ANALYTICS_ENABLED,
                         setValue = "false",
                         defaultValue = "false"
                     )
                 }
-                "crashlytics_enabled" -> {
+                SettingType.CRASHLYTICS_ENABLED -> {
                     Settings(
-                        code = code,
+                        code = SettingType.CRASHLYTICS_ENABLED,
                         setValue = "false",
                         defaultValue = "false"
                     )
                 }
-                else -> {null}
             }
-            if (setting == null) {
-                Log.i("KanjiRepository.kt", "Invalid setting code...")
-            } else {
-                Log.i("KanjiRepository.kt", "Setting code '${setting.code}' initialized...")
-                kanjiDao.insertSetting(setting = setting)
-            }
+            Log.i("KanjiRepository.kt", "Setting code '${setting.code}' initialized...")
+            kanjiDao.insertSetting(setting = setting)
         }
-        return kanjiDao.getSettingsFromCode(code = code)!!
+        return kanjiDao.getSettingsFromCode(settingType = settingType)!!
     }
 
     suspend fun getKanjiComponentsFromKanji(kanji: Char): List<Kanji> {
@@ -156,7 +152,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
             getLatestSuccessfulReviewDateFromKanji(kanji = kanji),
             LocalDateTime.now()
         ).toMinutes()).toDouble()
-        val forecast = (1440*ln((getSettingsFromCode("retention_threshold").setValue.toFloat()/100f).pow(-durability)) - minutes).toFloat()
+        val forecast = (1440*ln((getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f).pow(-durability)) - minutes).toFloat()
 //        Log.i("KanjiRepository.kt", "Minutes: $minutes with Forecast: $forecast")
 
         return forecast
@@ -186,7 +182,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
                 if (!calculatedRetentions.contains(component)) {
                     calculatedRetentions[component] = getRetentionFromKanji(component.unicode)
                 }
-                if (calculatedRetentions[component]!! <= getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                if (calculatedRetentions[component]!! <= getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
                     isLocked = true
                 }
             }
@@ -200,7 +196,7 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     suspend fun isKanjiAvailable(kanji: Kanji): Boolean {
         var isAvailable = true
         getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
-            if (getRetentionFromKanji(component.unicode) <= getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+            if (getRetentionFromKanji(component.unicode) <= getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
                 isAvailable = false
             }
         }
@@ -249,5 +245,10 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     fun getLatestDateOrderedByDurability(): Flow<List<String?>> {
         return kanjiDao.getLatestDateOrderedByDurability()
+    }
+
+    suspend fun getSettings(): List<Settings> {
+        Log.i("KanjiRepository.kt", kanjiDao.getSettings().toString())
+        return kanjiDao.getSettings()
     }
 }

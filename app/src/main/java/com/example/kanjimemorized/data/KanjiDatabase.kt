@@ -2,6 +2,7 @@ package com.example.kanjimemorized.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.kanjimemorized.data.entities.Kanji
@@ -15,6 +16,7 @@ import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
     version = 3,
     exportSchema = true,
 )
+@TypeConverters(Converters::class)
 abstract class KanjiDatabase: RoomDatabase() {
     abstract val kanjiDao: KanjiDao
 

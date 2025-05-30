@@ -58,6 +58,13 @@ fun SettingsScreen(
     settingsState: SettingsState,
     onSettingsEvent: (SettingsEvent) -> Unit,
 ) {
+    onSettingsEvent(SettingsEvent.UpdateButtons)
+    if (settingsState.isShowingConfirmationDialog) {
+        ConfirmationDialog(
+            onSettingsEvent = onSettingsEvent,
+            settingsState = settingsState
+        )
+    }
     Scaffold(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.primary)
@@ -147,11 +154,12 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.dailyNewKanjiField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "dailyNewKanji", value = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = SettingType.DAILY_NEW_KANJI, value = it))
+                            onSettingsEvent(SettingsEvent.UpdateButtons)
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        placeholder = { Text(text = settingsState.dailyNewKanji) },
+                        placeholder = { Text(text = settingsState.settingsMap.getValue(SettingType.DAILY_NEW_KANJI).setValue) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
                     )
@@ -181,11 +189,12 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.initialEaseField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "initialEase", value = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = SettingType.INITIAL_EASE, value = it))
+                            onSettingsEvent(SettingsEvent.UpdateButtons)
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        placeholder = { Text(text = settingsState.initialEase.trimEnd { it == '0' }.trimEnd { it == '.'}) },
+                        placeholder = { Text(text = settingsState.settingsMap.getValue(SettingType.INITIAL_EASE).setValue.trimEnd { it == '0' }.trimEnd { it == '.'}) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
                     )
@@ -215,11 +224,12 @@ fun SettingsScreen(
                     TextField(
                         value = settingsState.retentionThresholdField,
                         onValueChange = {
-                            onSettingsEvent(SettingsEvent.UpdateTextField(field = "retentionThreshold", value = it))
+                            onSettingsEvent(SettingsEvent.UpdateTextField(field = SettingType.RETENTION_THRESHOLD, value = it))
+                            onSettingsEvent(SettingsEvent.UpdateButtons)
                         },
                         modifier = Modifier
                             .width(80.dp),
-                        placeholder = { Text(text = "${settingsState.retentionThreshold}%") },
+                        placeholder = { Text(text = "${settingsState.settingsMap.getValue(SettingType.RETENTION_THRESHOLD).setValue}%") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
                     )
@@ -249,8 +259,14 @@ fun SettingsScreen(
                     Switch(
                         checked = settingsState.analyticsEnabledSwitch,
                         onCheckedChange = {
-                            Log.i("SettingsScreen.kt", "Checked changed...")
-                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "analyticsEnabled", checked = it))
+//                            Log.i("SettingsScreen.kt", "Checked changed...")
+//                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "analyticsEnabled", checked = it))
+                            if (!it) {
+                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.ANALYTICS_ENABLED, checked = it))
+                                onSettingsEvent(SettingsEvent.UpdateButtons)
+                            } else {
+                                onSettingsEvent(SettingsEvent.ShowConfirmationDialog(setting = SettingType.ANALYTICS_ENABLED))
+                            }
                         }
                     )
                 }
@@ -279,8 +295,14 @@ fun SettingsScreen(
                     Switch(
                         checked = settingsState.crashlyticsEnabledSwitch,
                         onCheckedChange = {
-                            Log.i("SettingsScreen.kt", "Checked changed...")
-                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "crashlyticsEnabled", checked = it))
+//                            Log.i("SettingsScreen.kt", "Checked changed...")
+//                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "crashlyticsEnabled", checked = it))
+                            if (!it) {
+                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.CRASHLYTICS_ENABLED, checked = it))
+                                onSettingsEvent(SettingsEvent.UpdateButtons)
+                            } else {
+                                onSettingsEvent(SettingsEvent.ShowConfirmationDialog(setting = SettingType.CRASHLYTICS_ENABLED))
+                            }
                         }
                     )
                 }
@@ -291,8 +313,12 @@ fun SettingsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { onSettingsEvent(SettingsEvent.ApplySettings) },
-                    modifier = Modifier.size(width = 350.dp, height = 60.dp)
+                    onClick = {
+                        onSettingsEvent(SettingsEvent.ApplySettings)
+                        onSettingsEvent(SettingsEvent.UpdateButtons)
+                    },
+                    modifier = Modifier.size(width = 350.dp, height = 60.dp),
+                    enabled = settingsState.isDifferentFromCurrentSettings
                 ) {
                     Box(modifier = Modifier) {
                         Text(
@@ -304,8 +330,12 @@ fun SettingsScreen(
                     }
                 }
                 Button(
-                    onClick = { onSettingsEvent(SettingsEvent.ApplyDefaultSettings) },
-                    modifier = Modifier.size(width = 350.dp, height = 60.dp)
+                    onClick = {
+                        onSettingsEvent(SettingsEvent.ApplyDefaultSettings)
+                        onSettingsEvent(SettingsEvent.UpdateButtons)
+                              },
+                    modifier = Modifier.size(width = 350.dp, height = 60.dp),
+                    enabled = settingsState.isDifferentFromDefaultSettings
                 ) {
                     Box(modifier = Modifier) {
                         Text(

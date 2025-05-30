@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kanjimemorized.data.KanjiRepository
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.data.entities.Review
+import com.example.kanjimemorized.ui.screens.settings.SettingType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -82,7 +83,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                         StudyType.REVIEW -> {
                             val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
                             kanjiRepository.getKnownKanjiList().forEach { kanji ->
-                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode(settingType = SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
                                     //Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 }
@@ -120,7 +121,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                             val queue : PriorityQueue<Pair<Float, Kanji>> = PriorityQueue(compareBy { it.first })
                             val unlockedKanjiList: List<Kanji> = kanjiRepository.getUnlockedKanjiList()
                             val knownKanjiList: List<Kanji> = kanjiRepository.getKnownKanjiList()
-                            var newCount = kanjiRepository.getSettingsFromCode(code = "daily_new_kanji").setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                            var newCount = kanjiRepository.getSettingsFromCode(settingType = SettingType.DAILY_NEW_KANJI).setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
 
                             unlockedKanjiList.forEach { kanji ->
                                 if (kanji.durability == 0f) {
@@ -136,7 +137,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                                 }
                             }
                             knownKanjiList.forEach { kanji ->
-                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode("retention_threshold").setValue.toFloat()/100f) {
+                                if (kanjiRepository.getRetentionFromKanji(kanji.unicode) > kanjiRepository.getSettingsFromCode(settingType = SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
 //                                        Log.i("FlashcardViewModel.kt", "${kanji.unicode} has retention greater than 80%.")
                                     return@forEach
                                 } else {
@@ -287,7 +288,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
                             Log.i("FlashcardViewModel.kt", "Updating ${state.value.kanji!!.unicode} in database...")
                             kanji = kanji.copy(
                                 durability = 1f,
-                                ease = kanjiRepository.getSettingsFromCode("initial_ease").setValue.toFloat()
+                                ease = kanjiRepository.getSettingsFromCode(settingType = SettingType.INITIAL_EASE).setValue.toFloat()
                             )
                         }
                         if (flashcardEvent.rating == Rating.EASY) {
