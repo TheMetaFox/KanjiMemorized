@@ -1,18 +1,17 @@
-*.iml
-.gradle
-/local.properties
+# Android Studio
+/.idea/modules/app/Kanji_Memorized.app.iml
 /.idea/caches
-/.idea/libraries
-/.idea/modules.xml
 /.idea/workspace.xml
-/.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Gradle & Build Files
+.gradle
+/build/
+/app/build/
+
+# Local Configuration
 local.properties
+
 google-services.json
 kanji.py
 kanjimeaningcrossref.py
