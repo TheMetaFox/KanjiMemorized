@@ -20,6 +20,11 @@ Current UI:
 <img width="200" alt="Screenshot_20241115_132120_Kanji" src="https://github.com/user-attachments/assets/7c24f92d-a120-4fcc-8712-71254ac1ce83">
 <img width="200" alt="Screenshot_20241115_132102_Kanji" src="https://github.com/user-attachments/assets/d059c06b-85b7-40b1-818d-4ee08525a448">
 
+## How To Use
+1. On your mobile device, go to the 'Releases' section of this repository and click on 'tags'
+2. Select the desired version of the app you'd like to install and download the .apk file
+3. ...
+
 ## App Guide
 ### Study Modes
 __Guided Study:__ Creates a queue of kanji to study out of the leftover daily new kanji and the kanji ready for review.
