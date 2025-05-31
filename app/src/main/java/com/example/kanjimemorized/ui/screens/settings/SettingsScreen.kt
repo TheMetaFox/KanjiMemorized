@@ -1,6 +1,5 @@
 package com.example.kanjimemorized.ui.screens.settings
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -179,7 +178,7 @@ fun SettingsScreen(
                         }
                         Box {
                             Text(
-                                text = "Factor new kanji's durability increases by",
+                                text = "Factor new a kanji's durability increases by",
                                 color = MaterialTheme.colorScheme.secondary,
                                 fontSize = 12.sp,
                                 fontStyle = FontStyle.Italic
@@ -262,7 +261,7 @@ fun SettingsScreen(
 //                            Log.i("SettingsScreen.kt", "Checked changed...")
 //                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "analyticsEnabled", checked = it))
                             if (!it) {
-                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.ANALYTICS_ENABLED, checked = it))
+                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.ANALYTICS_ENABLED, checked = false))
                                 onSettingsEvent(SettingsEvent.UpdateButtons)
                             } else {
                                 onSettingsEvent(SettingsEvent.ShowConfirmationDialog(setting = SettingType.ANALYTICS_ENABLED))
@@ -298,7 +297,7 @@ fun SettingsScreen(
 //                            Log.i("SettingsScreen.kt", "Checked changed...")
 //                            onSettingsEvent(SettingsEvent.UpdateSwitch(switch = "crashlyticsEnabled", checked = it))
                             if (!it) {
-                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.CRASHLYTICS_ENABLED, checked = it))
+                                onSettingsEvent(SettingsEvent.UpdateSwitch(switch = SettingType.CRASHLYTICS_ENABLED, checked = false))
                                 onSettingsEvent(SettingsEvent.UpdateButtons)
                             } else {
                                 onSettingsEvent(SettingsEvent.ShowConfirmationDialog(setting = SettingType.CRASHLYTICS_ENABLED))

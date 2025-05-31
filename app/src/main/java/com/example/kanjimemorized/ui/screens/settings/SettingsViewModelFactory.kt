@@ -9,7 +9,7 @@ class SettingsViewModelFactory(
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
-            return SettingsViewModel(kanjiRepository) as T
+            return modelClass.cast(SettingsViewModel(kanjiRepository)) as T
         }
         throw IllegalArgumentException("ViewModel class was not found.")
     }

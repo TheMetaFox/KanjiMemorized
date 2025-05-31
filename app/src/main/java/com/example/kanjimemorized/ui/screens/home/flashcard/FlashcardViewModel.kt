@@ -262,7 +262,7 @@ class FlashcardViewModel(private val kanjiRepository: KanjiRepository): ViewMode
             is FlashcardEvent.ProcessCard -> {
                 viewModelScope.launch {
                     var kanji: Kanji = state.value.kanji!!
-                    Log.i("FlashcardViewModel.kt", "Processing ${kanji} with ${flashcardEvent.rating} rating...")
+                    Log.i("FlashcardViewModel.kt", "Processing $kanji with ${flashcardEvent.rating} rating...")
 
                     val review = Review(
                         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

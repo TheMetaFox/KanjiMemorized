@@ -9,7 +9,7 @@ class LibraryViewModelFactory(
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {
-            return LibraryViewModel(kanjiRepository) as T
+            return modelClass.cast(LibraryViewModel(kanjiRepository)) as T
         }
         throw IllegalArgumentException("ViewModel class was not found.")
     }

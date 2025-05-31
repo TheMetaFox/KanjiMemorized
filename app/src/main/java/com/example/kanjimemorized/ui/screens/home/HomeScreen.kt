@@ -142,16 +142,6 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-//                Box(
-//                    modifier = Modifier,
-//                ) {
-//                    Text(
-//                        text = "Home",
-//                        modifier = Modifier
-//                            .align(alignment = Center),
-//                        fontSize = 50.sp,
-//                    )
-//                }
                 Box(
                     modifier = Modifier,
                 ) {
