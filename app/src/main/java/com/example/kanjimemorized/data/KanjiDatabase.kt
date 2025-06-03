@@ -13,7 +13,7 @@ import com.example.kanjimemorized.data.entities.relations.KanjiMeaningCrossRef
 
 @Database(
     entities = [Kanji::class, Review::class, KanjiMeaningCrossRef::class, KanjiComponentCrossRef::class, Settings::class],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -65,6 +65,26 @@ abstract class KanjiDatabase: RoomDatabase() {
                 db.execSQL(
                     """
                         ALTER TABLE `New_Settings` RENAME TO `Settings`;
+                    """.trimIndent()
+                )
+            }
+        }
+        val migration3to4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                        DELETE FROM `Settings`;
+                    """.trimIndent()
+                )
+                db.execSQL(
+                    """
+                        INSERT INTO `Settings` 
+                        (`id`, `code`, `setValue`, `defaultValue`) VALUES
+                        (1, 'daily_new_kanji', '3', '3'),
+                        (2, 'initial_ease', '2.5', '2.5'),
+                        (3, 'retention_threshold', '80', '80'),
+                        (4, 'analytics_enabled', 'false', 'false'),
+                        (5, 'crashlytics_enabled', 'false', 'false');
                     """.trimIndent()
                 )
             }

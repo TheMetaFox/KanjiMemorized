@@ -31,7 +31,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
 
             is StatisticsEvent.LoadStatisticsData -> {
                 viewModelScope.launch {
-                    Log.i("StatisticsViewModel.kt", "Started loading initial data...")
+                    Log.i("StatisticsViewModel.kt", "Started loading initial statistics data...")
                     var unknown = 0
                     var known = 0
                     var mastered = 0
@@ -67,7 +67,7 @@ class StatisticsViewModel(private val kanjiRepository: KanjiRepository): ViewMod
                         )
                     }
                     _isLoading.value = false
-                    Log.i("StatisticsViewModel.kt", "Finished loading initial data...")
+                    Log.i("StatisticsViewModel.kt", "Finished loading initial statistics data...")
                 }
             }
             is StatisticsEvent.SetBarGraphSpan -> {

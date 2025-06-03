@@ -19,14 +19,11 @@ interface KanjiDao {
     @Insert
     suspend fun insertReview(review: Review)
 
-    @Insert
-    suspend fun insertSetting(setting: Settings)
-
     @Query("UPDATE settings SET setValue = :setValue WHERE code = :settingType")
     suspend fun updateSettings(settingType: SettingType, setValue: String)
 
     @Query("SELECT * FROM settings WHERE code = :settingType")
-    suspend fun getSettingsFromCode(settingType: SettingType): Settings?
+    suspend fun getSettingsFromCode(settingType: SettingType): Settings
 
     @Query("SELECT * FROM kanji ORDER BY strokes ASC, unicode ASC")
     suspend fun getKanjiList(): List<Kanji>

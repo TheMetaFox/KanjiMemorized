@@ -23,7 +23,7 @@ class Converters {
             "retention_threshold" ->  SettingType.RETENTION_THRESHOLD
             "analytics_enabled" ->  SettingType.ANALYTICS_ENABLED
             "crashlytics_enabled" ->  SettingType.CRASHLYTICS_ENABLED
-            else -> SettingType.DAILY_NEW_KANJI
+            else -> throw Exception("Invalid setting code in database")
         }
     }
 }

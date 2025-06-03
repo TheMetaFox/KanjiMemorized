@@ -42,49 +42,8 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     }
 
     suspend fun getSettingsFromCode(settingType: SettingType): Settings {
-        if (kanjiDao.getSettingsFromCode(settingType = settingType) == null) {
-            Log.i("KanjiRepository.kt", "Setting code not found...")
-            val setting: Settings = when (settingType) {
-                SettingType.DAILY_NEW_KANJI -> {
-                    Settings(
-                        code = SettingType.DAILY_NEW_KANJI,
-                        setValue = "3",
-                        defaultValue = "3"
-                    )
-                }
-                SettingType.INITIAL_EASE -> {
-                    Settings(
-                        code = SettingType.INITIAL_EASE,
-                        setValue = "2.5",
-                        defaultValue = "2.5"
-                    )
-                }
-                SettingType.RETENTION_THRESHOLD -> {
-                    Settings(
-                        code = SettingType.RETENTION_THRESHOLD,
-                        setValue = "80",
-                        defaultValue = "80"
-                    )
-                }
-                SettingType.ANALYTICS_ENABLED -> {
-                    Settings(
-                        code = SettingType.ANALYTICS_ENABLED,
-                        setValue = "false",
-                        defaultValue = "false"
-                    )
-                }
-                SettingType.CRASHLYTICS_ENABLED -> {
-                    Settings(
-                        code = SettingType.CRASHLYTICS_ENABLED,
-                        setValue = "false",
-                        defaultValue = "false"
-                    )
-                }
-            }
-            Log.i("KanjiRepository.kt", "Setting code '${setting.code}' initialized...")
-            kanjiDao.insertSetting(setting = setting)
-        }
-        return kanjiDao.getSettingsFromCode(settingType = settingType)!!
+        Log.i("KanjiRepository.kt", "Getting setting $settingType...")
+        return kanjiDao.getSettingsFromCode(settingType = settingType)
     }
 
     suspend fun getKanjiComponentsFromKanji(kanji: Char): List<Kanji> {

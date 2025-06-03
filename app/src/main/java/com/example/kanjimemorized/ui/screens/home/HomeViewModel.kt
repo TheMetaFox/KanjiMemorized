@@ -28,13 +28,15 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
     ) {
         when(homeEvent) {
             is HomeEvent.LoadHomeData -> {
+                Log.i("HomeViewModel.kt", "Started loading initial home data...")
                 viewModelScope.launch {
                     var currentReviewCount = 0
                     val currentNewCount = kanjiRepository.getSettingsFromCode(settingType = SettingType.DAILY_NEW_KANJI).setValue.toInt() - kanjiRepository.getEarliestDateCountFromToday()
+                    val retentionThreshold: Float = kanjiRepository.getSettingsFromCode(settingType = SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f
                     kanjiRepository.getKanjiList().forEach { kanji ->
                         if (kanji.durability > 0.1f) {
                             Log.i("HomeViewModel.kt", "Kanji: ${kanji.unicode}\nDurability: ${kanji.durability}")
-                            if (kanjiRepository.getRetentionFromKanji(kanji = kanji.unicode) < kanjiRepository.getSettingsFromCode(settingType = SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
+                            if (kanjiRepository.getRetentionFromKanji(kanji = kanji.unicode) < retentionThreshold) {
                                 Log.i("HomeViewModel.kt", "${kanji.unicode} is ready to review...")
                                 currentReviewCount++
                             }
@@ -48,6 +50,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                     }
                     _isLoading.value = false
                 }
+                Log.i("SettingsViewModel.kt", "Finished loading initial home data...")
             }
         }
     }

@@ -185,7 +185,7 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                 }
             }
             SettingsEvent.LoadSettingsData -> {
-                Log.i("SettingsViewModel.kt", "Started loading initial data...")
+                Log.i("SettingsViewModel.kt", "Started loading initial settings data...")
                 viewModelScope.launch {
                     val settingsMap: MutableMap<SettingType, Settings> = mutableMapOf()
                     kanjiRepository.getSettings().forEach { setting ->
@@ -199,7 +199,7 @@ class SettingsViewModel(private val kanjiRepository: KanjiRepository): ViewModel
                         )
                     }
                     _isLoading.value = false
-                    Log.i("SettingsViewModel.kt", "Finished loading initial data...")
+                    Log.i("SettingsViewModel.kt", "Finished loading initial settings data...")
                 }
             }
             SettingsEvent.ApplySettings -> {
