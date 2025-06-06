@@ -1,5 +1,9 @@
 # Android Studio
 /.idea/modules/app/Kanji_Memorized.app.iml
+/.idea/AndroidProjectSystem.xml
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/modules/Kanji_Memorized.iml
+/.idea/modules.xml
 /.idea/caches
 /.idea/workspace.xml
 /.idea/assetWizardSettings.xml
@@ -12,6 +16,10 @@
 # Local Configuration
 local.properties
 
+# Release Files
+/app/release
+
+# Misc
 google-services.json
 kanji.py
 kanjimeaningcrossref.py

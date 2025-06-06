@@ -9,10 +9,3 @@ data class StatisticsState(
     val dayForecastsMap: MutableMap<Int, Int> = mutableMapOf(),
     val barGraphSpan: BarGraphSpan = BarGraphSpan.WEEK1
 )
-enum class BarGraphSpan {
-    WEEK1,
-    MONTH1,
-    MONTH3,
-    YEAR1,
-    ALL
-}

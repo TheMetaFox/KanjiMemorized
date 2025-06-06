@@ -1,9 +1,11 @@
 package com.example.kanjimemorized.ui.screens.home.flashcard
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
@@ -43,6 +46,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -52,6 +57,7 @@ import com.example.kanjimemorized.LoadingAnimation2
 import com.example.kanjimemorized.data.entities.Kanji
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
+import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,8 +126,9 @@ fun FlashcardScreen(
         } else {
             Column(
                 modifier = modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
+                    .padding(contentPadding)
+                    .padding(8.dp)
+                    .fillMaxSize(),
                 horizontalAlignment = CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
             ) {
@@ -196,7 +203,7 @@ fun FlashcardScreen(
                                 ) {
                                     Text(
                                         text = "View Kanji",
-                                        fontSize = 20.sp
+                                        fontSize = 16.sp
                                     )
                                 }
 
@@ -214,14 +221,15 @@ fun FlashcardScreen(
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
-                                            .size(125.dp, 50.dp),
+                                            .size(120.dp, 50.dp),
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = MaterialTheme.colorScheme.tertiary
-                                        )
+                                        ),
+                                        contentPadding = PaddingValues(5.dp)
                                     ) {
                                         Text(
                                             text = "Wrong",
-                                            fontSize = 20.sp
+                                            fontSize = 16.sp
                                         )
                                     }
                                     Button(
@@ -231,14 +239,15 @@ fun FlashcardScreen(
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
-                                            .size(125.dp, 50.dp),
+                                            .size(120.dp, 50.dp),
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = MaterialTheme.colorScheme.secondary
-                                        )
+                                        ),
+                                        contentPadding = PaddingValues(5.dp)
                                     ) {
                                         Text(
                                             text = "Correct",
-                                            fontSize = 20.sp
+                                            fontSize = 16.sp
                                         )
                                     }
                                     Button(
@@ -248,14 +257,15 @@ fun FlashcardScreen(
                                             onFlashcardEvent(FlashcardEvent.FlipFlashcard)
                                         },
                                         modifier = Modifier
-                                            .size(125.dp, 50.dp),
+                                            .size(120.dp, 50.dp),
                                         colors = ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.primary
-                                        )
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                        ),
+                                        contentPadding = PaddingValues(5.dp)
                                     ) {
                                         Text(
                                             text = "Easy",
-                                            fontSize = 20.sp
+                                            fontSize = 16.sp
                                         )
                                     }
                                 }
@@ -264,18 +274,18 @@ fun FlashcardScreen(
                             Button(
                                 onClick = { onFlashcardEvent(FlashcardEvent.FlipFlashcard) },
                                 modifier = Modifier
-                                    .size(250.dp, 100.dp),
+                                    .sizeIn(200.dp, 75.dp, 250.dp, 200.dp)
+                                ,
                             ) {
                                 Text(
                                     text = "Show Answer",
                                     fontSize = 30.sp,
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
+                                    lineHeight = 30.sp
                                 )
                             }
                         }
-
                     }
-
                 } else {
                     Box(
                         modifier = Modifier
@@ -300,48 +310,59 @@ fun FlashcardScreen(
     }
 }
 
-@Preview
-@Composable
-fun ReviewUnavailablePreview() {
-    FlashcardScreen(
-        modifier = Modifier,
-        navController = rememberNavController(),
-        flashcardState = FlashcardState(isLoading = false),
-        onFlashcardEvent = { },
-        onKanjiEvent = { }
-    )
-}
-
-@Preview
-@Composable
-fun FlashcardKanjiPreview() {
-    FlashcardScreen(
-        modifier = Modifier,
-        navController = rememberNavController(),
-        flashcardState = FlashcardState(
+class FlashcardStateParameterProvider: PreviewParameterProvider<FlashcardState> {
+    override val values: Sequence<FlashcardState> get() = sequenceOf(
+        FlashcardState(
+            isLoading = false
+        ),
+        FlashcardState(
             kanji = Kanji(unicode = Char(30000), strokes = 3),
             isReviewAvailable = true,
             isLoading = false
         ),
-        onFlashcardEvent = { },
-        onKanjiEvent = { }
-    )
-}
-
-@Preview
-@Composable
-fun FlashcardAnswerPreview() {
-    FlashcardScreen(
-        modifier = Modifier,
-        navController = rememberNavController(),
-        flashcardState = FlashcardState(
+        FlashcardState(
             kanji = Kanji(unicode = Char(30000), strokes = 3),
             meanings = listOf("rice field"),
             isAnswerShowing = true,
             isReviewAvailable = true,
             isLoading = false
-        ),
-        onFlashcardEvent = { },
-        onKanjiEvent = { }
+        )
     )
+}
+
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun FlashcardScreenPreview_LightDark(
+    @PreviewParameter(provider = FlashcardStateParameterProvider::class)
+    flashcardState: FlashcardState
+) {
+    KanjiMemorizedTheme {
+        FlashcardScreen(
+            modifier = Modifier,
+            navController = rememberNavController(),
+            flashcardState = flashcardState,
+            onFlashcardEvent = { },
+            onKanjiEvent = { }
+        )
+    }
+}
+
+@Preview(name = "85%", fontScale = 0.85f)
+@Preview(name = "150%", fontScale = 1.5f)
+@Preview(name = "200%", fontScale = 2f)
+@Composable
+fun FlashcardScreenPreview_FontScale(
+    @PreviewParameter(provider = FlashcardStateParameterProvider::class)
+    flashcardState: FlashcardState
+) {
+    KanjiMemorizedTheme {
+        FlashcardScreen(
+            modifier = Modifier,
+            navController = rememberNavController(),
+            flashcardState = flashcardState,
+            onFlashcardEvent = { },
+            onKanjiEvent = { }
+        )
+    }
 }

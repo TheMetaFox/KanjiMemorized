@@ -12,6 +12,9 @@ data class Kanji(
     val ease: Float // the easiness of the kanji; it's what durability multiplies with
 ) {
     constructor(unicode: Char, strokes: Int) : this(
-        unicode, strokes, durability = 0f, ease = 2.5f
+        unicode = unicode, strokes = strokes, durability = 0f, ease = 2.5f
+    )
+    constructor(unicode: Char, strokes: Int, durability: Float) : this(
+        unicode = unicode, strokes = strokes, durability = durability, ease = 2.5f
     )
 }

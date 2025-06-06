@@ -1,8 +1,10 @@
 package com.example.kanjimemorized.ui.screens.library
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -55,14 +57,19 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.library.kanji.KanjiEvent
+import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import com.example.kanjimemorized.ui.theme.spacing
 import java.time.Duration
 import java.time.LocalDateTime
@@ -348,9 +355,40 @@ fun CircularProgressBar(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun LibraryScreenPreview() {
-//    Animate
-//    LibraryScreen(Modifier, AnimatedContentScope, rememberNavController(), LibraryState(), { }, { })
-//}
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun LibraryScreenPreview_LightDark() {
+    KanjiMemorizedTheme {
+        SharedTransitionLayout {
+            NavHost(
+                rememberNavController(),
+                "here"
+            ) {
+                composable("here") {
+                    LibraryScreen(Modifier, this@SharedTransitionLayout, this@composable,rememberNavController(), LibraryState(), { }, { })
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(name = "85%", fontScale = 0.85f)
+@Preview(name = "150%", fontScale = 1.5f)
+@Preview(name = "200%", fontScale = 2f)
+@Composable
+fun LibraryScreenPreview_FontScale() {
+    KanjiMemorizedTheme {
+        SharedTransitionLayout {
+            NavHost(
+                rememberNavController(),
+                "here"
+            ) {
+                composable("here") {
+                    LibraryScreen(Modifier, this@SharedTransitionLayout, this@composable,rememberNavController(), LibraryState(), { }, { })
+                }
+            }
+        }
+    }
+}

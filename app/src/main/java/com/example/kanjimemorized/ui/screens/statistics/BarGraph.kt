@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BarGraph(
-    modifier: Modifier = Modifier.size(size = 300.dp),
+    modifier: Modifier = Modifier,
     barColor: Color = MaterialTheme.colorScheme.primary,
-    axisColor: Color = MaterialTheme.colorScheme.onBackground,
-    labelColor: Color = MaterialTheme.colorScheme.onBackground,
+    axisColor: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+    labelColor: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
     barGraphSpan: BarGraphSpan = BarGraphSpan.WEEK1,
     inputMap: Map<Int, Int>,
 ) {
@@ -49,7 +49,7 @@ fun BarGraph(
             val graphHeight: Float = height-(height/15f)
             drawBars(valueMap = inputMap, barCount = barCount, barColor = barColor, width = width, graphWidth = graphWidth, graphHeight = graphHeight)
             drawAxis(width = width, graphWidth = graphWidth, graphHeight = graphHeight, strokeWidth = 5f, axisColor = axisColor)
-            drawLabels(width = width, height = height, graphWidth = graphWidth, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = maxValue, labelColor = labelColor)
+            drawLabels(width = width, height = height, graphWidth = graphWidth, graphHeight = graphHeight, textMeasurer = textMeasurer, horizontalMax = barCount, verticalMax = maxValue, labelColor = labelColor)
         }
     }
 }
@@ -98,6 +98,7 @@ fun DrawScope.drawLabels(
     width: Float,
     height: Float,
     graphWidth: Float,
+    graphHeight: Float,
     textMeasurer: TextMeasurer,
     horizontalMax: Int,
     verticalMax: Int,
@@ -108,7 +109,7 @@ fun DrawScope.drawLabels(
         drawText(
             textLayoutResult = textResult,
             color = labelColor,
-            topLeft = Offset(x = (width-graphWidth) + (graphWidth/horizontalMax/2f) - (textResult.size.width/2) + (graphWidth/horizontalMax*(i-1)), y = height - textResult.size.height)
+            topLeft = Offset(x = (width-graphWidth) + (graphWidth/horizontalMax/2f) - (textResult.size.width/2) + (graphWidth/horizontalMax*(i-1)), y = graphHeight)//height - textResult.size.height)
         )
     }
     for (i in 1..verticalMax step verticalMax/5+1) {
@@ -124,10 +125,10 @@ fun DrawScope.drawLabels(
 @Preview(showBackground = true)
 @Composable
 fun BarGraphPreview1() {
-    BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.WEEK1)
+    BarGraph(modifier = Modifier.size(size = 300.dp), inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.WEEK1)
 }
 @Preview(showBackground = true)
 @Composable
 fun BarGraphPreview2() {
-    BarGraph(inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.MONTH1)
+    BarGraph(modifier = Modifier.size(size = 300.dp), inputMap = mapOf(1 to 2, 2 to 1, 3 to 3), barGraphSpan = BarGraphSpan.MONTH1)
 }

@@ -1,5 +1,6 @@
 package com.example.kanjimemorized.ui.screens.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -59,7 +60,7 @@ import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.Screen
 import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.home.flashcard.StudyType
-import com.example.kanjimemorized.ui.theme.spacing
+import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,9 +81,9 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(text = "Home") },
                 actions = {
-                    var showDropDownMenu by remember { mutableStateOf(false) }
+                    var showDropdownMenu by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { showDropDownMenu = true }
+                        onClick = { showDropdownMenu = true }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.MoreVert,
@@ -91,13 +92,13 @@ fun HomeScreen(
                     }
                     val localUriHandler: UriHandler = LocalUriHandler.current
                     DropdownMenu(
-                        expanded = showDropDownMenu,
-                        onDismissRequest = { showDropDownMenu = false },
+                        expanded = showDropdownMenu,
+                        onDismissRequest = { showDropdownMenu = false },
                     ) {
                         DropdownMenuItem(
                             text = { Text("App Guide") },
                             onClick = {
-                                showDropDownMenu = false
+                                showDropdownMenu = false
                                 localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
                             },
                             leadingIcon = { Icon(Icons.Outlined.Info, "info") }
@@ -105,7 +106,7 @@ fun HomeScreen(
                         DropdownMenuItem(
                             text = { Text("Feedback") },
                             onClick = {
-                                showDropDownMenu = false
+                                showDropdownMenu = false
                                 localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
                             },
                             leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
@@ -137,7 +138,6 @@ fun HomeScreen(
             )
             Column(
                 modifier = modifier
-                    .padding(spacing.small)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
@@ -149,7 +149,7 @@ fun HomeScreen(
                         text = "New Kanji: ${homeState.currentNewCount}",
                         modifier = Modifier
                             .align(alignment = Center),
-                        fontSize = 36.sp,
+                        fontSize = 32.sp,
                     )
                 }
                 Box(
@@ -159,11 +159,11 @@ fun HomeScreen(
                         text = "Reviews: ${homeState.currentReviewCount}",
                         modifier = Modifier
                             .align(alignment = Center),
-                        fontSize = 36.sp,
+                        fontSize = 32.sp,
                     )
                 }
                 Column(
-                    verticalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.spacedBy(space = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
@@ -172,18 +172,14 @@ fun HomeScreen(
                             onFlashcardEvent(FlashcardEvent.InitializeQueue)
                             navController.navigate(route = Screen.Flashcard.route)
                         },
-                        modifier = Modifier
-                            .padding(spacing.small)
                     ) {
                         Text(
                             text = "Guided Study",
-                            fontSize = 36.sp,
+                            fontSize = 32.sp,
                         )
                     }
                     Row(
-                        modifier = Modifier
-                            .padding(spacing.small),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
@@ -192,12 +188,10 @@ fun HomeScreen(
                                 onFlashcardEvent(FlashcardEvent.InitializeQueue)
                                 navController.navigate(route = Screen.Flashcard.route)
                             },
-                            modifier = Modifier
-                                .padding(spacing.small)
                         ) {
                             Text(
                                 text = "Learn",
-                                fontSize = 35.sp
+                                fontSize = 32.sp
                             )
                         }
                         Button(
@@ -206,12 +200,10 @@ fun HomeScreen(
                                 onFlashcardEvent(FlashcardEvent.InitializeQueue)
                                 navController.navigate(route = Screen.Flashcard.route)
                             },
-                            modifier = Modifier
-                                .padding(spacing.small)
                         ) {
                             Text(
                                 text = "Review",
-                                fontSize = 35.sp
+                                fontSize = 32.sp
                             )
                         }
                     }
@@ -260,7 +252,7 @@ fun ImageCard(
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            fontSize = 35.sp
+                            fontSize = 32.sp
                         )
                     ) {
                         append(text = "K")
@@ -268,7 +260,7 @@ fun ImageCard(
                     append(text = "anji ")
                     withStyle(
                         style = SpanStyle(
-                            fontSize = 35.sp
+                            fontSize = 32.sp
                         )
                     ) {
                         append(text = "M")
@@ -281,15 +273,27 @@ fun ImageCard(
                 color = MaterialTheme.colorScheme.onBackground,
                 style = TextStyle(
                     color = Color.White,
-                    fontSize = 30.sp
+                    fontSize = 26.sp
                 )
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light", group = "LightDark")
+@Preview(name = "Dark", group = "LightDark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
+fun HomeScreenPreview_LightDark() {
+    KanjiMemorizedTheme {
+        HomeScreen(navController = rememberNavController(), homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
+    }
+}
+@Preview(name = "85%", group = "FontScale", fontScale = 0.85f)
+@Preview(name = "150%", group = "FontScale", fontScale = 1.5f)
+@Preview(name = "200%", group = "FontScale", fontScale = 2f)
+@Composable
+fun HomeScreenPreview_FontScale() {
+    KanjiMemorizedTheme {
+        HomeScreen(navController = rememberNavController(), homeState = HomeState(), onHomeEvent = { }, onFlashcardEvent = { })
+    }
 }
