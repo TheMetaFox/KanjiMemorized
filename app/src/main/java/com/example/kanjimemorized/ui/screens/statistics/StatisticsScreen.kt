@@ -134,7 +134,7 @@ fun StatisticsScreen(
                     Column(
                         modifier = Modifier
                             .wrapContentSize()
-                            .padding(vertical = 15.dp),
+                            .padding(all = 15.dp),
                         verticalArrangement = Arrangement.spacedBy(15.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -154,7 +154,7 @@ fun UnlockedKanjiCard(
 ) {
     Card(
         modifier = Modifier
-            .width(width = 350.dp)
+            .fillMaxWidth()
             .padding(2.dp),
     ) {
         Column(
@@ -204,7 +204,7 @@ fun KanjiCountCard(
 ) {
     Card(
         modifier = Modifier
-            .width(width = 350.dp)
+            .fillMaxWidth()
             .padding(2.dp),
     ) {
         Column(
@@ -296,7 +296,7 @@ fun ReviewForecastCard(
 ) {
     Card(
         modifier = Modifier
-            .width(width = 350.dp)
+            .fillMaxWidth()
             .padding(2.dp),
     ) {
         Column(

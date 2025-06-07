@@ -329,7 +329,7 @@ fun CircularProgressBar(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .size(radius*2f)
+            .size(radius*2f+strokeWidth)
     ) {
         Canvas(
             modifier = Modifier
