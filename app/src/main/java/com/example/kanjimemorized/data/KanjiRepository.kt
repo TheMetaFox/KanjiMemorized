@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class KanjiRepository(private val kanjiDao: KanjiDao) {
     suspend fun resetKanjiData() {
@@ -135,13 +136,14 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     suspend fun getUnlockedKanjiList(): List<Kanji> {
         var unlockedKanjiList: List<Kanji> = listOf()
         val calculatedRetentions: MutableMap<Kanji, Float> = mutableMapOf()
+        val retentionThreshold: Float = getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f
         kanjiDao.getKanjiList().forEach { kanji ->
             var isLocked = false
             getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
                 if (!calculatedRetentions.contains(component)) {
                     calculatedRetentions[component] = getRetentionFromKanji(component.unicode)
                 }
-                if (calculatedRetentions[component]!! <= getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
+                if (calculatedRetentions[component]!! <= retentionThreshold) {
                     isLocked = true
                 }
             }
@@ -154,8 +156,9 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     suspend fun isKanjiAvailable(kanji: Kanji): Boolean {
         var isAvailable = true
+        val retentionThreshold: Float = getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f
         getKanjiComponentsFromKanji(kanji.unicode).forEach { component ->
-            if (getRetentionFromKanji(component.unicode) <= getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f) {
+            if (getRetentionFromKanji(component.unicode) <= retentionThreshold) {
                 isAvailable = false
             }
         }
@@ -165,10 +168,6 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
     suspend fun getEarliestDateCountFromToday(): Int {
         return kanjiDao.getEarliestDateCountFromToday(today = LocalDate.now().toString())
     }
-
-//    suspend fun getRandomKanji(): Kanji {
-//        return kanjiDao.getKanjiList().random()
-//    }
 
     fun getKanjiOrderedByUnicode(): Flow<List<Kanji>> {
         return kanjiDao.getKanjiOrderedByUnicode()
@@ -204,6 +203,12 @@ class KanjiRepository(private val kanjiDao: KanjiDao) {
 
     fun getLatestDateOrderedByDurability(): Flow<List<String?>> {
         return kanjiDao.getLatestDateOrderedByDurability()
+    }
+
+    suspend fun getProjectedCompletionDate(): LocalDate {
+        val daysStudyingNewKanji: Int = kanjiDao.getUnknownKanjiList().size / getSettingsFromCode(settingType = SettingType.DAILY_NEW_KANJI).setValue.toInt()
+        val daysMasteringLastKanji: Int = (100-1-kanjiDao.getLeastDurableKanji().durability.toInt()) * ln(getSettingsFromCode(SettingType.RETENTION_THRESHOLD).setValue.toFloat()/100f).roundToInt()
+        return LocalDate.now().plusDays( (daysStudyingNewKanji+daysMasteringLastKanji).toLong())
     }
 
     suspend fun getSettings(): List<Settings> {

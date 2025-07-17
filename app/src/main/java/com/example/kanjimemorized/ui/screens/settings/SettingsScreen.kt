@@ -21,35 +21,20 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Feedback
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,6 +45,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.data.entities.Settings
 import com.example.kanjimemorized.ui.BottomNavBar
+import com.example.kanjimemorized.ui.TopBar
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,50 +65,10 @@ fun SettingsScreen(
     }
     Scaffold(
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.primary)
-            .windowInsetsPadding(insets = WindowInsets.statusBars)
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
+            .windowInsetsPadding(insets = WindowInsets.statusBars),
         topBar = {
-            TopAppBar(
-                title = { Text("Settings") },
-                actions = {
-                    var showDropDownMenu by remember { mutableStateOf(false) }
-                    IconButton(
-                        onClick = { showDropDownMenu = true }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "more vertical"
-                        )
-                    }
-                    val localUriHandler: UriHandler = LocalUriHandler.current
-                    DropdownMenu(
-                        expanded = showDropDownMenu,
-                        onDismissRequest = { showDropDownMenu = false },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("App Guide") },
-                            onClick = {
-                                showDropDownMenu = false
-                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Feedback") },
-                            onClick = {
-                                showDropDownMenu = false
-                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                )
-            )
+            TopBar(title = "Settings")
         },
         bottomBar = {
             BottomNavBar(selected = "Settings", navController = navController)
@@ -179,15 +125,21 @@ fun SettingsScreen(
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .fillMaxSize()
                 .padding(contentPadding)
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.background),
+                        endY = 50f
+                    )
+                )
                 .zIndex(0f),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .width(350.dp)
+                    .padding(10.dp)
                     .safeGesturesPadding(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

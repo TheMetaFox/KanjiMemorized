@@ -22,29 +22,16 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Feedback
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +41,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.kanjimemorized.data.entities.Kanji
+import com.example.kanjimemorized.ui.TopBar
 import com.example.kanjimemorized.ui.screens.library.CircularProgressBar
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
 import com.example.kanjimemorized.ui.theme.spacing
@@ -74,61 +62,24 @@ fun KanjiScreen(
     if (kanjiState.isShowingReviewData) {
         KanjiReviewDataDialog(onKanjiEvent = onKanjiEvent, kanjiState = kanjiState)
     }
-//    Log.i("KanjiScreen.kt", "Setting Selected to 0...")
-//    val selected = remember {
-//        mutableIntStateOf(-1)
-//    }
     Scaffold (
         modifier = modifier
-            .background(color = MaterialTheme.colorScheme.primary)
-            .windowInsetsPadding(insets = WindowInsets.statusBars)
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
+            .windowInsetsPadding(insets = WindowInsets.statusBars),
         topBar = {
-            TopAppBar(
-                title = { Text("Kanji") },
-                actions = {
-                    var showDropDownMenu by remember { mutableStateOf(false) }
-                    IconButton(
-                        onClick = { showDropDownMenu = true }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "more vertical"
-                        )
-                    }
-                    val localUriHandler: UriHandler = LocalUriHandler.current
-                    DropdownMenu(
-                        expanded = showDropDownMenu,
-                        onDismissRequest = { showDropDownMenu = false },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("App Guide") },
-                            onClick = {
-                                showDropDownMenu = false
-                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Feedback") },
-                            onClick = {
-                                showDropDownMenu = false
-                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                )
-            )
+            TopBar(title = "Kanji")
         }
     ) { contentPadding ->
         Column(
             modifier = Modifier
                 .padding(paddingValues = contentPadding)
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.background),
+                        endY = 50f
+                    )
+                )
                 .padding(
                     start = spacing.medium,
                     top = spacing.medium,

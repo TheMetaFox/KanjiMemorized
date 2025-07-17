@@ -31,6 +31,12 @@ interface KanjiDao {
     @Query("SELECT * FROM kanji WHERE durability > 0")
     suspend fun getKnownKanjiList(): List<Kanji>
 
+    @Query("SELECT * FROM kanji WHERE durability = 0")
+    suspend fun getUnknownKanjiList(): List<Kanji>
+
+    @Query("SELECT unicode as unicode, strokes as strokes, MIN(durability) as durability, ease as ease FROM kanji")
+    suspend fun getLeastDurableKanji(): Kanji
+
     @Query("SELECT * FROM kanji ORDER BY unicode ASC")
     fun getKanjiOrderedByUnicode(): Flow<List<Kanji>>
 

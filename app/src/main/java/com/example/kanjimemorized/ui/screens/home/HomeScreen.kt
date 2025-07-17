@@ -1,7 +1,6 @@
 package com.example.kanjimemorized.ui.screens.home
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,58 +8,32 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Feedback
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.kanjimemorized.R
 import com.example.kanjimemorized.ui.BottomNavBar
 import com.example.kanjimemorized.ui.Screen
+import com.example.kanjimemorized.ui.TopBar
 import com.example.kanjimemorized.ui.screens.home.flashcard.FlashcardEvent
 import com.example.kanjimemorized.ui.screens.home.flashcard.StudyType
 import com.example.kanjimemorized.ui.theme.KanjiMemorizedTheme
+import java.time.LocalDate
+import java.time.Period
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,50 +47,10 @@ fun HomeScreen(
     onHomeEvent(HomeEvent.LoadHomeData)
     Scaffold(
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.primary)
-            .windowInsetsPadding(insets = WindowInsets.statusBars)
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
+            .windowInsetsPadding(insets = WindowInsets.statusBars),
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Home") },
-                actions = {
-                    var showDropdownMenu by remember { mutableStateOf(false) }
-                    IconButton(
-                        onClick = { showDropdownMenu = true }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "more vertical"
-                        )
-                    }
-                    val localUriHandler: UriHandler = LocalUriHandler.current
-                    DropdownMenu(
-                        expanded = showDropdownMenu,
-                        onDismissRequest = { showDropdownMenu = false },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("App Guide") },
-                            onClick = {
-                                showDropdownMenu = false
-                                localUriHandler.openUri("https://github.com/TheMetaFox/KanjiMemorized?tab=readme-ov-file#app-guide")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Info, "info") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Feedback") },
-                            onClick = {
-                                showDropdownMenu = false
-                                localUriHandler.openUri("https://docs.google.com/forms/d/e/1FAIpQLScQzby5vRCzXCFfAlnzWv6iUmuMwS1J6PlYcG7HzOxW8hTwnw/viewform?usp=sf_link")
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Feedback, "feedback") }
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                )
-            )
+            TopBar(title = "Home")
         },
         bottomBar = {
             BottomNavBar(selected = "Home", navController = navController)
@@ -126,21 +59,51 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .padding(paddingValues = contentPadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.background),
+                        endY = 50f
+                    )
+                ),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ImageCard(
-                modifier = Modifier
-                    .wrapContentSize(),
-                painter = painterResource(R.drawable.study_anime),
-                contentDescription = "An adolescent human female studying in their room.",
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(32.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Completion Date",
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = homeState.projectedCompletionDate.toString(),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontSize = 42.sp,
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val until: Period = Period.between(LocalDate.now(), homeState.projectedCompletionDate)
+                    Text(
+                        text = until.plusDays((until.years*365 + until.months*30).toLong()).days.toString(),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontSize = 42.sp
+                    )
+                    Text(
+                        text = "Days",
+                        fontSize = 14.sp
+                    )
+                }
+            }
             Column(
-                modifier = modifier
-                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
+                verticalArrangement = Arrangement.spacedBy(36.dp)
             ) {
                 Box(
                     modifier = Modifier,
@@ -209,73 +172,6 @@ fun HomeScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun ImageCard(
-    modifier: Modifier,
-    painter: Painter,
-    contentDescription: String,
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(0.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .wrapContentSize()
-        ){
-            Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
-            )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                MaterialTheme.colorScheme.background
-                            ),
-                            startY = 0f,
-                            endY = 560f
-                        )
-                    )
-            )
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            fontSize = 32.sp
-                        )
-                    ) {
-                        append(text = "K")
-                    }
-                    append(text = "anji ")
-                    withStyle(
-                        style = SpanStyle(
-                            fontSize = 32.sp
-                        )
-                    ) {
-                        append(text = "M")
-                    }
-                    append(text = "emorised")
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(12.dp),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 26.sp
-                )
-            )
         }
     }
 }

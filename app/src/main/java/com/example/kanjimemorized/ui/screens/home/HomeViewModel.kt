@@ -44,6 +44,7 @@ class HomeViewModel(private val kanjiRepository: KanjiRepository): ViewModel() {
                     }
                     _state.update {
                         it.copy(
+                            projectedCompletionDate = kanjiRepository.getProjectedCompletionDate(),
                             currentReviewCount = currentReviewCount,
                             currentNewCount = if (currentNewCount >= 0) currentNewCount else 0
                         )

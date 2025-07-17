@@ -1,6 +1,9 @@
 package com.example.kanjimemorized.ui.screens.home
 
+import java.time.LocalDate
+
 data class HomeState(
-    var currentReviewCount: Int = 0,
-    var currentNewCount: Int = 0,
+    val projectedCompletionDate: LocalDate = LocalDate.now(),
+    val currentReviewCount: Int = 0,
+    val currentNewCount: Int = 0,
 )
